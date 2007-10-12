@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 12.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 51448)  -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Icon"
+   width="43.307"
+   height="43.305"
+   viewBox="0 0 43.307 43.305"
+   overflow="visible"
+   enable-background="new 0 0 43.307 43.305"
+   xml:space="preserve"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docname="activity-test.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="/home/edsiper/coding/sugar_activities/terminal-activity/activity"><metadata
+   id="metadata20"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+   id="defs18" /><sodipodi:namedview
+   inkscape:window-height="627"
+   inkscape:window-width="910"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   guidetolerance="10.0"
+   gridtolerance="10.0"
+   objecttolerance="10.0"
+   borderopacity="1.0"
+   bordercolor="#666666"
+   pagecolor="#ffffff"
+   id="base"
+   inkscape:zoom="9.3984528"
+   inkscape:cx="21.6535"
+   inkscape:cy="24.783565"
+   inkscape:window-x="12"
+   inkscape:window-y="71"
+   inkscape:current-layer="Icon" />
+<circle
+   id="Globe"
+   fill="#AAAAAA"
+   stroke="#000000"
+   stroke-width="3.5"
+   cx="21.652"
+   cy="21.653"
+   r="19.903"
+   style="fill:#f3bd70;fill-opacity:1" />
+<g
+   id="Lines">
+	
+	
+	<line
+   x1="9.2688932"
+   y1="12.167065"
+   x2="34.462708"
+   y2="12.073284"
+   id="line9"
+   style="fill:#aaaaaa;stroke:#000000;stroke-width:2.99707246" />
+	
+	
+	
+<line
+   x1="21.838366"
+   y1="10.852942"
+   x2="21.998638"
+   y2="36.046421"
+   id="line2160"
+   style="fill:#aaaaaa;stroke:#000000;stroke-width:2.99707246" /></g>
+</svg>

@@ -1,0 +1,6 @@
+[Activity]
+name = Terminal
+activity_version = 1
+service_name = org.laptop.Terminal
+icon = terminal
+class = terminal.TerminalActivity
