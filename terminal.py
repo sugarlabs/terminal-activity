@@ -39,8 +39,7 @@ class TerminalActivity(activity.Activity):
         self.set_title(_('Terminal Activity'))
 
         # CANVAS
-        terminal = Multiple()
-        
+        terminal = Terminal()
         self.set_canvas(terminal)
 
         # TOOLBAR
@@ -165,94 +164,3 @@ class Terminal(gtk.HBox):
 
     def on_vte_popup_menu(self, term):
         pass
-
-class Multiple(gtk.VBox):
-    def __init__(self):
-        gtk.VBox.__init__(self, False, 3)
-
-        self._page_number = 0
-        self.notebook = gtk.Notebook()
-        t_width = gtk.gdk.screen_width()
-        t_height = gtk.gdk.screen_height() * 83 / 100
-        self.notebook.set_size_request(t_width, t_height)
-
-        self.add_new_terminal()
-        
-        open_terminal = gtk.Button('Open a new terminal')
-        open_terminal.connect("clicked", self.add_new_terminal)
-        open_terminal.show()
-                
-        self.notebook.show()
-        
-        self.pack_start(open_terminal, True, True, 2)
-        self.pack_start(self.notebook, True, True, 2)
-        self.show_all()
-    
-    # Remove a page from the notebook
-    def close_terminal(self, button, child):
-        page = self.notebook.page_num(child)
-
-        if page != -1:
-            self.notebook.remove_page(page)
-        
-        
-        pages = self.notebook.get_n_pages()
-        if pages <= 0:
-            self._page_number = 0
-            self.add_new_terminal()
-            
-        # Need to refresh the widget --
-        # This forces the widget to redraw itself.
-        self.notebook.queue_draw_area(0, 0, -1, -1)
-
-    def add_icon_to_button(self, button):
-        iconBox = gtk.HBox(False, 0)
-        image = gtk.Image()
-        image.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-        gtk.Button.set_relief(button, gtk.RELIEF_NONE)
-
-        settings = gtk.Widget.get_settings (button)
-        (w,h) = gtk.icon_size_lookup_for_settings (settings, gtk.ICON_SIZE_MENU)
-        gtk.Widget.set_size_request (button, w + 4, h + 4)
-        image.show()
-        iconBox.pack_start(image, True, False, 0)
-        button.add(iconBox)
-        iconBox.show()
-
-    def add_new_terminal(self, *arguments, **keywords):
-        self._page_number += 1
-
-        terminal = Terminal()
-        terminal.show()
-
-        eventBox = self.create_custom_tab("Term %d" % self._page_number, terminal)
-        self.notebook.append_page(terminal, eventBox)
-
-        # Set the new page
-        pages = gtk.Notebook.get_n_pages(self.notebook)
-        self.notebook.set_current_page(pages - 1)
-        return True
-
-    def create_custom_tab(self, text, child):
-        eventBox = gtk.EventBox()
-        tabBox = gtk.HBox(False, 2)
-        tabLabel = gtk.Label(text)
-
-        tabButton = gtk.Button()
-        tabButton.connect('clicked', self.close_terminal, child)
-
-        # Add a picture on a button
-        self.add_icon_to_button(tabButton)
-        iconBox = gtk.HBox(False, 0)
-
-        eventBox.show()
-        tabButton.show()
-        tabLabel.show()
-
-        tabBox.pack_start(tabLabel, False)
-        tabBox.pack_start(tabButton, False)
-
-        tabBox.show_all()
-        eventBox.add(tabBox)
-        
-        return eventBox
