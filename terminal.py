@@ -44,8 +44,15 @@ class TerminalActivity(activity.Activity):
 
         # TOOLBAR
         toolbox = activity.ActivityToolbox(self)
+        toolbox.show()
+
         self.set_toolbox(toolbox)
         self.show_all()
+        
+        # Dirty hide()
+        toolbar = toolbox.get_activity_toolbar()
+        toolbar.share.hide()
+        toolbar.keep.hide()
 
 class Terminal(gtk.HBox):
     def __init__(self):
