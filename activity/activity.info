@@ -3,4 +3,4 @@ name = Terminal
 activity_version = 1
 service_name = org.laptop.Terminal
 exec = sugar-activity testactivity.TestActivity -s
-icon = terminal
+icon = activity-terminal
