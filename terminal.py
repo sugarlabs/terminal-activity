@@ -88,7 +88,7 @@ class Terminal(gtk.HBox):
         if conf.has_option('terminal', 'font'):
             font = conf.get('terminal', 'font')
         else:
-            font = 'Monospace 10'
+            font = 'Monospace 8'
             conf.set('terminal', 'font', font)
         self._vte.set_font(pango.FontDescription(font))
 
