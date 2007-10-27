@@ -58,24 +58,25 @@ class Terminal(gtk.HBox):
     def __init__(self):
         gtk.HBox.__init__(self, False, 4)
 
-        self._vte = vte.Terminal()
+        vte = VTE()
+        vte.show()
+
+        scrollbar = gtk.VScrollbar(vte.get_adjustment())
+        scrollbar.show()
+
+        self.pack_start(vte)
+        self.pack_start(scrollbar, False, False, 0)
+
+class VTE(vte.Terminal):
+    def __init__(self):
+        vte.Terminal.__init__(self)
         self._configure_vte()
-        self._vte.set_size(100, 5)
-        self._vte.set_size_request(200, 450)
-        self._vte.show()
-        self.pack_start(self._vte)
-
-        self._scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
-        self._scrollbar.show()
-        self.pack_start(self._scrollbar, False, False, 0)
-
-        self._vte.connect("child-exited", lambda term: term.fork_command())
-
-        self._vte.fork_command()
+        self.connect("child-exited", lambda term: term.fork_command())
+        self.fork_command()
+        self.feed_child("cd ~/ && clear\n")
 
     def _configure_vte(self):
         conf = ConfigParser.ConfigParser()
-
         conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
         
         if os.path.isfile(conf_file):
@@ -90,7 +91,7 @@ class Terminal(gtk.HBox):
         else:
             font = 'Monospace 8'
             conf.set('terminal', 'font', font)
-        self._vte.set_font(pango.FontDescription(font))
+        self.set_font(pango.FontDescription(font))
 
         if conf.has_option('terminal', 'fg_color'):
             fg_color = conf.get('terminal', 'fg_color')
@@ -102,7 +103,7 @@ class Terminal(gtk.HBox):
         else:
             bg_color = '#FFFFFF'
             conf.set('terminal', 'bg_color', bg_color)
-        self._vte.set_colors(gtk.gdk.color_parse (fg_color),
+        self.set_colors(gtk.gdk.color_parse (fg_color),
                             gtk.gdk.color_parse (bg_color),
                             [])
                             
@@ -112,14 +113,14 @@ class Terminal(gtk.HBox):
             blink = False
             conf.set('terminal', 'cursor_blink', blink)
         
-        self._vte.set_cursor_blinks(blink)
+        self.set_cursor_blinks(blink)
 
         if conf.has_option('terminal', 'bell'):
             bell = conf.getboolean('terminal', 'bell')
         else:
             bell = False
             conf.set('terminal', 'bell', bell)
-        self._vte.set_audible_bell(bell)
+        self.set_audible_bell(bell)
         
         if conf.has_option('terminal', 'scrollback_lines'):
             scrollback_lines = conf.getint('terminal', 'scrollback_lines')
@@ -127,40 +128,38 @@ class Terminal(gtk.HBox):
             scrollback_lines = 1000
             conf.set('terminal', 'scrollback_lines', scrollback_lines)
             
-        self._vte.set_scrollback_lines(scrollback_lines)
-        
-        self._vte.set_allow_bold(True)
+        self.set_scrollback_lines(scrollback_lines)
+        self.set_allow_bold(True)
         
         if conf.has_option('terminal', 'scroll_on_keystroke'):
             scroll_key = conf.getboolean('terminal', 'scroll_on_keystroke')
         else:
             scroll_key = False
             conf.set('terminal', 'scroll_on_keystroke', scroll_key)
-        self._vte.set_scroll_on_keystroke(scroll_key)
-        
+        self.set_scroll_on_keystroke(scroll_key)
+
         if conf.has_option('terminal', 'scroll_on_output'):
             scroll_output = conf.getboolean('terminal', 'scroll_on_output')
         else:
             scroll_output = False
             conf.set('terminal', 'scroll_on_output', scroll_output)
-        self._vte.set_scroll_on_output(scroll_output)
+        self.set_scroll_on_output(scroll_output)
         
         if conf.has_option('terminal', 'emulation'):
             emulation = conf.get('terminal', 'emulation')
         else:
             emulation = 'xterm'
             conf.set('terminal', 'emulation', emulation)
-        self._vte.set_emulation(emulation)
-        
+        self.set_emulation(emulation)
+
         if conf.has_option('terminal', 'visible_bell'):
             visible_bell = conf.getboolean('terminal', 'visible_bell')
         else:
             visible_bell = False
             conf.set('terminal', 'visible_bell', visible_bell)
-        self._vte.set_visible_bell(visible_bell)
-        
+        self.set_visible_bell(visible_bell)
         conf.write(open(conf_file, 'w'))
-        
+
     def on_gconf_notification(self, client, cnxn_id, entry, what):
         self.reconfigure_vte()
 
