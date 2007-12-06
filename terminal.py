@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+
 import logging
 from gettext import gettext as _
 
@@ -23,7 +24,8 @@ import dbus
 
 from sugar.activity import activity
 from sugar import env
-
+from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.palette import Palette
 import ConfigParser
 import os.path
 
@@ -72,8 +74,9 @@ class VTE(vte.Terminal):
         vte.Terminal.__init__(self)
         self._configure_vte()
         self.connect("child-exited", lambda term: term.fork_command())
+
+        os.chdir(os.environ["HOME"])
         self.fork_command()
-        self.feed_child("cd ~/ && clear\n")
 
     def _configure_vte(self):
         conf = ConfigParser.ConfigParser()
