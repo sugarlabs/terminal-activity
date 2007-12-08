@@ -50,31 +50,53 @@ class TerminalActivity(activity.Activity):
 
         self.set_toolbox(toolbox)
         self.show_all()
-        
+
+        vte_terminal = terminal.get_vte_terminal()
+        terminal_toolbar = TerminalToolbar(vte_terminal)
+        toolbox.add_toolbar(_('Options'), terminal_toolbar)
+        terminal_toolbar.show()
+
         # Dirty hide()
         toolbar = toolbox.get_activity_toolbar()
         toolbar.share.hide()
         toolbar.keep.hide()
 
+
+class TerminalToolbar(gtk.Toolbar):
+    def __init__(self, vte):
+        gtk.Toolbar.__init__(self)
+        self._vte = vte
+
+        copy = ToolButton('edit-copy')
+        copy.connect('clicked', self._on_copy_clicked_cb)
+        self.insert(copy, -1)
+        copy.show()
+
+    def _on_copy_clicked_cb(self, widget):
+        self._vte.copy_clipboard()
+
 class Terminal(gtk.HBox):
     def __init__(self):
         gtk.HBox.__init__(self, False, 4)
 
-        vte = VTE()
-        vte.show()
+        self._vte = VTE()
+        self._vte.show()
 
-        scrollbar = gtk.VScrollbar(vte.get_adjustment())
+        scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
         scrollbar.show()
 
-        self.pack_start(vte)
+        self.pack_start(self._vte)
         self.pack_start(scrollbar, False, False, 0)
+
+    def get_vte_terminal(self):
+        return self._vte
 
 class VTE(vte.Terminal):
     def __init__(self):
         vte.Terminal.__init__(self)
         self._configure_vte()
         self.connect("child-exited", lambda term: term.fork_command())
-
+        gtk.clipboard_get(gtk.gdk.SELECTION_CLIPBOARD)
         os.chdir(os.environ["HOME"])
         self.fork_command()
 
