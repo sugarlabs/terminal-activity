@@ -68,6 +68,7 @@ class TerminalToolbar(gtk.Toolbar):
         self._vte = vte
 
         copy = ToolButton('edit-copy')
+        copy.set_tooltip(_('Copy selected text to clipboard'))
         copy.connect('clicked', self._on_copy_clicked_cb)
         self.insert(copy, -1)
         copy.show()
@@ -96,7 +97,7 @@ class VTE(vte.Terminal):
         vte.Terminal.__init__(self)
         self._configure_vte()
         self.connect("child-exited", lambda term: term.fork_command())
-        gtk.clipboard_get(gtk.gdk.SELECTION_CLIPBOARD)
+
         os.chdir(os.environ["HOME"])
         self.fork_command()
 
@@ -193,5 +194,5 @@ class VTE(vte.Terminal):
             self.do_popup(event)
             return True
 
-    def on_vte_popup_menu(self, term):
-        pass
+    #def on_vte_popup_menu(self, term):
+    #    pass
