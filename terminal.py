@@ -74,7 +74,8 @@ class TerminalToolbar(gtk.Toolbar):
         copy.show()
 
     def _on_copy_clicked_cb(self, widget):
-        self._vte.copy_clipboard()
+        if self._vte.get_has_selection():
+            self._vte.copy_clipboard()
 
 class Terminal(gtk.HBox):
     def __init__(self):
@@ -194,5 +195,5 @@ class VTE(vte.Terminal):
             self.do_popup(event)
             return True
 
-    #def on_vte_popup_menu(self, term):
-    #    pass
+    def on_vte_popup_menu(self, term):
+        pass
