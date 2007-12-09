@@ -4,3 +4,5 @@ activity_version = 3
 service_name = org.laptop.Terminal
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
+mime_types = text/rtf;text/plain;
+

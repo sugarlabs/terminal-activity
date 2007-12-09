@@ -35,13 +35,18 @@ import pango
 class TerminalActivity(activity.Activity):
 
     def __init__(self, handle):
+        self._resume_text = ''
 
         activity.Activity.__init__(self, handle)
+
+        terminal = Terminal()
+        self._vte_terminal = terminal.get_vte_terminal()
+        self._hid_vt = self._vte_terminal.connect('cursor-moved', self._paste_text)
+
         logging.debug('Starting the Terminal activity')
         self.set_title(_('Terminal Activity'))
 
         # CANVAS
-        terminal = Terminal()
         self.set_canvas(terminal)
 
         # TOOLBAR
@@ -51,8 +56,7 @@ class TerminalActivity(activity.Activity):
         self.set_toolbox(toolbox)
         self.show_all()
 
-        vte_terminal = terminal.get_vte_terminal()
-        terminal_toolbar = TerminalToolbar(vte_terminal)
+        terminal_toolbar = TerminalToolbar(self._vte_terminal)
         toolbox.add_toolbar(_('Options'), terminal_toolbar)
         terminal_toolbar.show()
 
@@ -61,6 +65,22 @@ class TerminalActivity(activity.Activity):
         toolbar.share.hide()
         toolbar.keep.hide()
 
+    # Tricky paste :D
+    def _paste_text(self, terminal):
+        self._vte_terminal.feed_child(self._resume_text)
+        self._vte_terminal.disconnect(self._hid_vt)
+
+    def read_file(self, path):
+        if not os.path.exists(path):
+            return False
+
+        if not os.access(path, os.R_OK): 
+            return False
+
+        f = open(path, "r")
+        data = f.read()
+        f.close()
+        self._resume_text = data
 
 class TerminalToolbar(gtk.Toolbar):
     def __init__(self, vte):
