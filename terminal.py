@@ -1,4 +1,5 @@
 # Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>.
+# Copyright (C) 2008, One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,71 +36,32 @@ import pango
 class TerminalActivity(activity.Activity):
 
     def __init__(self, handle):
-        self._resume_text = ''
-
         activity.Activity.__init__(self, handle)
-
-        terminal = Terminal()
-        self._vte_terminal = terminal.get_vte_terminal()
-        self._hid_vt = self._vte_terminal.connect('cursor-moved', self._paste_text)
-
+        
         logging.debug('Starting the Terminal activity')
+        
         self.set_title(_('Terminal Activity'))
+        self.connect('key-press-event', self.__key_press_cb)
 
-        # CANVAS
-        self.set_canvas(terminal)
-
-        # TOOLBAR
         toolbox = activity.ActivityToolbox(self)
-        toolbox.show()
+
+        self._edit_toolbar = activity.EditToolbar()
+        toolbox.add_toolbar(_('Edit'), self._edit_toolbar)
+        self._edit_toolbar.show()
+        self._edit_toolbar.undo.props.visible = False
+        self._edit_toolbar.redo.props.visible = False
+        self._edit_toolbar.separator.props.visible = False
+        self._edit_toolbar.copy.connect('clicked', self._copy_cb)
+        self._edit_toolbar.paste.connect('clicked', self._paste_cb)
+
+        activity_toolbar = toolbox.get_activity_toolbar()
+        activity_toolbar.share.props.visible = False
+        activity_toolbar.keep.props.visible = False
 
         self.set_toolbox(toolbox)
-        self.show_all()
-
-        terminal_toolbar = TerminalToolbar(self._vte_terminal)
-        toolbox.add_toolbar(_('Options'), terminal_toolbar)
-        terminal_toolbar.show()
-
-        # Dirty hide()
-        toolbar = toolbox.get_activity_toolbar()
-        toolbar.share.hide()
-        toolbar.keep.hide()
-
-    # Tricky paste :D
-    def _paste_text(self, terminal):
-        self._vte_terminal.feed_child(self._resume_text)
-        self._vte_terminal.disconnect(self._hid_vt)
-
-    def read_file(self, path):
-        if not os.path.exists(path):
-            return False
-
-        if not os.access(path, os.R_OK): 
-            return False
-
-        f = open(path, "r")
-        data = f.read()
-        f.close()
-        self._resume_text = data
-
-class TerminalToolbar(gtk.Toolbar):
-    def __init__(self, vte):
-        gtk.Toolbar.__init__(self)
-        self._vte = vte
-
-        copy = ToolButton('edit-copy')
-        copy.set_tooltip(_('Copy selected text to clipboard'))
-        copy.connect('clicked', self._on_copy_clicked_cb)
-        self.insert(copy, -1)
-        copy.show()
-
-    def _on_copy_clicked_cb(self, widget):
-        if self._vte.get_has_selection():
-            self._vte.copy_clipboard()
-
-class Terminal(gtk.HBox):
-    def __init__(self):
-        gtk.HBox.__init__(self, False, 4)
+        toolbox.show()
+        
+        box = gtk.HBox(False, 4)
 
         self._vte = VTE()
         self._vte.show()
@@ -107,11 +69,33 @@ class Terminal(gtk.HBox):
         scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
         scrollbar.show()
 
-        self.pack_start(self._vte)
-        self.pack_start(scrollbar, False, False, 0)
+        box.pack_start(self._vte)
+        box.pack_start(scrollbar, False, False, 0)
+        
+        self.set_canvas(box)
+        box.show()
+        
+        self._vte.grab_focus()
 
-    def get_vte_terminal(self):
-        return self._vte
+    def _copy_cb(self, button):
+        if self._vte.get_has_selection():
+            self._vte.copy_clipboard()
+
+    def _paste_cb(self, button):
+        self._vte.paste_clipboard()
+
+    def __key_press_cb(self, window, event):
+        if event.state & gtk.gdk.CONTROL_MASK and event.state & gtk.gdk.SHIFT_MASK:
+        
+            if gtk.gdk.keyval_name(event.keyval) == "C":
+                if self._vte.get_has_selection():
+                    self._vte.copy_clipboard()              
+                return True
+            elif gtk.gdk.keyval_name(event.keyval) == "V":
+                self._vte.paste_clipboard()
+                return True
+                
+        return False
 
 class VTE(vte.Terminal):
     def __init__(self):
