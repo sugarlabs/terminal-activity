@@ -1,4 +1,10 @@
+8
+
+* #5537: Add a button and icon to launch a 'become_root' script. (phil, mstone)
+
 7
+
+* Remove mime types support. (tomeu)
 
 6
 
