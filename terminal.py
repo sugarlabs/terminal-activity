@@ -58,6 +58,14 @@ class TerminalActivity(activity.Activity):
         activity_toolbar.share.props.visible = False
         activity_toolbar.keep.props.visible = False
 
+        # Add a button that will be used to become root easily.
+        activity_toolbar.become_root = ToolButton('activity-become-root')
+        activity_toolbar.become_root.set_tooltip(_('Become root'))
+        activity_toolbar.become_root.connect('clicked',
+                                             self._become_root_cb)
+        activity_toolbar.insert(activity_toolbar.become_root, 2)
+        activity_toolbar.become_root.show()
+
         self.set_toolbox(toolbox)
         toolbox.show()
         
@@ -83,6 +91,11 @@ class TerminalActivity(activity.Activity):
 
     def _paste_cb(self, button):
         self._vte.paste_clipboard()
+
+    def _become_root_cb(self, button):
+
+        # The become_root script is part of olpc-utils.
+        self._vte.feed_child("become_root\n")
 
     def __key_press_cb(self, window, event):
         if event.state & gtk.gdk.CONTROL_MASK and event.state & gtk.gdk.SHIFT_MASK:
