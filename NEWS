@@ -1,3 +1,7 @@
+9
+
+* #6316: Cause the 'become root' button to fork a root terminal. (mstone)
+
 8
 
 * #5537: Add a button and icon to launch a 'become_root' script. (phil, mstone)
