@@ -93,9 +93,7 @@ class TerminalActivity(activity.Activity):
         self._vte.paste_clipboard()
 
     def _become_root_cb(self, button):
-
-        # The become_root script is part of olpc-utils.
-        self._vte.feed_child("become_root\n")
+        self._vte.fork_command("/bin/su")
 
     def __key_press_cb(self, window, event):
         if event.state & gtk.gdk.CONTROL_MASK and event.state & gtk.gdk.SHIFT_MASK:
