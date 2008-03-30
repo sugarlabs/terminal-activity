@@ -72,6 +72,7 @@ class TerminalActivity(activity.Activity):
         box = gtk.HBox(False, 4)
 
         self._vte = VTE()
+        self._vte.set_scroll_on_keystroke(True)
         self._vte.show()
 
         scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
