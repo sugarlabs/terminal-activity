@@ -73,6 +73,7 @@ class TerminalActivity(activity.Activity):
 
         self._vte = VTE()
         self._vte.set_scroll_on_keystroke(True)
+        self._vte.connect("child-exited", lambda term: self.close())
         self._vte.show()
 
         scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
@@ -113,7 +114,6 @@ class VTE(vte.Terminal):
     def __init__(self):
         vte.Terminal.__init__(self)
         self._configure_vte()
-        self.connect("child-exited", lambda term: term.fork_command())
 
         os.chdir(os.environ["HOME"])
         self.fork_command()
