@@ -1,3 +1,7 @@
+12
+
+* #5520: Make the activity exit when the user exits the shell. (sayamindu)
+
 11
 
 * Add po/Terminal.pot for preliminary i18n support.
