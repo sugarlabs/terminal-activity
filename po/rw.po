@@ -2,14 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-07-10 12:28+0200\n"
+"Last-Translator: Mwesigye Robert <robmwesigye@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,16 +17,16 @@ msgstr ""
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "Umusoozo"
 
 #: terminal.py:43
 msgid "Terminal Activity"
-msgstr ""
+msgstr "Umusoozo w'igikorwa"
 
 #: terminal.py:49
 msgid "Edit"
-msgstr ""
+msgstr "Hindura"
 
 #: terminal.py:63
 msgid "Become root"
-msgstr ""
+msgstr "Guhinduka umuzi"
