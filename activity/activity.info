@@ -1,6 +1,6 @@
 [Activity]
 name = Terminal
-activity_version = 16
+activity_version = 17
 service_name = org.laptop.Terminal
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
