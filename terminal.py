@@ -114,10 +114,22 @@ class VTE(vte.Terminal):
     def __init__(self):
         vte.Terminal.__init__(self)
         self._configure_vte()
-
+        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION|
+                gtk.DEST_DEFAULT_DROP,
+               [('text/plain', 0, 0),
+                ('STRING', 0, 1)],
+               gtk.gdk.ACTION_DEFAULT|
+               gtk.gdk.ACTION_COPY)
+        self.connect('drag_data_received', self.data_cb)
+        
         os.chdir(os.environ["HOME"])
         self.fork_command()
-
+    
+    def data_cb(self, widget, context, x, y, selection, target, time):
+        self.feed_child(selection.data)
+        context.finish(True, False, time)
+        return True
+    
     def _configure_vte(self):
         conf = ConfigParser.ConfigParser()
         conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
