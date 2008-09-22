@@ -95,7 +95,7 @@ class TerminalActivity(activity.Activity):
         self._vte.paste_clipboard()
 
     def _become_root_cb(self, button):
-        self._vte.fork_command("/bin/su")
+        self._vte.fork_command("/bin/su", ('/bin/su', '-'))
 
     def __key_press_cb(self, window, event):
         if event.state & gtk.gdk.CONTROL_MASK and event.state & gtk.gdk.SHIFT_MASK:
