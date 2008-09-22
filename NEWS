@@ -1,3 +1,7 @@
+18
+
+* Make the root shell a login shell (#8515)
+
 17
 
 * Add licensing information and a MAINTAINERS file
