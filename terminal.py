@@ -55,8 +55,14 @@ class TerminalActivity(activity.Activity):
         self._edit_toolbar.paste.connect('clicked', self._paste_cb)
 
         activity_toolbar = toolbox.get_activity_toolbar()
-        activity_toolbar.share.props.visible = False
-        activity_toolbar.keep.props.visible = False
+        # free up keyboard accelerators per #4646
+        activity_toolbar.stop.props.accelerator = None
+
+        # unneeded buttons (also frees up keyboard accelerators per #4646)
+        activity_toolbar.remove(activity_toolbar.share)
+        activity_toolbar.share = None
+        activity_toolbar.remove(activity_toolbar.keep)
+        activity_toolbar.keep = None
 
         # Add a button that will be used to become root easily.
         activity_toolbar.become_root = ToolButton('activity-become-root')
