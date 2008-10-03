@@ -1,3 +1,8 @@
+19
+
+* Fix systemwide shortcut breakage (#4646) - Martin Dengler
+
+
 18
 
 * Make the root shell a login shell (#8515)
