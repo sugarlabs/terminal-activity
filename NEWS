@@ -1,3 +1,11 @@
+20
+
+* #4646: Fix systemwide shortcut breakage (Martin Dengler)
+* #8515: Make the root shell a login shell
+* Add drop support to Terminal (Cortland Setlow)
+* Updated tr and pt translations
+
+
 15
 
 * New and updated translations
