@@ -206,11 +206,10 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
         if tab_state:
             # Restore the environment.
-            env = tab_state['env'].replace('\0', '\n')
-            vt.feed(env)
+            env = tab_state['env']
 
             filtered_vars = []
-            for e in env.split('\n'):
+            for e in env:
                 var, sep, value = e.partition('=')
                 if var not in MASKED_ENVIRONMENT:
                     filtered_vars.append(var + sep + value)
@@ -218,6 +217,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
                 # Restore working directory.
                 vt.feed(var + ' = ' + value + '\r\n')
                 if var == 'PWD':
+                    vt.feed('chdir '+ value + '\r\n')
                     os.chdir(value)
 
             # TODO: Make the shell restore these environment variables, then clear out TERMINAL_ENV.
@@ -300,7 +300,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
             scrollback_lines = scrollback_text.split('\n')
 
-            environment = open('/proc/%d/environ' % page.pid, 'r').read().replace('\0', '\n')
+            environment = open('/proc/%d/environ' % page.pid, 'r').read().split('\0')
 
             tab_state = { 'env': environment, 'cwd': '', 'scrollback': scrollback_lines }
 
