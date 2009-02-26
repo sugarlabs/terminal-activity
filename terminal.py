@@ -49,7 +49,7 @@ class TerminalActivity(activity.Activity):
         self.data_file = None
         
         self.set_title(_('Terminal Activity'))
-        self.connect('key-press-event', self._key_press_cb)
+        #self.connect('key-press-event', self._key_press_cb)
 
         toolbox = activity.ActivityToolbox(self)
 
@@ -150,39 +150,6 @@ class TerminalActivity(activity.Activity):
         vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
         vt.grab_focus()
 
-    def _restore_shell(self, vt, tab_idx, data, data_file):
-        tab_state = data['tabs'][tab_idx]
-
-        # Restore the scrollback buffer.
-        for l in tab_state['scrollback']:
-            vt.feed(l + '\r\n')
-
-        # Launch the shell using the wrapper script to restore the environment.
-        bundle_path = activity.get_bundle_path() 
-        os.chdir(bundle_path)
-        pid = vt.fork_command(bundle_path + '/shell.py', \
-            '--state', data_file, 
-            '--tab', tab_idx)
-
-        # TODO: Figure out how to grab the environment from the PID when closing.
-        log.debug(pid)
-
-    def _launch_shell(self, vt, tab_state):
-        # Launch the default shell in the HOME directory.
-        if tab_state:
-            # TODO: Need to save cwd on exit.
-            #os.chdir(tab_data['cwd'])
-            os.chdir(os.environ["HOME"])
-
-            # Restore the scrollback buffer.
-            for l in tab_state['scrollback']:
-                vt.feed(l + '\r\n')
-
-        else:
-            os.chdir(os.environ["HOME"])
-
-        vt.fork_command()
-
     def _close_tab(self, index):
         self.notebook.remove_page(index)
         if self.notebook.get_n_pages() == 0:
@@ -201,13 +168,26 @@ class TerminalActivity(activity.Activity):
                 label.set_text(vt.get_window_title())
                 return
  
+    def _drag_data_received_cb(self, widget, context, x, y, selection, target, time):
+        widget.feed_child(selection.data)
+        context.finish(True, False, time)
+        return True
+
     def _create_tab(self, tab_state):
         vt = vte.Terminal()
-        vt.set_scroll_on_keystroke(True)
         vt.connect("child-exited", self._tab_child_exited_cb)
         vt.connect("window-title-changed", self._tab_title_changed_cb)
-        vt.show()
 
+        vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION|gtk.DEST_DEFAULT_DROP,
+               [('text/plain', 0, 0), ('STRING', 0, 1)],
+               gtk.gdk.ACTION_DEFAULT|
+               gtk.gdk.ACTION_COPY)
+        vt.connect('drag_data_received', self._drag_data_received_cb)
+        
+        self._configure_vt(vt)
+
+        vt.show()
+    
         label = gtk.Label()
 
         scrollbar = gtk.VScrollbar(vt.get_adjustment())
@@ -224,7 +204,18 @@ class TerminalActivity(activity.Activity):
         self.notebook.show_all()
         self.notebook.props.show_tabs = self.notebook.get_n_pages() > 1
 
-        self._launch_shell(vt, tab_state)
+        # Launch the default shell in the HOME directory.
+        os.chdir(os.environ["HOME"])
+
+        if tab_state:
+            # Restore the environment.
+            os.environ['TERMINAL_ENV'] = tab_state['env']
+            
+            # Restore the scrollback buffer.
+            for l in tab_state['scrollback']:
+                vt.feed(l + '\r\n')
+
+        box.pid = vt.fork_command()
 
         self.notebook.props.page = index
         vt.grab_focus()
@@ -281,7 +272,9 @@ class TerminalActivity(activity.Activity):
         data['current-tab'] = self.notebook.get_current_page()
         data['tabs'] = []
 
+        print "about to save tabs"
         for i in range(self.notebook.get_n_pages()):
+            print "tab %d" % i
             page = self.notebook.get_nth_page(i)
 
             def selected_cb(terminal, c, row, cb_data):
@@ -290,11 +283,74 @@ class TerminalActivity(activity.Activity):
 
             scrollback_lines = scrollback_text.split('\n')
 
-            tab = { 'env': {}, 'cwd': '', 'scrollback': scrollback_lines }
-            data['tabs'].append(tab)
+            environment = open('/proc/%d/environ' % page.pid, 'r').read().replace('\0','\n')
+
+            tab_state = { 'env': environment, 'cwd': '', 'scrollback': scrollback_lines }
+
+            data['tabs'].append(tab_state)
 
         fd = open(file_path, 'w')
         text = simplejson.dumps(data)
         fd.write(text)
         fd.close()
+    
+    def _get_conf(self, conf, var, default):
+        if conf.has_option('terminal', var):
+            if isinstance(default, bool):
+                return conf.getboolean('terminal', var)
+            elif isinstance(default, int):
+                return conf.getint('terminal', var)
+            else:
+                return conf.get('terminal', var)
+        else:
+            if isinstance(default, bool):
+                conf.setboolean('terminal', var, default)
+            elif isinstance(default, int):
+                conf.setint('terminal', var, default)
+            else:
+                conf.set('terminal', var, default)
 
+            return default
+
+    def _configure_vt(self, vt):
+        conf = ConfigParser.ConfigParser()
+        conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
+        
+        if os.path.isfile(conf_file):
+            f = open(conf_file, 'r')
+            conf.readfp(f)
+            f.close()
+        else:
+            conf.add_section('terminal')
+        
+        font = self._get_conf(conf, 'font', 'Monospace')
+        vt.set_font(pango.FontDescription(font))
+
+        fg_color = self._get_conf(conf, 'fg_color', '#000000')
+        bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
+        vt.set_colors(gtk.gdk.color_parse(fg_color), gtk.gdk.color_parse(bg_color), [])
+                            
+        blink = self._get_conf(conf, 'cursor_blink', False)
+        vt.set_cursor_blinks(blink)
+
+        bell = self._get_conf(conf, 'bell', False)
+        vt.set_audible_bell(bell)
+        
+        scrollback_lines = self._get_conf(conf, 'scrollback_lines', 1000)
+        vt.set_scrollback_lines(scrollback_lines)
+
+        vt.set_allow_bold(True)
+        
+        scroll_key = self._get_conf(conf, 'scroll_on_keystroke', True)
+        vt.set_scroll_on_keystroke(scroll_key)
+
+        scroll_output = self._get_conf(conf, 'scroll_on_output', False)
+        vt.set_scroll_on_output(scroll_output)
+        
+        emulation = self._get_conf(conf, 'emulation', 'xterm')
+        vt.set_emulation(emulation)
+
+        visible_bell = self._get_conf(conf, 'visible_bell', False)
+        vt.set_visible_bell(visible_bell)
+
+        conf.write(open(conf_file, 'w'))

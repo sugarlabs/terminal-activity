@@ -1,7 +1,7 @@
 [Activity]
-name = Terminal
+name = Terminal-Wade
 activity_version = 21
-service_name = org.laptop.Terminal
+service_name = org.laptop.TerminalWade
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
