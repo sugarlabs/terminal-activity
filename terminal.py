@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
+import os, os.path, simplejson, ConfigParser
 
 from gettext import gettext as _
 
@@ -26,34 +26,31 @@ log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
 import gtk
-import dbus
-
-import sugar.graphics.toolbutton
-from sugar.activity import activity
-from sugar import env
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.palette import Palette
-import ConfigParser
-import os.path
-
 import vte
 import pango
 
-import simplejson
+import sugar.graphics.toolbutton
+import sugar.activity.activity
+import sugar.env
 
-class TerminalActivity(activity.Activity):
+MASKED_ENVIRONMENT = [
+    'DBUS_SESSION_BUS_ADDRESS',
+    'PPID'
+]
+
+class TerminalActivity(sugar.activity.activity.Activity):
 
     def __init__(self, handle):
-        activity.Activity.__init__(self, handle)
+        sugar.activity.activity.Activity.__init__(self, handle)
         
         self.data_file = None
         
         self.set_title(_('Terminal Activity'))
         #self.connect('key-press-event', self._key_press_cb)
 
-        toolbox = activity.ActivityToolbox(self)
+        toolbox = sugar.activity.activity.ActivityToolbox(self)
 
-        editbar = activity.EditToolbar()
+        editbar = sugar.activity.activity.EditToolbar()
         toolbox.add_toolbar(_('Edit'), editbar)
         editbar.show()
         editbar.undo.props.visible = False
@@ -79,7 +76,7 @@ class TerminalActivity(activity.Activity):
         tabsep.set_draw(False)
 
         # Add a button that will be used to become root easily.
-        rootbtn = ToolButton('activity-become-root')
+        rootbtn = sugar.graphics.toolbutton.ToolButton('activity-become-root')
         rootbtn.set_tooltip(_('Become root'))
         rootbtn.connect('clicked', self._become_root_cb)
 
@@ -209,7 +206,22 @@ class TerminalActivity(activity.Activity):
 
         if tab_state:
             # Restore the environment.
-            os.environ['TERMINAL_ENV'] = tab_state['env']
+            env = tab_state['env'].replace('\0', '\n')
+            vt.feed(env)
+
+            filtered_vars = []
+            for e in env.split('\n'):
+                var, sep, value = e.partition('=')
+                if var not in MASKED_ENVIRONMENT:
+                    filtered_vars.append(var + sep + value)
+
+                # Restore working directory.
+                vt.feed(var + ' = ' + value + '\r\n')
+                if var == 'PWD':
+                    os.chdir(value)
+
+            # TODO: Make the shell restore these environment variables, then clear out TERMINAL_ENV.
+            #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_vars)
             
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
@@ -242,7 +254,7 @@ class TerminalActivity(activity.Activity):
     def _key_press_cb(self, window, event):
         if gtk.gdk.keyval_name(event.keyval) == 'Escape':
             return True
-                
+
         return False
 
     def read_file(self, file_path):
@@ -256,13 +268,20 @@ class TerminalActivity(activity.Activity):
 
         data_file = file_path
 
+        # Clean out any existing tabs.
         while self.notebook.get_n_pages():
             self.notebook.remove_page(0)
 
-        for tab in data['tabs']:
-            index = self._create_tab(tab)
+        # Create new tabs from saved state.
+        for tab_state in data['tabs']:
+            self._create_tab(tab_state)
 
+        # Restore active tab.
         self.notebook.props.page = data['current-tab']
+
+        # Create a blank one if this state had no terminals.
+        if self.notebook.get_n_pages() == 0:
+            self._create_tab(None)
 
     def write_file(self, file_path):
         if not self.metadata['mime_type']:
@@ -272,9 +291,7 @@ class TerminalActivity(activity.Activity):
         data['current-tab'] = self.notebook.get_current_page()
         data['tabs'] = []
 
-        print "about to save tabs"
         for i in range(self.notebook.get_n_pages()):
-            print "tab %d" % i
             page = self.notebook.get_nth_page(i)
 
             def selected_cb(terminal, c, row, cb_data):
@@ -283,7 +300,7 @@ class TerminalActivity(activity.Activity):
 
             scrollback_lines = scrollback_text.split('\n')
 
-            environment = open('/proc/%d/environ' % page.pid, 'r').read().replace('\0','\n')
+            environment = open('/proc/%d/environ' % page.pid, 'r').read().replace('\0', '\n')
 
             tab_state = { 'env': environment, 'cwd': '', 'scrollback': scrollback_lines }
 
@@ -314,7 +331,7 @@ class TerminalActivity(activity.Activity):
 
     def _configure_vt(self, vt):
         conf = ConfigParser.ConfigParser()
-        conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
+        conf_file = os.path.join(sugar.env.get_profile_path(), 'terminalrc')
         
         if os.path.isfile(conf_file):
             f = open(conf_file, 'r')
