@@ -199,7 +199,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
         
         index = self.notebook.append_page(box, label)
         self.notebook.show_all()
-        self.notebook.props.show_tabs = self.notebook.get_n_pages() > 1
+        #self.notebook.props.show_tabs = self.notebook.get_n_pages() > 1
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -208,20 +208,18 @@ class TerminalActivity(sugar.activity.activity.Activity):
             # Restore the environment.
             env = tab_state['env']
 
-            filtered_vars = []
+            filtered_env = []
             for e in env:
                 var, sep, value = e.partition('=')
                 if var not in MASKED_ENVIRONMENT:
-                    filtered_vars.append(var + sep + value)
+                    filtered_env.append(var + sep + value)
 
                 # Restore working directory.
-                vt.feed(var + ' = ' + value + '\r\n')
                 if var == 'PWD':
-                    vt.feed('chdir '+ value + '\r\n')
                     os.chdir(value)
 
             # TODO: Make the shell restore these environment variables, then clear out TERMINAL_ENV.
-            #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_vars)
+            #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
             
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
@@ -301,6 +299,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
             scrollback_lines = scrollback_text.split('\n')
 
             environment = open('/proc/%d/environ' % page.pid, 'r').read().split('\0')
+            print '\n'.join(environment)
 
             tab_state = { 'env': environment, 'cwd': '', 'scrollback': scrollback_lines }
 
