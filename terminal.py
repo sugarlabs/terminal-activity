@@ -46,6 +46,8 @@ class TerminalActivity(sugar.activity.activity.Activity):
         self.data_file = None
         
         self.set_title(_('Terminal Activity'))
+        
+        # Non-working attempt to hide the Escape key from Sugar.
         #self.connect('key-press-event', self._key_press_cb)
 
         toolbox = sugar.activity.activity.ActivityToolbox(self)
@@ -199,6 +201,9 @@ class TerminalActivity(sugar.activity.activity.Activity):
         
         index = self.notebook.append_page(box, label)
         self.notebook.show_all()
+
+        # Uncomment this to only show the tab bar when there is at least one tab.
+        # I think it's useful to always see it, since it displays the 'window title'.
         #self.notebook.props.show_tabs = self.notebook.get_n_pages() > 1
 
         # Launch the default shell in the HOME directory.
@@ -251,7 +256,11 @@ class TerminalActivity(sugar.activity.activity.Activity):
         self.fullscreen()
 
     def _key_press_cb(self, window, event):
+        # Escape keypresses are routed directly to the vte and then dropped.
+        # This hack prevents Sugar from hijacking them and canceling fullscreen mode.
         if gtk.gdk.keyval_name(event.keyval) == 'Escape':
+            vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+            vt.event(event)
             return True
 
         return False
@@ -299,6 +308,8 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
             scrollback_lines = scrollback_text.split('\n')
 
+            # Note- this currently gets the child's initial environment rather than the current
+            # environment, making it not very useful.
             environment = open('/proc/%d/environ' % page.pid, 'r').read().split('\0')
 
             cwd = os.readlink('/proc/%d/cwd' % page.pid)
