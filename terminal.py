@@ -355,10 +355,6 @@ class TerminalActivity(sugar.activity.activity.Activity):
         font = self._get_conf(conf, 'font', 'Monospace')
         vt.set_font(pango.FontDescription(font))
 
-        fg_color = self._get_conf(conf, 'fg_color', '#000000')
-        bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
-        vt.set_colors(gtk.gdk.color_parse(fg_color), gtk.gdk.color_parse(bg_color), [])
-                            
         blink = self._get_conf(conf, 'cursor_blink', False)
         vt.set_cursor_blinks(blink)
 
