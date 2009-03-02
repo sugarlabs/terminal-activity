@@ -206,6 +206,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
         if tab_state:
             # Restore the environment.
+            # This is currently not enabled.
             env = tab_state['env']
 
             filtered_env = []
@@ -214,13 +215,13 @@ class TerminalActivity(sugar.activity.activity.Activity):
                 if var not in MASKED_ENVIRONMENT:
                     filtered_env.append(var + sep + value)
 
-                # Restore working directory.
-                if var == 'PWD':
-                    os.chdir(value)
-
             # TODO: Make the shell restore these environment variables, then clear out TERMINAL_ENV.
             #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
             
+            # Restore the working directory.
+            if tab_state.has_key('cwd'):
+                os.chdir(tab_state['cwd'])
+
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
                 vt.feed(l + '\r\n')
@@ -299,9 +300,10 @@ class TerminalActivity(sugar.activity.activity.Activity):
             scrollback_lines = scrollback_text.split('\n')
 
             environment = open('/proc/%d/environ' % page.pid, 'r').read().split('\0')
-            print '\n'.join(environment)
 
-            tab_state = { 'env': environment, 'cwd': '', 'scrollback': scrollback_lines }
+            cwd = os.readlink('/proc/%d/cwd' % page.pid)
+
+            tab_state = { 'env': environment, 'cwd': cwd, 'scrollback': scrollback_lines }
 
             data['tabs'].append(tab_state)
 
