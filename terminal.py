@@ -150,7 +150,7 @@ class VTE(vte.Terminal):
         if conf.has_option('terminal', 'font'):
             font = conf.get('terminal', 'font')
         else:
-            font = 'Monospace 8'
+            font = 'Monospace 10'
             conf.set('terminal', 'font', font)
         self.set_font(pango.FontDescription(font))
 
