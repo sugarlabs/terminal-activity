@@ -215,3 +215,15 @@ locale/fi/activity.linfo
 locale/fi/LC_MESSAGES/org.laptop.Terminal.mo
 locale/bi/activity.linfo
 locale/bi/LC_MESSAGES/org.laptop.Terminal.mo
+locale/cpp/activity.linfo
+locale/cpp/LC_MESSAGES/org.laptop.Terminal.mo
+locale/mi/activity.linfo
+locale/mi/LC_MESSAGES/org.laptop.Terminal.mo
+locale/ug/activity.linfo
+locale/ug/LC_MESSAGES/org.laptop.Terminal.mo
+locale/ms/activity.linfo
+locale/ms/LC_MESSAGES/org.laptop.Terminal.mo
+po/ug.po
+po/ms.po
+po/mi.po
+po/cpp.po
