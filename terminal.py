@@ -332,12 +332,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
             else:
                 return conf.get('terminal', var)
         else:
-            if isinstance(default, bool):
-                conf.setboolean('terminal', var, default)
-            elif isinstance(default, int):
-                conf.setint('terminal', var, default)
-            else:
-                conf.set('terminal', var, default)
+            conf.set('terminal', var, default)
 
             return default
 
