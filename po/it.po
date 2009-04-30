@@ -6,27 +6,53 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: 2008-06-06 08:57-0400\n"
+"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"PO-Revision-Date: 2009-04-30 09:20-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminale"
 
-#: terminal.py:43
+#: terminal.py:48
 msgid "Terminal Activity"
 msgstr "Attività Terminale"
 
-#: terminal.py:49
+#: terminal.py:56
 msgid "Edit"
 msgstr "Modifica"
 
-#: terminal.py:63
+#: terminal.py:67
+msgid "Open New Tab"
+msgstr "Apri Nuova Scheda"
+
+#: terminal.py:72
+msgid "Close Tab"
+msgstr "Chiudi Scheda"
+
+#: terminal.py:82
 msgid "Become root"
 msgstr "Diventa root (amministratore)"
+
+#: terminal.py:86
+msgid "Previous Tab"
+msgstr "Scheda Precedente"
+
+#: terminal.py:91
+msgid "Next Tab"
+msgstr "Prossima Scheda"
+
+#: terminal.py:104
+msgid "Tab"
+msgstr "Scheda"
+
+#: terminal.py:111
+msgid "Fullscreen"
+msgstr "Schermo intero"
