@@ -106,6 +106,8 @@ class TerminalActivity(sugar.activity.activity.Activity):
         activity_toolbar = toolbox.get_activity_toolbar()
         activity_toolbar.share.props.visible = False
         activity_toolbar.keep.props.visible = False
+        activity_toolbar.keep.props.accelerator = '<Ctrl><Shift>S'
+        activity_toolbar.stop.props.accelerator = '<Ctrl><Shift>Q'
 
         fullscreenbtn = sugar.graphics.toolbutton.ToolButton('view-fullscreen')
         fullscreenbtn.set_tooltip(_("Fullscreen"))
