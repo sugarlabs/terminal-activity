@@ -16,15 +16,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os, os.path, simplejson, ConfigParser
-
-from gettext import gettext as _
-
-# Initialize logging.
+import os
+import simplejson
+import ConfigParser
 import logging
-log = logging.getLogger('Terminal')
-log.setLevel(logging.DEBUG)
-logging.basicConfig()
+from gettext import gettext as _
 
 import gtk
 import vte
@@ -40,16 +36,18 @@ from sugar import env
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
-    'PPID'
-]
+    'PPID']
+
+log = logging.getLogger('Terminal')
+log.setLevel(logging.DEBUG)
+logging.basicConfig()
+
 
 class TerminalActivity(activity.Activity):
 
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
-        
-        self.data_file = None
-        
+
         self.max_participants = 1
 
         toolbar_box = ToolbarBox()
@@ -104,12 +102,12 @@ class TerminalActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
 
-        self.notebook = gtk.Notebook()
-        self.notebook.set_property("tab-pos", gtk.POS_BOTTOM)
-        self.notebook.set_scrollable(True)
-        self.notebook.show()
+        self._notebook = gtk.Notebook()
+        self._notebook.set_property("tab-pos", gtk.POS_BOTTOM)
+        self._notebook.set_scrollable(True)
+        self._notebook.show()
 
-        self.set_canvas(self.notebook)
+        self.set_canvas(self._notebook)
 
         self._create_tab(None)
 
@@ -125,12 +123,12 @@ class TerminalActivity(activity.Activity):
         return edit_toolbar
 
     def __copy_cb(self, button):
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         if vt.get_has_selection():
             vt.copy_clipboard()
 
     def __paste_cb(self, button):
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
     def _create_view_toolbar(self):
@@ -178,47 +176,48 @@ class TerminalActivity(activity.Activity):
         return tab_toolbar
 
     def __open_tab_cb(self, btn):
-        index = self._create_tab(None) 
-        self.notebook.page = index
+        index = self._create_tab(None)
+        self._notebook.page = index
 
     def __close_tab_cb(self, btn):
-        self._close_tab(self.notebook.props.page)
+        self._close_tab(self._notebook.props.page)
 
     def __prev_tab_cb(self, btn):
-        if self.notebook.props.page == 0:
-            self.notebook.props.page = self.notebook.get_n_pages() - 1
+        if self._notebook.props.page == 0:
+            self._notebook.props.page = self._notebook.get_n_pages() - 1
         else:
-            self.notebook.props.page = self.notebook.props.page - 1
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+            self._notebook.props.page = self._notebook.props.page - 1
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.grab_focus()
 
     def __next_tab_cb(self, btn):
-        if self.notebook.props.page == self.notebook.get_n_pages() - 1:
-            self.notebook.props.page = 0
+        if self._notebook.props.page == self._notebook.get_n_pages() - 1:
+            self._notebook.props.page = 0
         else:
-            self.notebook.props.page = self.notebook.props.page + 1
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+            self._notebook.props.page = self._notebook.props.page + 1
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.grab_focus()
 
     def _close_tab(self, index):
-        self.notebook.remove_page(index)
-        if self.notebook.get_n_pages() == 0:
+        self._notebook.remove_page(index)
+        if self._notebook.get_n_pages() == 0:
             self.close()
-            
+
     def __tab_child_exited_cb(self, vt):
-        for i in range(self.notebook.get_n_pages()):
-            if self.notebook.get_nth_page(i).vt == vt:
+        for i in range(self._notebook.get_n_pages()):
+            if self._notebook.get_nth_page(i).vt == vt:
                 self._close_tab(i)
                 return
- 
+
     def __tab_title_changed_cb(self, vt):
-        for i in range(self.notebook.get_n_pages()):
-            if self.notebook.get_nth_page(i).vt == vt:
-                label = self.notebook.get_nth_page(i).label
+        for i in range(self._notebook.get_n_pages()):
+            if self._notebook.get_nth_page(i).vt == vt:
+                label = self._notebook.get_nth_page(i).label
                 label.set_text(vt.get_window_title())
                 return
- 
-    def __drag_data_received_cb(self, widget, context, x, y, selection, target, time):
+
+    def __drag_data_received_cb(self, widget, context, x, y, selection,
+                                target, time):
         widget.feed_child(selection.data)
         context.finish(True, False, time)
         return True
@@ -233,11 +232,11 @@ class TerminalActivity(activity.Activity):
                gtk.gdk.ACTION_DEFAULT|
                gtk.gdk.ACTION_COPY)
         vt.connect('drag_data_received', self.__drag_data_received_cb)
-        
+
         self._configure_vt(vt)
 
         vt.show()
-    
+
         label = gtk.Label()
 
         scrollbar = gtk.VScrollbar(vt.get_adjustment())
@@ -249,13 +248,14 @@ class TerminalActivity(activity.Activity):
 
         box.vt = vt
         box.label = label
-        
-        index = self.notebook.append_page(box, label)
-        self.notebook.show_all()
 
-        # Uncomment this to only show the tab bar when there is at least one tab.
-        # I think it's useful to always see it, since it displays the 'window title'.
-        #self.notebook.props.show_tabs = self.notebook.get_n_pages() > 1
+        index = self._notebook.append_page(box, label)
+        self._notebook.show_all()
+
+        # Uncomment this to only show the tab bar when there is at least
+        # one tab. I think it's useful to always see it, since it displays
+        # the 'window title'.
+        # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -263,19 +263,20 @@ class TerminalActivity(activity.Activity):
         if tab_state:
             # Restore the environment.
             # This is currently not enabled.
-            env = tab_state['env']
+            environment = tab_state['env']
 
             filtered_env = []
-            for e in env:
+            for e in environment:
                 var, sep, value = e.partition('=')
                 if var not in MASKED_ENVIRONMENT:
                     filtered_env.append(var + sep + value)
 
-            # TODO: Make the shell restore these environment variables, then clear out TERMINAL_ENV.
-            #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
-            
+            # TODO: Make the shell restore these environment variables,
+            # then clear out TERMINAL_ENV.
+            # os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
+
             # Restore the working directory.
-            if tab_state.has_key('cwd'):
+            if 'cwd' in tab_state:
                 os.chdir(tab_state['cwd'])
 
             # Restore the scrollback buffer.
@@ -284,21 +285,23 @@ class TerminalActivity(activity.Activity):
 
         box.pid = vt.fork_command()
 
-        self.notebook.props.page = index
+        self._notebook.props.page = index
         vt.grab_focus()
 
         return index
 
     def __become_root_cb(self, button):
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.feed('\r\n')
         vt.fork_command("/bin/su", ('/bin/su', '-'))
 
     def __key_press_cb(self, window, event):
         # Escape keypresses are routed directly to the vte and then dropped.
-        # This hack prevents Sugar from hijacking them and canceling fullscreen mode.
+        # This hack prevents Sugar from hijacking them and canceling
+        # fullscreen mode.
         if gtk.gdk.keyval_name(event.keyval) == 'Escape':
-            vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+            current_page = self._notebook.get_current_page()
+            vt = self._notebook.get_nth_page(current_page).vt
             vt.event(event)
             return True
 
@@ -316,18 +319,18 @@ class TerminalActivity(activity.Activity):
         data_file = file_path
 
         # Clean out any existing tabs.
-        while self.notebook.get_n_pages():
-            self.notebook.remove_page(0)
+        while self._notebook.get_n_pages():
+            self._notebook.remove_page(0)
 
         # Create new tabs from saved state.
         for tab_state in data['tabs']:
             self._create_tab(tab_state)
 
         # Restore active tab.
-        self.notebook.props.page = data['current-tab']
+        self._notebook.props.page = data['current-tab']
 
         # Create a blank one if this state had no terminals.
-        if self.notebook.get_n_pages() == 0:
+        if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
 
     def write_file(self, file_path):
@@ -335,25 +338,27 @@ class TerminalActivity(activity.Activity):
             self.metadata['mime_type'] = 'text/plain'
 
         data = {}
-        data['current-tab'] = self.notebook.get_current_page()
+        data['current-tab'] = self._notebook.get_current_page()
         data['tabs'] = []
 
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
+        for i in range(self._notebook.get_n_pages()):
+            page = self._notebook.get_nth_page(i)
 
             def selected_cb(terminal, c, row, cb_data):
                 return 1
-            (scrollback_text, attrs) = page.vt.get_text(selected_cb, 1)
+            (scrollback_text, attributes_) = page.vt.get_text(selected_cb, 1)
 
             scrollback_lines = scrollback_text.split('\n')
 
-            # Note- this currently gets the child's initial environment rather than the current
-            # environment, making it not very useful.
-            environment = open('/proc/%d/environ' % page.pid, 'r').read().split('\0')
+            # Note- this currently gets the child's initial environment
+            # rather than the current environment, making it not very useful.
+            environment = open('/proc/%d/environ' %
+                               page.pid, 'r').read().split('\0')
 
             cwd = os.readlink('/proc/%d/cwd' % page.pid)
 
-            tab_state = { 'env': environment, 'cwd': cwd, 'scrollback': scrollback_lines }
+            tab_state = {'env': environment, 'cwd': cwd,
+                         'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
 
@@ -361,7 +366,7 @@ class TerminalActivity(activity.Activity):
         text = simplejson.dumps(data)
         fd.write(text)
         fd.close()
-    
+
     def _get_conf(self, conf, var, default):
         if conf.has_option('terminal', var):
             if isinstance(default, bool):
@@ -378,38 +383,39 @@ class TerminalActivity(activity.Activity):
     def _configure_vt(self, vt):
         conf = ConfigParser.ConfigParser()
         conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
-        
+
         if os.path.isfile(conf_file):
             f = open(conf_file, 'r')
             conf.readfp(f)
             f.close()
         else:
             conf.add_section('terminal')
-        
+
         font = self._get_conf(conf, 'font', 'Monospace')
         vt.set_font(pango.FontDescription(font))
 
         fg_color = self._get_conf(conf, 'fg_color', '#000000')
         bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
-        vt.set_colors(gtk.gdk.color_parse(fg_color), gtk.gdk.color_parse(bg_color), [])
+        vt.set_colors(gtk.gdk.color_parse(fg_color),
+                      gtk.gdk.color_parse(bg_color), [])
 
         blink = self._get_conf(conf, 'cursor_blink', False)
         vt.set_cursor_blinks(blink)
 
         bell = self._get_conf(conf, 'bell', False)
         vt.set_audible_bell(bell)
-        
+
         scrollback_lines = self._get_conf(conf, 'scrollback_lines', 1000)
         vt.set_scrollback_lines(scrollback_lines)
 
         vt.set_allow_bold(True)
-        
+
         scroll_key = self._get_conf(conf, 'scroll_on_keystroke', True)
         vt.set_scroll_on_keystroke(scroll_key)
 
         scroll_output = self._get_conf(conf, 'scroll_on_output', False)
         vt.set_scroll_on_output(scroll_output)
-        
+
         emulation = self._get_conf(conf, 'emulation', 'xterm')
         vt.set_emulation(emulation)
 
