@@ -73,6 +73,9 @@ class TerminalActivity(activity.Activity):
         toolbar_box.toolbar.insert(view_toolbar_button, -1)
         view_toolbar_button.show()
 
+        self._delete_tab_toolbar = None
+        self._previous_tab_toolbar = None
+        self._next_tab_toolbar = None
         tab_toolbar = self._create_tab_toolbar()
         tab_toolbar_button = ToolbarButton(
                 page=tab_toolbar,
@@ -153,34 +156,45 @@ class TerminalActivity(activity.Activity):
         tab_toolbar.insert(new_tab_button, -1)
         new_tab_button.show()
 
-        delete_tab_button = ToolButton('list-remove')
-        delete_tab_button.set_tooltip(_("Close Tab"))
-        delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
-        delete_tab_button.connect('clicked', self.__close_tab_cb)
-        tab_toolbar.insert(delete_tab_button, -1)
-        delete_tab_button.show()
+        self._delete_tab_button = ToolButton('list-remove')
+        self._delete_tab_button.set_tooltip(_("Close Tab"))
+        self._delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
+        self._delete_tab_button.props.sensitive = False
+        self._delete_tab_button.connect('clicked', self.__close_tab_cb)
+        tab_toolbar.insert(self._delete_tab_button, -1)
+        self._delete_tab_button.show()
 
-        previous_tab_button = ToolButton('go-previous')
-        previous_tab_button.set_tooltip(_("Previous Tab"))
-        previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
-        previous_tab_button.connect('clicked', self.__prev_tab_cb)
-        tab_toolbar.insert(previous_tab_button, -1)
-        previous_tab_button.show()
+        self._previous_tab_button = ToolButton('go-previous')
+        self._previous_tab_button.set_tooltip(_("Previous Tab"))
+        self._previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
+        self._previous_tab_button.props.sensitive = False
+        self._previous_tab_button.connect('clicked', self.__prev_tab_cb)
+        tab_toolbar.insert(self._previous_tab_button, -1)
+        self._previous_tab_button.show()
 
-        next_tab_button = ToolButton('go-next')
-        next_tab_button.set_tooltip(_("Next Tab"))
-        next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
-        next_tab_button.connect('clicked', self.__next_tab_cb)
-        tab_toolbar.insert(next_tab_button, -1)
-        next_tab_button.show()
+        self._next_tab_button = ToolButton('go-next')
+        self._next_tab_button.set_tooltip(_("Next Tab"))
+        self._next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
+        self._next_tab_button.props.sensitive = False
+        self._next_tab_button.connect('clicked', self.__next_tab_cb)
+        tab_toolbar.insert(self._next_tab_button, -1)
+        self._next_tab_button.show()
         return tab_toolbar
 
     def __open_tab_cb(self, btn):
         index = self._create_tab(None)
         self._notebook.page = index
+        if self._notebook.get_n_pages() == 2:
+            self._delete_tab_button.props.sensitive = True
+            self._previous_tab_button.props.sensitive = True
+            self._next_tab_button.props.sensitive = True
 
     def __close_tab_cb(self, btn):
         self._close_tab(self._notebook.props.page)
+        if self._notebook.get_n_pages() == 1:
+            self._delete_tab_button.props.sensitive = False
+            self._previous_tab_button.props.sensitive = False
+            self._next_tab_button.props.sensitive = False
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -332,6 +346,11 @@ class TerminalActivity(activity.Activity):
         # Create a blank one if this state had no terminals.
         if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
+
+        if self._notebook.get_n_pages() > 1:
+            self._delete_tab_button.props.sensitive = True
+            self._previous_tab_button.props.sensitive = True
+            self._next_tab_button.props.sensitive = True
 
     def write_file(self, file_path):
         if not self.metadata['mime_type']:
