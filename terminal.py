@@ -1,5 +1,6 @@
 # Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>.
 # Copyright (C) 2008, One Laptop Per Child
+# Copyright (C) 2009, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,96 +30,80 @@ import gtk
 import vte
 import pango
 
-import sugar.graphics.toolbutton
-import sugar.activity.activity
-import sugar.env
+from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.toolbarbox import ToolbarBox
+from sugar.graphics.toolbarbox import ToolbarButton
+from sugar.activity.widgets import ActivityToolbarButton
+from sugar.activity.widgets import StopButton
+from sugar.activity import activity
+from sugar import env
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
     'PPID'
 ]
 
-class TerminalActivity(sugar.activity.activity.Activity):
+class TerminalActivity(activity.Activity):
 
     def __init__(self, handle):
-        sugar.activity.activity.Activity.__init__(self, handle)
+        activity.Activity.__init__(self, handle)
         
         self.data_file = None
         
-        self.set_title(_('Terminal Activity'))
-        
-        # Non-working attempt to hide the Escape key from Sugar.
-        #self.connect('key-press-event', self._key_press_cb)
+        self.max_participants = 1
 
-        toolbox = sugar.activity.activity.ActivityToolbox(self)
+        toolbar_box = ToolbarBox()
 
-        editbar = sugar.activity.activity.EditToolbar()
-        toolbox.add_toolbar(_('Edit'), editbar)
-        editbar.show()
-        editbar.undo.props.visible = False
-        editbar.redo.props.visible = False
-        editbar.separator.props.visible = False
-        editbar.copy.connect('clicked', self._copy_cb)
-        editbar.copy.props.accelerator = '<Ctrl><Shift>C'
-        editbar.paste.connect('clicked', self._paste_cb)
-        editbar.paste.props.accelerator = '<Ctrl><Shift>V'
+        activity_button = ActivityToolbarButton(self)
+        toolbar_box.toolbar.insert(activity_button, 0)
+        activity_button.page.keep.props.accelerator = '<Ctrl><Shift>S'
+        activity_button.show()
 
-        newtabbtn = sugar.graphics.toolbutton.ToolButton('list-add')
-        newtabbtn.set_tooltip(_("Open New Tab"))
-        newtabbtn.props.accelerator = '<Ctrl><Shift>T'
-        newtabbtn.connect('clicked', self._open_tab_cb)
+        edit_toolbar = self._create_edit_toolbar()
+        edit_toolbar_button = ToolbarButton(
+                page=edit_toolbar,
+                icon_name='toolbar-edit')
+        edit_toolbar.show()
+        toolbar_box.toolbar.insert(edit_toolbar_button, -1)
+        edit_toolbar_button.show()
 
-        deltabbtn = sugar.graphics.toolbutton.ToolButton('list-remove')
-        deltabbtn.set_tooltip(_("Close Tab"))
-        deltabbtn.props.accelerator = '<Ctrl><Shift>X'
-        deltabbtn.connect('clicked', self._close_tab_cb)
+        view_toolbar = self._create_view_toolbar()
+        view_toolbar_button = ToolbarButton(
+                page=view_toolbar,
+                icon_name='toolbar-view')
+        view_toolbar.show()
+        toolbar_box.toolbar.insert(view_toolbar_button, -1)
+        view_toolbar_button.show()
 
-        tabsep = gtk.SeparatorToolItem()
-        tabsep.set_expand(True)
-        tabsep.set_draw(False)
+        tab_toolbar = self._create_tab_toolbar()
+        tab_toolbar_button = ToolbarButton(
+                page=tab_toolbar,
+                icon_name='view-list')
+        tab_toolbar.show()
+        toolbar_box.toolbar.insert(tab_toolbar_button, -1)
+        tab_toolbar_button.show()
 
         # Add a button that will be used to become root easily.
-        rootbtn = sugar.graphics.toolbutton.ToolButton('activity-become-root')
-        rootbtn.set_tooltip(_('Become root'))
-        rootbtn.connect('clicked', self._become_root_cb)
+        root_button = ToolButton('activity-become-root')
+        root_button.set_tooltip(_('Become root'))
+        root_button.connect('clicked', self.__become_root_cb)
+        toolbar_box.toolbar.insert(root_button, -1)
+        root_button.show()
 
-        prevtabbtn = sugar.graphics.toolbutton.ToolButton('go-previous')
-        prevtabbtn.set_tooltip(_("Previous Tab"))
-        prevtabbtn.props.accelerator = '<Ctrl><Shift>Left'
-        prevtabbtn.connect('clicked', self._prev_tab_cb)
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        toolbar_box.toolbar.insert(separator, -1)
+        separator.show()
 
-        nexttabbtn = sugar.graphics.toolbutton.ToolButton('go-next')
-        nexttabbtn.set_tooltip(_("Next Tab"))
-        nexttabbtn.props.accelerator = '<Ctrl><Shift>Right'
-        nexttabbtn.connect('clicked', self._next_tab_cb)
+        stop_button = StopButton(self)
+        stop_button.props.accelerator = '<Ctrl><Shift>Q'
+        toolbar_box.toolbar.insert(stop_button, -1)
+        stop_button.show()
 
-        tabbar = gtk.Toolbar()
-        tabbar.insert(newtabbtn, -1)
-        tabbar.insert(deltabbtn, -1)
-        tabbar.insert(tabsep, -1)
-        tabbar.insert(rootbtn, -1)
-        tabbar.insert(prevtabbtn, -1)
-        tabbar.insert(nexttabbtn, -1)
-        tabbar.show_all()
+        self.set_toolbar_box(toolbar_box)
+        toolbar_box.show()
 
-        toolbox.add_toolbar(_('Tab'), tabbar)
-
-        activity_toolbar = toolbox.get_activity_toolbar()
-        activity_toolbar.share.props.visible = False
-        activity_toolbar.keep.props.visible = False
-        activity_toolbar.keep.props.accelerator = '<Ctrl><Shift>S'
-        activity_toolbar.stop.props.accelerator = '<Ctrl><Shift>Q'
-
-        fullscreenbtn = sugar.graphics.toolbutton.ToolButton('view-fullscreen')
-        fullscreenbtn.set_tooltip(_("Fullscreen"))
-        fullscreenbtn.props.accelerator = '<Alt>Enter'
-        fullscreenbtn.connect('clicked', self._fullscreen_cb)
-        activity_toolbar.insert(fullscreenbtn, 2)
-        fullscreenbtn.show()
-        
-        self.set_toolbox(toolbox)
-        toolbox.show()
-        
         self.notebook = gtk.Notebook()
         self.notebook.set_property("tab-pos", gtk.POS_BOTTOM)
         self.notebook.set_scrollable(True)
@@ -128,14 +113,78 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
         self._create_tab(None)
 
-    def _open_tab_cb(self, btn):
+    def _create_edit_toolbar(self):
+        edit_toolbar = activity.EditToolbar()
+        edit_toolbar.undo.props.visible = False
+        edit_toolbar.redo.props.visible = False
+        edit_toolbar.separator.props.visible = False
+        edit_toolbar.copy.connect('clicked', self.__copy_cb)
+        edit_toolbar.copy.props.accelerator = '<Ctrl><Shift>C'
+        edit_toolbar.paste.connect('clicked', self.__paste_cb)
+        edit_toolbar.paste.props.accelerator = '<Ctrl><Shift>V'
+        return edit_toolbar
+
+    def __copy_cb(self, button):
+        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+        if vt.get_has_selection():
+            vt.copy_clipboard()
+
+    def __paste_cb(self, button):
+        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
+        vt.paste_clipboard()
+
+    def _create_view_toolbar(self):
+        view_toolbar = gtk.Toolbar()
+        fullscreen_button = ToolButton('view-fullscreen')
+        fullscreen_button.set_tooltip(_("Fullscreen"))
+        fullscreen_button.props.accelerator = '<Alt>Enter'
+        fullscreen_button.connect('clicked', self.__fullscreen_cb)
+        view_toolbar.insert(fullscreen_button, -1)
+        fullscreen_button.show()
+        return view_toolbar
+
+    def __fullscreen_cb(self, btn):
+        self.fullscreen()
+
+    def _create_tab_toolbar(self):
+        tab_toolbar = gtk.Toolbar()
+        new_tab_button = ToolButton('list-add')
+        new_tab_button.set_tooltip(_("Open New Tab"))
+        new_tab_button.props.accelerator = '<Ctrl><Shift>T'
+        new_tab_button.connect('clicked', self.__open_tab_cb)
+        tab_toolbar.insert(new_tab_button, -1)
+        new_tab_button.show()
+
+        delete_tab_button = ToolButton('list-remove')
+        delete_tab_button.set_tooltip(_("Close Tab"))
+        delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
+        delete_tab_button.connect('clicked', self.__close_tab_cb)
+        tab_toolbar.insert(delete_tab_button, -1)
+        delete_tab_button.show()
+
+        previous_tab_button = ToolButton('go-previous')
+        previous_tab_button.set_tooltip(_("Previous Tab"))
+        previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
+        previous_tab_button.connect('clicked', self.__prev_tab_cb)
+        tab_toolbar.insert(previous_tab_button, -1)
+        previous_tab_button.show()
+
+        next_tab_button = ToolButton('go-next')
+        next_tab_button.set_tooltip(_("Next Tab"))
+        next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
+        next_tab_button.connect('clicked', self.__next_tab_cb)
+        tab_toolbar.insert(next_tab_button, -1)
+        next_tab_button.show()
+        return tab_toolbar
+
+    def __open_tab_cb(self, btn):
         index = self._create_tab(None) 
         self.notebook.page = index
 
-    def _close_tab_cb(self, btn):
+    def __close_tab_cb(self, btn):
         self._close_tab(self.notebook.props.page)
 
-    def _prev_tab_cb(self, btn):
+    def __prev_tab_cb(self, btn):
         if self.notebook.props.page == 0:
             self.notebook.props.page = self.notebook.get_n_pages() - 1
         else:
@@ -143,7 +192,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
         vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
         vt.grab_focus()
 
-    def _next_tab_cb(self, btn):
+    def __next_tab_cb(self, btn):
         if self.notebook.props.page == self.notebook.get_n_pages() - 1:
             self.notebook.props.page = 0
         else:
@@ -156,34 +205,34 @@ class TerminalActivity(sugar.activity.activity.Activity):
         if self.notebook.get_n_pages() == 0:
             self.close()
             
-    def _tab_child_exited_cb(self, vt):
+    def __tab_child_exited_cb(self, vt):
         for i in range(self.notebook.get_n_pages()):
             if self.notebook.get_nth_page(i).vt == vt:
                 self._close_tab(i)
                 return
  
-    def _tab_title_changed_cb(self, vt):
+    def __tab_title_changed_cb(self, vt):
         for i in range(self.notebook.get_n_pages()):
             if self.notebook.get_nth_page(i).vt == vt:
                 label = self.notebook.get_nth_page(i).label
                 label.set_text(vt.get_window_title())
                 return
  
-    def _drag_data_received_cb(self, widget, context, x, y, selection, target, time):
+    def __drag_data_received_cb(self, widget, context, x, y, selection, target, time):
         widget.feed_child(selection.data)
         context.finish(True, False, time)
         return True
 
     def _create_tab(self, tab_state):
         vt = vte.Terminal()
-        vt.connect("child-exited", self._tab_child_exited_cb)
-        vt.connect("window-title-changed", self._tab_title_changed_cb)
+        vt.connect("child-exited", self.__tab_child_exited_cb)
+        vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION|gtk.DEST_DEFAULT_DROP,
                [('text/plain', 0, 0), ('STRING', 0, 1)],
                gtk.gdk.ACTION_DEFAULT|
                gtk.gdk.ACTION_COPY)
-        vt.connect('drag_data_received', self._drag_data_received_cb)
+        vt.connect('drag_data_received', self.__drag_data_received_cb)
         
         self._configure_vt(vt)
 
@@ -240,24 +289,12 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
         return index
 
-    def _copy_cb(self, button):
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
-        if vt.get_has_selection():
-            vt.copy_clipboard()
-
-    def _paste_cb(self, button):
-        vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
-        vt.paste_clipboard()
-
-    def _become_root_cb(self, button):
+    def __become_root_cb(self, button):
         vt = self.notebook.get_nth_page(self.notebook.get_current_page()).vt
         vt.feed('\r\n')
         vt.fork_command("/bin/su", ('/bin/su', '-'))
 
-    def _fullscreen_cb(self, btn):
-        self.fullscreen()
-
-    def _key_press_cb(self, window, event):
+    def __key_press_cb(self, window, event):
         # Escape keypresses are routed directly to the vte and then dropped.
         # This hack prevents Sugar from hijacking them and canceling fullscreen mode.
         if gtk.gdk.keyval_name(event.keyval) == 'Escape':
@@ -340,7 +377,7 @@ class TerminalActivity(sugar.activity.activity.Activity):
 
     def _configure_vt(self, vt):
         conf = ConfigParser.ConfigParser()
-        conf_file = os.path.join(sugar.env.get_profile_path(), 'terminalrc')
+        conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
         
         if os.path.isfile(conf_file):
             f = open(conf_file, 'r')
