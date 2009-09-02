@@ -103,7 +103,7 @@ class TerminalActivity(activity.Activity):
         toolbar_box.show()
 
         self._notebook = gtk.Notebook()
-        self._notebook.set_property("tab-pos", gtk.POS_BOTTOM)
+        self._notebook.set_property("tab-pos", gtk.POS_TOP)
         self._notebook.set_scrollable(True)
         self._notebook.show()
 
