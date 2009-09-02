@@ -144,7 +144,7 @@ class TerminalActivity(activity.Activity):
         fullscreen_button.show()
         return view_toolbar
 
-    def __fullscreen_cb(self, btn):
+    def __fullscreen_cb(self, button):
         self.fullscreen()
 
     def _create_tab_toolbar(self):
