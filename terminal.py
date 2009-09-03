@@ -79,7 +79,7 @@ class TerminalActivity(activity.Activity):
         tab_toolbar = self._create_tab_toolbar()
         tab_toolbar_button = ToolbarButton(
                 page=tab_toolbar,
-                icon_name='view-list')
+                icon_name='toolbar-tab')
         tab_toolbar.show()
         toolbar_box.toolbar.insert(tab_toolbar_button, -1)
         tab_toolbar_button.show()
@@ -149,14 +149,14 @@ class TerminalActivity(activity.Activity):
 
     def _create_tab_toolbar(self):
         tab_toolbar = gtk.Toolbar()
-        new_tab_button = ToolButton('list-add')
+        new_tab_button = ToolButton('tab-add')
         new_tab_button.set_tooltip(_("Open New Tab"))
         new_tab_button.props.accelerator = '<Ctrl><Shift>T'
         new_tab_button.connect('clicked', self.__open_tab_cb)
         tab_toolbar.insert(new_tab_button, -1)
         new_tab_button.show()
 
-        self._delete_tab_button = ToolButton('list-remove')
+        self._delete_tab_button = ToolButton('tab-remove')
         self._delete_tab_button.set_tooltip(_("Close Tab"))
         self._delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
         self._delete_tab_button.props.sensitive = False
@@ -164,7 +164,7 @@ class TerminalActivity(activity.Activity):
         tab_toolbar.insert(self._delete_tab_button, -1)
         self._delete_tab_button.show()
 
-        self._previous_tab_button = ToolButton('go-previous')
+        self._previous_tab_button = ToolButton('tab-previous')
         self._previous_tab_button.set_tooltip(_("Previous Tab"))
         self._previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
         self._previous_tab_button.props.sensitive = False
@@ -172,7 +172,7 @@ class TerminalActivity(activity.Activity):
         tab_toolbar.insert(self._previous_tab_button, -1)
         self._previous_tab_button.show()
 
-        self._next_tab_button = ToolButton('go-next')
+        self._next_tab_button = ToolButton('tab-next')
         self._next_tab_button.set_tooltip(_("Next Tab"))
         self._next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
         self._next_tab_button.props.sensitive = False
