@@ -150,14 +150,14 @@ class TerminalActivity(activity.Activity):
     def _create_tab_toolbar(self):
         tab_toolbar = gtk.Toolbar()
         new_tab_button = ToolButton('tab-add')
-        new_tab_button.set_tooltip(_("Open New Tab"))
+        new_tab_button.set_tooltip(_("Add New Tab"))
         new_tab_button.props.accelerator = '<Ctrl><Shift>T'
         new_tab_button.connect('clicked', self.__open_tab_cb)
         tab_toolbar.insert(new_tab_button, -1)
         new_tab_button.show()
 
         self._delete_tab_button = ToolButton('tab-remove')
-        self._delete_tab_button.set_tooltip(_("Close Tab"))
+        self._delete_tab_button.set_tooltip(_("Remove Tab"))
         self._delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
         self._delete_tab_button.props.sensitive = False
         self._delete_tab_button.connect('clicked', self.__close_tab_cb)
