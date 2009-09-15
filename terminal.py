@@ -138,7 +138,7 @@ class TerminalActivity(activity.Activity):
         view_toolbar = gtk.Toolbar()
         fullscreen_button = ToolButton('view-fullscreen')
         fullscreen_button.set_tooltip(_("Fullscreen"))
-        fullscreen_button.props.accelerator = '<Alt>Enter'
+        fullscreen_button.props.accelerator = '<Alt>Return'
         fullscreen_button.connect('clicked', self.__fullscreen_cb)
         view_toolbar.insert(fullscreen_button, -1)
         fullscreen_button.show()
