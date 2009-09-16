@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2009-05-29 18:25-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,38 +21,35 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr "Activité Terminal"
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "Édition"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr "Ouvrir un nouvel onglet"
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr "Fermer l'onglet"
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
 msgstr "Devenir administrateur"
 
-#: terminal.py:86
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "Plein écran"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Ouvrir un nouvel onglet"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Fermer l'onglet"
+
+#: terminal.py:168
 msgid "Previous Tab"
 msgstr "Onglet précédent"
 
-#: terminal.py:91
+#: terminal.py:176
 msgid "Next Tab"
 msgstr "Onglet suivant"
 
-#: terminal.py:104
-msgid "Tab"
-msgstr "Onglet"
+#~ msgid "Terminal Activity"
+#~ msgstr "Activité Terminal"
 
-#: terminal.py:111
-msgid "Fullscreen"
-msgstr "Plein écran"
+#~ msgid "Edit"
+#~ msgstr "Édition"
+
+#~ msgid "Tab"
+#~ msgstr "Onglet"
