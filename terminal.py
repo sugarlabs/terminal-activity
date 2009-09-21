@@ -241,6 +241,9 @@ class TerminalActivity(activity.Activity):
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
+        # FIXME have to resend motion events to parent, see #1402
+        vt.connect('motion-notify-event', self.__motion_notify_cb)
+
         vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION|gtk.DEST_DEFAULT_DROP,
                [('text/plain', 0, 0), ('STRING', 0, 1)],
                gtk.gdk.ACTION_DEFAULT|
@@ -303,6 +306,9 @@ class TerminalActivity(activity.Activity):
         vt.grab_focus()
 
         return index
+
+    def __motion_notify_cb(self, widget, event):
+        self.canvas.parent.emit('motion-notify-event', event)
 
     def __become_root_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
