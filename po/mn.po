@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: 2008-06-27 03:05-0400\n"
-"Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"PO-Revision-Date: 2009-09-21 01:07-0400\n"
+"Last-Translator: Bulgantamir <ar_uul_us@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2
@@ -27,6 +29,26 @@ msgstr "Терминалын үйл ажиллагаа"
 msgid "Edit"
 msgstr "Засварлах"
 
-#: terminal.py:63
+#: terminal.py:89
 msgid "Become root"
 msgstr "Давуу эрхтэй хэрэглэгч болох"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "Дэлгэц дүүрэн"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Шинэ хавтгай нээх"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Хавтгайг хаах"
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr "Өмнөх хавтгайд оч"
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr "Дараах хавтгайд оч"
