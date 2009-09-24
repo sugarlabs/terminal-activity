@@ -1,3 +1,9 @@
+27
+
+* Make canvas emit motion-notify-event during pointer motion. dslo#1402 (Aleksey Lim)
+* Fix typo (dslo#1356) (Aleksey Lim)
+* Updated translations for French, German, Portuguese and Mongolian 
+
 26
 
 * Toolbar redesign
