@@ -6,27 +6,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: 2008-06-16 08:49-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"PO-Revision-Date: 2009-09-25 08:14-0400\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Thiết bị cuối"
 
-#: terminal.py:43
-msgid "Terminal Activity"
-msgstr "Hoạt động thiết bị cuối"
-
-#: terminal.py:49
-msgid "Edit"
-msgstr "Sửa"
-
-#: terminal.py:63
+#: terminal.py:89
 msgid "Become root"
 msgstr "Trở thành người chủ"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "Toàn màn hình"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Mở thẻ mới"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Đóng thẻ"
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr "Thẻ trước"
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr "Thẻ sau"
+
+#~ msgid "Terminal Activity"
+#~ msgstr "Hoạt động thiết bị cuối"
+
+#~ msgid "Edit"
+#~ msgstr "Sửa"
