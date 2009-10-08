@@ -1,3 +1,7 @@
+28
+
+* Updated Vietnamese translations
+
 27
 
 * Make canvas emit motion-notify-event during pointer motion. dslo#1402 (Aleksey Lim)
