@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os, os.path, simplejson, ConfigParser
+import os, os.path, sys, simplejson, ConfigParser
 
 from gettext import gettext as _
 
@@ -226,8 +226,12 @@ class TerminalActivity(sugar.activity.activity.Activity):
             #os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
             
             # Restore the working directory.
-            if tab_state.has_key('cwd'):
-                os.chdir(tab_state['cwd'])
+            if tab_state.has_key('cwd') and os.path.exists(tab_state['cwd']):
+                try:                                           
+                    os.chdir(tab_state['cwd'])
+                except:
+                    # ACLs may deny access
+                    sys.stdout.write("Could not chdir to " + tab_state['cwd'])
 
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
