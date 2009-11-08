@@ -1,3 +1,6 @@
+30
+* Backport of fixes to version with oldstyle toolbars
+
 25
 
 * Fix exception when starting with no terminalrc.
