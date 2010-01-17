@@ -17,6 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import sys
 import simplejson
 import ConfigParser
 import logging
@@ -293,8 +294,12 @@ class TerminalActivity(activity.Activity):
             # os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
 
             # Restore the working directory.
-            if 'cwd' in tab_state:
-                os.chdir(tab_state['cwd'])
+            if 'cwd' in tab_state and os.path.exists(tab_state['cwd']):
+                try:                                           
+                    os.chdir(tab_state['cwd'])
+                except:
+                    # ACLs may deny access
+                    sys.stdout.write("Could not chdir to " + tab_state['cwd'])
 
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
