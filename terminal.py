@@ -29,12 +29,21 @@ import vte
 import pango
 
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.activity.widgets import StopButton
 from sugar.activity import activity
 from sugar import env
+
+# Attempt to import the new toolbar classes.  If the import fails,
+# fall back to the old toolbar style.
+try:
+    from sugar.graphics.toolbarbox import ToolbarBox
+    from sugar.graphics.toolbarbox import ToolbarButton
+    from sugar.activity.widgets import ActivityToolbarButton
+    from sugar.activity.widgets import StopButton
+    NEW_TOOLBARS = True
+except ImportError:
+    from sugar.activity.activity import ActivityToolbox
+    NEW_TOOLBARS = False
+
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
@@ -52,60 +61,74 @@ class TerminalActivity(activity.Activity):
 
         self.max_participants = 1
 
-        toolbar_box = ToolbarBox()
-
-        activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, 0)
-        activity_button.page.keep.props.accelerator = '<Ctrl><Shift>S'
-        activity_button.show()
-
         edit_toolbar = self._create_edit_toolbar()
-        edit_toolbar_button = ToolbarButton(
-                page=edit_toolbar,
-                icon_name='toolbar-edit')
         edit_toolbar.show()
-        toolbar_box.toolbar.insert(edit_toolbar_button, -1)
-        edit_toolbar_button.show()
 
         view_toolbar = self._create_view_toolbar()
-        view_toolbar_button = ToolbarButton(
-                page=view_toolbar,
-                icon_name='toolbar-view')
         view_toolbar.show()
-        toolbar_box.toolbar.insert(view_toolbar_button, -1)
-        view_toolbar_button.show()
 
         self._delete_tab_toolbar = None
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
         tab_toolbar = self._create_tab_toolbar()
-        tab_toolbar_button = ToolbarButton(
-                page=tab_toolbar,
-                icon_name='toolbar-tab')
         tab_toolbar.show()
-        toolbar_box.toolbar.insert(tab_toolbar_button, -1)
-        tab_toolbar_button.show()
 
         # Add a button that will be used to become root easily.
         root_button = ToolButton('activity-become-root')
         root_button.set_tooltip(_('Become root'))
         root_button.connect('clicked', self.__become_root_cb)
-        toolbar_box.toolbar.insert(root_button, -1)
         root_button.show()
 
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        toolbar_box.toolbar.insert(separator, -1)
-        separator.show()
+        if NEW_TOOLBARS:
+            toolbar_box = ToolbarBox()
 
-        stop_button = StopButton(self)
-        stop_button.props.accelerator = '<Ctrl><Shift>Q'
-        toolbar_box.toolbar.insert(stop_button, -1)
-        stop_button.show()
+            activity_button = ActivityToolbarButton(self)
+            toolbar_box.toolbar.insert(activity_button, 0)
+            activity_button.page.keep.props.accelerator = '<Ctrl><Shift>S'
+            activity_button.show()
+    
+            edit_toolbar_button = ToolbarButton(
+                    page=edit_toolbar,
+                    icon_name='toolbar-edit')
+            toolbar_box.toolbar.insert(edit_toolbar_button, -1)
+            edit_toolbar_button.show()
 
-        self.set_toolbar_box(toolbar_box)
-        toolbar_box.show()
+            view_toolbar_button = ToolbarButton(
+                    page=view_toolbar,
+                    icon_name='toolbar-view')
+            toolbar_box.toolbar.insert(view_toolbar_button, -1)
+            view_toolbar_button.show()
+
+            tab_toolbar_button = ToolbarButton(
+                    page=tab_toolbar,
+                    icon_name='toolbar-tab')
+            toolbar_box.toolbar.insert(tab_toolbar_button, -1)
+            tab_toolbar_button.show()
+
+            toolbar_box.toolbar.insert(root_button, -1)
+
+            separator = gtk.SeparatorToolItem()
+            separator.props.draw = False
+            separator.set_expand(True)
+            toolbar_box.toolbar.insert(separator, -1)
+            separator.show()
+    
+            stop_button = StopButton(self)
+            stop_button.props.accelerator = '<Ctrl><Shift>Q'
+            toolbar_box.toolbar.insert(stop_button, -1)
+            stop_button.show()
+    
+            self.set_toolbar_box(toolbar_box)
+            toolbar_box.show()
+    
+        else:
+            toolbox = ActivityToolbox(self)
+            toolbox.add_toolbar(_('Edit'), edit_toolbar)
+            toolbox.add_toolbar(_('View'), view_toolbar)
+            toolbox.add_toolbar(_('Tab'), tab_toolbar)
+
+            self.set_toolbox(toolbox)
+            toolbox.show()
 
         self._notebook = gtk.Notebook()
         self._notebook.set_property("tab-pos", gtk.POS_TOP)
