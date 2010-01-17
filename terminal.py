@@ -371,7 +371,7 @@ class TerminalActivity(activity.Activity):
 
             def selected_cb(terminal, c, row, cb_data):
                 return 1
-            (scrollback_text, attributes_) = page.vt.get_text(selected_cb, 1)
+            scrollback_text = page.vt.get_text(selected_cb, False)
 
             scrollback_lines = scrollback_text.split('\n')
 
