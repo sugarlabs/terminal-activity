@@ -1,3 +1,8 @@
+31
+
+* Merge oldstyle and newstyle toolbars into a single version.
+* Fix segfault when saving to Journal with F12 version of VTE.
+
 30
 
 * Backport of fixes to version with oldstyle toolbars
