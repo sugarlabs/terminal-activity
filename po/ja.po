@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2009-07-02 10:39-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,38 +21,35 @@ msgstr ""
 msgid "Terminal"
 msgstr "ターミナル"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr "ターミナル アクティビティ"
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "編集"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr "新しいタブを開く"
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr "タブを閉じる"
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
 msgstr "root（管理者ユーザ）になる"
 
-#: terminal.py:86
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "全画面"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "新しいタブを開く"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "タブを閉じる"
+
+#: terminal.py:168
 msgid "Previous Tab"
 msgstr "前のタブ"
 
-#: terminal.py:91
+#: terminal.py:176
 msgid "Next Tab"
 msgstr "次のタブ"
 
-#: terminal.py:104
-msgid "Tab"
-msgstr "タブ"
+#~ msgid "Terminal Activity"
+#~ msgstr "ターミナル アクティビティ"
 
-#: terminal.py:111
-msgid "Fullscreen"
-msgstr "全画面"
+#~ msgid "Edit"
+#~ msgstr "編集"
+
+#~ msgid "Tab"
+#~ msgstr "タブ"
