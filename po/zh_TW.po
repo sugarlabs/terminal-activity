@@ -6,27 +6,50 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: 2008-07-18 19:14-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"PO-Revision-Date: 2009-05-10 11:27-0400\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "終端機"
 
-#: terminal.py:43
-msgid "Terminal Activity"
-msgstr "終端機活動"
-
-#: terminal.py:49
-msgid "Edit"
-msgstr "編輯"
-
-#: terminal.py:63
+#: terminal.py:89
 msgid "Become root"
 msgstr "成為超級管理員"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "全螢幕"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "開啟新的分頁"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "關閉分頁"
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr "上一個分頁"
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr "下一個分頁"
+
+#~ msgid "Terminal Activity"
+#~ msgstr "終端機活動"
+
+#~ msgid "Edit"
+#~ msgstr "編輯"
+
+#~ msgid "Tab"
+#~ msgstr "分頁"
