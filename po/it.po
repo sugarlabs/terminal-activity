@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2009-04-30 09:20-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,38 +21,35 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminale"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr "Attività Terminale"
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "Modifica"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr "Apri Nuova Scheda"
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr "Chiudi Scheda"
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
 msgstr "Diventa root (amministratore)"
 
-#: terminal.py:86
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "Schermo intero"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Apri Nuova Scheda"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Chiudi Scheda"
+
+#: terminal.py:168
 msgid "Previous Tab"
 msgstr "Scheda Precedente"
 
-#: terminal.py:91
+#: terminal.py:176
 msgid "Next Tab"
 msgstr "Prossima Scheda"
 
-#: terminal.py:104
-msgid "Tab"
-msgstr "Scheda"
+#~ msgid "Terminal Activity"
+#~ msgstr "Attività Terminale"
 
-#: terminal.py:111
-msgid "Fullscreen"
-msgstr "Schermo intero"
+#~ msgid "Edit"
+#~ msgstr "Modifica"
+
+#~ msgid "Tab"
+#~ msgstr "Scheda"
