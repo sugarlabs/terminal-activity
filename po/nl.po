@@ -2,11 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2009-05-21 02:32-0400\n"
 "Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,38 +25,35 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr "Terminal activiteit"
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "Bewerken"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr "Nieuw tabblad openen"
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr "Tabblad sluiten"
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
 msgstr "Root worden"
 
-#: terminal.py:86
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "Schermvullend maken"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Nieuw tabblad openen"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Tabblad sluiten"
+
+#: terminal.py:168
 msgid "Previous Tab"
 msgstr "Vorig tabblad"
 
-#: terminal.py:91
+#: terminal.py:176
 msgid "Next Tab"
 msgstr "Volgend tabblad"
 
-#: terminal.py:104
-msgid "Tab"
-msgstr "Tabblad"
+#~ msgid "Terminal Activity"
+#~ msgstr "Terminal activiteit"
 
-#: terminal.py:111
-msgid "Fullscreen"
-msgstr "Schermvullend maken"
+#~ msgid "Edit"
+#~ msgstr "Bewerken"
+
+#~ msgid "Tab"
+#~ msgstr "Tabblad"
