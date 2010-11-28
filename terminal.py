@@ -30,6 +30,8 @@ import pango
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.graphics.toolbarbox import ToolbarButton
+from sugar.graphics.notebook import Notebook
+
 from sugar.activity.widgets import ActivityToolbarButton
 from sugar.activity.widgets import StopButton
 from sugar.activity import activity
@@ -106,7 +108,7 @@ class TerminalActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
 
-        self._notebook = gtk.Notebook()
+        self._notebook = Notebook()
         self._notebook.set_property("tab-pos", gtk.POS_TOP)
         self._notebook.set_scrollable(True)
         self._notebook.show()
