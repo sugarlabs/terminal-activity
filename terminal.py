@@ -245,9 +245,9 @@ class TerminalActivity(activity.Activity):
         # FIXME have to resend motion events to parent, see #1402
         vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION|gtk.DEST_DEFAULT_DROP,
+        vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                [('text/plain', 0, 0), ('STRING', 0, 1)],
-               gtk.gdk.ACTION_DEFAULT|
+               gtk.gdk.ACTION_DEFAULT |
                gtk.gdk.ACTION_COPY)
         vt.connect('drag_data_received', self.__drag_data_received_cb)
 
@@ -295,7 +295,7 @@ class TerminalActivity(activity.Activity):
 
             # Restore the working directory.
             if 'cwd' in tab_state and os.path.exists(tab_state['cwd']):
-                try:                                           
+                try:
                     os.chdir(tab_state['cwd'])
                 except:
                     # ACLs may deny access
