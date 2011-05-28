@@ -1,7 +1,7 @@
 [Activity]
 name = Terminal
-activity_version = 28
-service_name = org.laptop.Terminal
+activity_version = 29
+bundle_id = org.laptop.Terminal
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
