@@ -45,6 +45,8 @@ log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
+ZOOM_STEP = 2000
+
 
 class TerminalActivity(activity.Activity):
 
@@ -139,6 +141,21 @@ class TerminalActivity(activity.Activity):
 
     def _create_view_toolbar(self):
         view_toolbar = gtk.Toolbar()
+
+        zoom_out_button = ToolButton('zoom-out')
+        zoom_out_button.set_tooltip(_('Zoom out'))
+        zoom_out_button.props.accelerator = '<Ctrl>-'
+        zoom_out_button.connect('clicked', self.__zoom_out_cb)
+        view_toolbar.insert(zoom_out_button, -1)
+        zoom_out_button.show()
+
+        zoom_in_button = ToolButton('zoom-in')
+        zoom_in_button.set_tooltip(_('Zoom in'))
+        zoom_in_button.props.accelerator = '<Ctrl>+'
+        zoom_in_button.connect('clicked', self.__zoom_in_cb)
+        view_toolbar.insert(zoom_in_button, -1)
+        zoom_in_button.show()
+
         fullscreen_button = ToolButton('view-fullscreen')
         fullscreen_button.set_tooltip(_("Fullscreen"))
         fullscreen_button.props.accelerator = '<Alt>Return'
@@ -146,6 +163,19 @@ class TerminalActivity(activity.Activity):
         view_toolbar.insert(fullscreen_button, -1)
         fullscreen_button.show()
         return view_toolbar
+
+    def _zoom(self, step):
+        current_page = self._notebook.get_current_page()
+        vt = self._notebook.get_nth_page(current_page).vt
+        font_desc = vt.get_font()
+        font_desc.set_size(font_desc.get_size() + step)
+        vt.set_font(font_desc)
+
+    def __zoom_out_cb(self, button):
+        self._zoom(ZOOM_STEP * -1)
+
+    def __zoom_in_cb(self, button):
+        self._zoom(ZOOM_STEP)
 
     def __fullscreen_cb(self, button):
         self.fullscreen()
@@ -321,6 +351,7 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.feed('\r\n')
         vt.fork_command("/bin/su", ('/bin/su', '-'))
+        vt.fork_command("/bin/sudo", ('/bin/sudo', '-i'))
 
     def __key_press_cb(self, window, event):
         # Escape keypresses are routed directly to the vte and then dropped.
@@ -425,7 +456,6 @@ class TerminalActivity(activity.Activity):
 
         font = self._get_conf(conf, 'font', 'Monospace')
         vt.set_font(pango.FontDescription(font))
-
         fg_color = self._get_conf(conf, 'fg_color', '#000000')
         bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
         vt.set_colors(gtk.gdk.color_parse(fg_color),
