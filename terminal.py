@@ -351,7 +351,6 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.feed('\r\n')
         vt.fork_command("/bin/su", ('/bin/su', '-'))
-        vt.fork_command("/bin/sudo", ('/bin/sudo', '-i'))
 
     def __key_press_cb(self, window, event):
         # Escape keypresses are routed directly to the vte and then dropped.
