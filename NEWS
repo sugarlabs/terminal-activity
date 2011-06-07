@@ -1,3 +1,10 @@
+33
+
+* Adding a zoom out and zoom in button, with accelerators, which change
+text font size of the terminal area.  Same accelerators as used by
+GNOME Terminal. by:manuel quiñones <manuel.por.aca@gmail.com>
+* Changing gtk to sugar notebook by natetheis, natetheis @gmail.com
+
 32
 
 * New Icon and fix for activity.info deprecations
