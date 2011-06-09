@@ -2,32 +2,62 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"PO-Revision-Date: 2009-06-21 01:25-0400\n"
+"Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fa_AF\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.1.1rc4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "پايانی"
 
-#: terminal.py:43
-msgid "Terminal Activity"
-msgstr ""
-
-#: terminal.py:49
-msgid "Edit"
-msgstr ""
-
-#: terminal.py:63
+#: terminal.py:89
 msgid "Become root"
-msgstr ""
+msgstr "ریشه ای شدن"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "صفحه کامل"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "حساب جدیدی باز کن"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "حساب را بسته کن"
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr "حساب قبلی"
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr "حساب بعدی"
+
+#~ msgid "Terminal Activity"
+#~ msgstr "فعالیت پایانه"
+
+#~ msgid "Edit"
+#~ msgstr "تنظیم کردن"
+
+#~ msgid "Tab"
+#~ msgstr "حساب یا برگ"

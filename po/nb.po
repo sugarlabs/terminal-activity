@@ -2,11 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2008-07-23 16:23+0100\n"
 "Last-Translator: Kent Dahl <kentda@pvv.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,16 +27,34 @@ msgstr ""
 msgid "Terminal"
 msgstr "Konsoll"
 
-#: terminal.py:43
-#, fuzzy
-msgid "Terminal Activity"
-msgstr "Konsollsesjon"
-
-#: terminal.py:49
-msgid "Edit"
-msgstr "Endre"
-
-#: terminal.py:63
+#: terminal.py:89
 #, fuzzy
 msgid "Become root"
 msgstr "Bli til rotbruker"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr ""
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr ""
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr ""
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr ""
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Terminal Activity"
+#~ msgstr "Konsollsesjon"
+
+#~ msgid "Edit"
+#~ msgstr "Endre"
