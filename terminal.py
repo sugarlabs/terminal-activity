@@ -109,6 +109,7 @@ class TerminalActivity(activity.Activity):
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
+        self._update_accelerators(toolbar_box)
 
         self._notebook = Notebook()
         self._notebook.set_property("tab-pos", gtk.POS_TOP)
@@ -118,6 +119,28 @@ class TerminalActivity(activity.Activity):
         self.set_canvas(self._notebook)
 
         self._create_tab(None)
+
+    def _update_accelerators(self, container):
+        for child in container.get_children():
+            if isinstance(child, ToolButton):
+                if child.props.accelerator is not None:
+                    # This code is copied from toolbutton.py
+                    # to solve workaround bug described in OLPC #10930
+                    accel_group = self.get_data('sugar-accel-group')
+                    keyval, mask = gtk.accelerator_parse(
+                                                    child.props.accelerator)
+                    # the accelerator needs to be set at the child,
+                    # so the gtk.AccelLabel
+                    # in the palette can pick it up.
+                    child.child.add_accelerator('clicked', accel_group,
+                                keyval, mask,
+                                gtk.ACCEL_LOCKED | gtk.ACCEL_VISIBLE)
+
+            if isinstance(child, ToolbarButton):
+                if child.get_page() is not None:
+                    self._update_accelerators(child.get_page())
+            if hasattr(child, 'get_children'):
+                self._update_accelerators(child)
 
     def _create_edit_toolbar(self):
         edit_toolbar = activity.EditToolbar()
