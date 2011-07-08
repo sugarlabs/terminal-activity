@@ -2,57 +2,59 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
-"PO-Revision-Date: 2009-08-17 10:52-0400\n"
-"Last-Translator: Jon  <joni-ber_rock@hotmail.com>\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"PO-Revision-Date: 2010-02-14 18:57+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr "Terminal"
+msgstr "Terminali"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr ""
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "Ndrysho"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr ""
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr ""
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
-msgstr ""
+msgstr "Bëhu rrënjësori"
 
-#: terminal.py:86
-msgid "Previous Tab"
-msgstr ""
-
-#: terminal.py:91
-msgid "Next Tab"
-msgstr ""
-
-#: terminal.py:104
-msgid "Tab"
-msgstr ""
-
-#: terminal.py:111
+#: terminal.py:140
 msgid "Fullscreen"
-msgstr "Ekran të plotë "
+msgstr "Ekran të plotë"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "Hape një lidhëse të ri"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "Mbyll lidhësen"
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr "Lidhësja e mëparshme"
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr "Lidhësja tjetër"
+
+#~ msgid "Terminal Activity"
+#~ msgstr "Aktiviteti i Terminalit"
+
+#~ msgid "Edit"
+#~ msgstr "Ndrysho"

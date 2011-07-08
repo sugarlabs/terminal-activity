@@ -2,6 +2,26 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -20,14 +40,6 @@ msgstr ""
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Терминал"
-
-#: terminal.py:43
-msgid "Terminal Activity"
-msgstr "Терминалын үйл ажиллагаа"
-
-#: terminal.py:49
-msgid "Edit"
-msgstr "Засварлах"
 
 #: terminal.py:89
 msgid "Become root"
@@ -52,3 +64,9 @@ msgstr "Өмнөх хавтгайд оч"
 #: terminal.py:176
 msgid "Next Tab"
 msgstr "Дараах хавтгайд оч"
+
+#~ msgid "Terminal Activity"
+#~ msgstr "Терминалын үйл ажиллагаа"
+
+#~ msgid "Edit"
+#~ msgstr "Засварлах"

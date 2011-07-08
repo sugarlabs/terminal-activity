@@ -2,11 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 00:31-0400\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2009-08-28 15:29-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,38 +26,35 @@ msgstr ""
 msgid "Terminal"
 msgstr "الطرفية"
 
-#: terminal.py:48
-msgid "Terminal Activity"
-msgstr "نشاط الطرفية"
-
-#: terminal.py:56
-msgid "Edit"
-msgstr "تحرير"
-
-#: terminal.py:67
-msgid "Open New Tab"
-msgstr "افتح لسانا جديدا"
-
-#: terminal.py:72
-msgid "Close Tab"
-msgstr "أغلق اللسان"
-
-#: terminal.py:82
+#: terminal.py:89
 msgid "Become root"
 msgstr "تحوّل إلى الجذر"
 
-#: terminal.py:86
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr "ملء الشاشة"
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr "افتح لسانا جديدا"
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr "أغلق اللسان"
+
+#: terminal.py:168
 msgid "Previous Tab"
 msgstr "اللسان السابق"
 
-#: terminal.py:91
+#: terminal.py:176
 msgid "Next Tab"
 msgstr "اللسان التالي"
 
-#: terminal.py:104
-msgid "Tab"
-msgstr "الألسنة"
+#~ msgid "Terminal Activity"
+#~ msgstr "نشاط الطرفية"
 
-#: terminal.py:111
-msgid "Fullscreen"
-msgstr "ملء الشاشة"
+#~ msgid "Edit"
+#~ msgstr "تحرير"
+
+#~ msgid "Tab"
+#~ msgstr "الألسنة"

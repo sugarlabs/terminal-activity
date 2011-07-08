@@ -2,11 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-21 20:48+0530\n"
+"POT-Creation-Date: 2009-09-10 00:33-0400\n"
 "PO-Revision-Date: 2008-07-03 07:02-0400\n"
 "Last-Translator: salman minhas <sulmanminhas@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,14 +27,32 @@ msgstr ""
 msgid "Terminal"
 msgstr "ٹرمينل"
 
-#: terminal.py:43
-msgid "Terminal Activity"
-msgstr "ٹرمينل سرگرمی"
-
-#: terminal.py:49
-msgid "Edit"
-msgstr "تبديل کريں"
-
-#: terminal.py:63
+#: terminal.py:89
 msgid "Become root"
 msgstr "روٹ بنيں"
+
+#: terminal.py:140
+msgid "Fullscreen"
+msgstr ""
+
+#: terminal.py:153
+msgid "Open New Tab"
+msgstr ""
+
+#: terminal.py:160
+msgid "Close Tab"
+msgstr ""
+
+#: terminal.py:168
+msgid "Previous Tab"
+msgstr ""
+
+#: terminal.py:176
+msgid "Next Tab"
+msgstr ""
+
+#~ msgid "Terminal Activity"
+#~ msgstr "ٹرمينل سرگرمی"
+
+#~ msgid "Edit"
+#~ msgstr "تبديل کريں"
