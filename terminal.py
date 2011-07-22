@@ -162,7 +162,7 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
-    def _create_view_toolbar(self):
+    def _create_view_toolbar(self): # Zoom toolbar  
         view_toolbar = gtk.Toolbar()
 
         zoom_out_button = ToolButton('zoom-out')
