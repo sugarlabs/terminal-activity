@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-10 00:33-0400\n"
-"PO-Revision-Date: 2009-05-29 18:25-0400\n"
+"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"PO-Revision-Date: 2011-08-17 12:09+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -23,33 +23,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:89
+#: terminal.py:94
 msgid "Become root"
 msgstr "Devenir administrateur"
 
-#: terminal.py:140
+#: terminal.py:169
+msgid "Zoom out"
+msgstr "Zoom arrière"
+
+#: terminal.py:176
+msgid "Zoom in"
+msgstr "Zoom avant"
+
+#: terminal.py:183
 msgid "Fullscreen"
 msgstr "Plein écran"
 
-#: terminal.py:153
+#: terminal.py:209
 msgid "Open New Tab"
 msgstr "Ouvrir un nouvel onglet"
 
-#: terminal.py:160
+#: terminal.py:216
 msgid "Close Tab"
 msgstr "Fermer l'onglet"
 
-#: terminal.py:168
+#: terminal.py:224
 msgid "Previous Tab"
 msgstr "Onglet précédent"
 
-#: terminal.py:176
+#: terminal.py:232
 msgid "Next Tab"
 msgstr "Onglet suivant"
 
