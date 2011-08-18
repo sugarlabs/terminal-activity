@@ -59,7 +59,6 @@ class TerminalActivity(activity.Activity):
 
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
-        activity_button.page.keep.props.accelerator = '<Ctrl><Shift>S'
         activity_button.show()
 
         edit_toolbar = self._create_edit_toolbar()
