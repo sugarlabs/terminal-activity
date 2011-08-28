@@ -1,3 +1,11 @@
+34
+
+*Fix for OLPC #10930  by Gonzalo Odiard.
+*Remove code setting accelerator to KeepButton because was removed from defualt toolbar by Gonzalo Odiard.
+*New string translations by korakurader, cjl, aputsiaq, khaled, samybt.
+
+
+
 33
 
 * Adding a zoom out and zoom in button, with accelerators, which change
