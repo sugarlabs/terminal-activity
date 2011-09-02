@@ -45,7 +45,7 @@ log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
-ZOOM_STEP = 2000
+ZOOM_STEP = 1024
 
 
 class TerminalActivity(activity.Activity):
@@ -166,14 +166,14 @@ class TerminalActivity(activity.Activity):
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
-        zoom_out_button.props.accelerator = '<Ctrl>-'
+        zoom_out_button.props.accelerator = '<Ctrl>minus'
         zoom_out_button.connect('clicked', self.__zoom_out_cb)
         view_toolbar.insert(zoom_out_button, -1)
         zoom_out_button.show()
 
         zoom_in_button = ToolButton('zoom-in')
         zoom_in_button.set_tooltip(_('Zoom in'))
-        zoom_in_button.props.accelerator = '<Ctrl>+'
+        zoom_in_button.props.accelerator = '<Ctrl>plus'
         zoom_in_button.connect('clicked', self.__zoom_in_cb)
         view_toolbar.insert(zoom_in_button, -1)
         zoom_in_button.show()
