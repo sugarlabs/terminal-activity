@@ -14,42 +14,50 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-10 00:33-0400\n"
-"PO-Revision-Date: 2011-02-09 11:11+0200\n"
-"Last-Translator: Shaswot <shaswot.kharel@olenepal.org>\n"
+"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"PO-Revision-Date: 2011-09-08 10:25+0200\n"
+"Last-Translator:  <aman.maharjan@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.3\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "टर्मिनल"
 
-#: terminal.py:89
+#: terminal.py:94
 msgid "Become root"
 msgstr "रुट बन"
 
-#: terminal.py:140
+#: terminal.py:169
+msgid "Zoom out"
+msgstr "सानो पार"
+
+#: terminal.py:176
+msgid "Zoom in"
+msgstr "ठूलो पार"
+
+#: terminal.py:183
 msgid "Fullscreen"
 msgstr "पुरा पर्दा"
 
-#: terminal.py:153
+#: terminal.py:209
 msgid "Open New Tab"
 msgstr "नयाँ ट्याब खोल"
 
-#: terminal.py:160
+#: terminal.py:216
 msgid "Close Tab"
 msgstr "ट्याब बन्द गर"
 
-#: terminal.py:168
+#: terminal.py:224
 msgid "Previous Tab"
 msgstr "अघिल्लो ट्याब "
 
-#: terminal.py:176
+#: terminal.py:232
 msgid "Next Tab"
 msgstr "अर्को ट्याब"
 
