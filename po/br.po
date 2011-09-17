@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr ""
+
+#: terminal.py:94
+msgid "Become root"
+msgstr ""
+
+#: terminal.py:169
+msgid "Zoom out"
+msgstr ""
+
+#: terminal.py:176
+msgid "Zoom in"
+msgstr ""
+
+#: terminal.py:183
+msgid "Fullscreen"
+msgstr ""
+
+#: terminal.py:209
+msgid "Open New Tab"
+msgstr ""
+
+#: terminal.py:216
+msgid "Close Tab"
+msgstr ""
+
+#: terminal.py:224
+msgid "Previous Tab"
+msgstr ""
+
+#: terminal.py:232
+msgid "Next Tab"
+msgstr ""
