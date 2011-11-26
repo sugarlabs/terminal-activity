@@ -1,0 +1,59 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"PO-Revision-Date: 2011-11-26 01:41+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: aym\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
+
+#  "Terminal"
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr ""
+
+#  "Convertirse en root"
+#: terminal.py:94
+msgid "Become root"
+msgstr ""
+
+#  "Reducir"
+#: terminal.py:169
+msgid "Zoom out"
+msgstr "Jisk'aptayaña"
+
+#  "Ampliar"
+#: terminal.py:176
+msgid "Zoom in"
+msgstr "Jach'aptayaña"
+
+#  "Pantalla completa"
+#: terminal.py:183
+msgid "Fullscreen"
+msgstr "Maypacha uñtawi"
+
+#  "Abrir lengüeta nueva"
+#: terminal.py:209
+msgid "Open New Tab"
+msgstr ""
+
+#  "Cerrar lengüeta"
+#: terminal.py:216
+msgid "Close Tab"
+msgstr ""
+
+#  "Lengüeta anterior"
+#: terminal.py:224
+msgid "Previous Tab"
+msgstr ""
+
+#  "Lengüeta siguiente"
+#: terminal.py:232
+msgid "Next Tab"
+msgstr ""
