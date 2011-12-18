@@ -15,15 +15,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 15:54-0500\n"
-"PO-Revision-Date: 2010-12-27 16:29+0200\n"
-"Last-Translator: rubina <rubina@aua.am>\n"
+"PO-Revision-Date: 2011-12-18 18:29+0200\n"
+"Last-Translator: Jasmine <udea_jasmine@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
@@ -31,15 +31,15 @@ msgstr "Վերջնակայան"
 
 #: terminal.py:94
 msgid "Become root"
-msgstr "Դարնալ առմատ"
+msgstr "Դառնալ արմատ"
 
 #: terminal.py:169
 msgid "Zoom out"
-msgstr ""
+msgstr "Հեռացնել"
 
 #: terminal.py:176
 msgid "Zoom in"
-msgstr ""
+msgstr "Մոտեցնել"
 
 #: terminal.py:183
 msgid "Fullscreen"
@@ -47,7 +47,7 @@ msgstr "Էկրանի չափով"
 
 #: terminal.py:209
 msgid "Open New Tab"
-msgstr "﻿ Բացել նոր փեղկում"
+msgstr "﻿ Բացել նոր փեղկ"
 
 #: terminal.py:216
 msgid "Close Tab"
