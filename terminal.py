@@ -53,6 +53,11 @@ class TerminalActivity(activity.Activity):
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
 
+        # HACK to avoid Escape key disable fullscreen mode on Terminal Activity
+        # This is related with http://bugs.sugarlabs.org/ticket/440
+        self.disconnect_by_func(self._Window__key_press_cb)
+        self.connect('key-press-event', self.__key_press_cb)
+
         self.max_participants = 1
 
         toolbar_box = ToolbarBox()
