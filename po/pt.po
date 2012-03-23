@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 15:54-0500\n"
-"PO-Revision-Date: 2012-01-25 23:00+0200\n"
+"PO-Revision-Date: 2012-03-23 21:22+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -31,7 +31,7 @@ msgstr "Terminal"
 
 #: terminal.py:94
 msgid "Become root"
-msgstr "Tornar-se root"
+msgstr "Tornar-me root"
 
 #: terminal.py:169
 msgid "Zoom out"
@@ -43,23 +43,23 @@ msgstr "Aproximar zoom"
 
 #: terminal.py:183
 msgid "Fullscreen"
-msgstr "Ecrã inteiro"
+msgstr "Ecrã Inteiro"
 
 #: terminal.py:209
 msgid "Open New Tab"
-msgstr "Abrir novo separador"
+msgstr "Abrir Novo Separador"
 
 #: terminal.py:216
 msgid "Close Tab"
-msgstr "Fechar separador"
+msgstr "Fechar Separador"
 
 #: terminal.py:224
 msgid "Previous Tab"
-msgstr "Separador anterior"
+msgstr "Separador Anterior"
 
 #: terminal.py:232
 msgid "Next Tab"
-msgstr "Separador seguinte"
+msgstr "Separador Seguinte"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "Actividade Terminal"
