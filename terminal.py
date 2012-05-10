@@ -380,14 +380,29 @@ class TerminalActivity(activity.Activity):
         vt.fork_command("/bin/su", ('/bin/su', '-'))
 
     def __key_press_cb(self, window, event):
-        # Escape keypresses are routed directly to the vte and then dropped.
-        # This hack prevents Sugar from hijacking them and canceling
-        # fullscreen mode.
-        if gtk.gdk.keyval_name(event.keyval) == 'Escape':
+        """Route some keypresses directly to the vte and then drop them.
+
+        This prevents Sugar from hijacking events that are useful in
+        the vte.
+
+        """
+
+        def event_to_vt(event):
             current_page = self._notebook.get_current_page()
             vt = self._notebook.get_nth_page(current_page).vt
             vt.event(event)
+
+        key_name = gtk.gdk.keyval_name(event.keyval)
+
+        # Escape is used in Sugar to cancel fullscreen mode.
+        if key_name == 'Escape':
+            event_to_vt(event)
             return True
+
+        elif event.get_state() & gtk.gdk.CONTROL_MASK:
+            if key_name in ['z', 'q']:
+                event_to_vt(event)
+                return True
 
         return False
 
