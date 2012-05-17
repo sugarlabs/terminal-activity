@@ -14,10 +14,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-10 00:33-0400\n"
+"POT-Creation-Date: 2011-08-03 15:54-0500\n"
 "PO-Revision-Date: 2008-07-23 16:23+0100\n"
 "Last-Translator: Kent Dahl <kentda@pvv.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,28 +28,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "Konsoll"
 
-#: terminal.py:89
+#: terminal.py:94
 #, fuzzy
 msgid "Become root"
 msgstr "Bli til rotbruker"
 
-#: terminal.py:140
-msgid "Fullscreen"
-msgstr ""
-
-#: terminal.py:153
-msgid "Open New Tab"
-msgstr ""
-
-#: terminal.py:160
-msgid "Close Tab"
-msgstr ""
-
-#: terminal.py:168
-msgid "Previous Tab"
+#: terminal.py:169
+msgid "Zoom out"
 msgstr ""
 
 #: terminal.py:176
+msgid "Zoom in"
+msgstr ""
+
+#: terminal.py:183
+msgid "Fullscreen"
+msgstr ""
+
+#: terminal.py:209
+msgid "Open New Tab"
+msgstr ""
+
+#: terminal.py:216
+msgid "Close Tab"
+msgstr ""
+
+#: terminal.py:224
+msgid "Previous Tab"
+msgstr ""
+
+#: terminal.py:232
 msgid "Next Tab"
 msgstr ""
 
