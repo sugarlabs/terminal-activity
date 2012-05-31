@@ -23,19 +23,22 @@ import ConfigParser
 import logging
 from gettext import gettext as _
 
-import gtk
-import vte
-import pango
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import Vte
+from gi.repository import Pango
 
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.graphics.notebook import Notebook
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.notebook import Notebook
 
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.activity.widgets import StopButton
-from sugar.activity import activity
-from sugar import env
+from sugar3.activity.widgets import EditToolbar
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.activity.widgets import StopButton
+from sugar3.activity import activity
+from sugar3 import env
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
@@ -100,7 +103,7 @@ class TerminalActivity(activity.Activity):
         toolbar_box.toolbar.insert(root_button, -1)
         root_button.show()
 
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
@@ -116,7 +119,7 @@ class TerminalActivity(activity.Activity):
         self._update_accelerators(toolbar_box)
 
         self._notebook = Notebook()
-        self._notebook.set_property("tab-pos", gtk.POS_TOP)
+        self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
         self._notebook.set_scrollable(True)
         self._notebook.show()
 
@@ -131,14 +134,14 @@ class TerminalActivity(activity.Activity):
                     # This code is copied from toolbutton.py
                     # to solve workaround bug described in OLPC #10930
                     accel_group = self.get_data('sugar-accel-group')
-                    keyval, mask = gtk.accelerator_parse(
+                    keyval, mask = Gtk.accelerator_parse(
                                                     child.props.accelerator)
                     # the accelerator needs to be set at the child,
-                    # so the gtk.AccelLabel
+                    # so the Gtk.AccelLabel
                     # in the palette can pick it up.
-                    child.child.add_accelerator('clicked', accel_group,
+                    child.get_child().add_accelerator('clicked', accel_group,
                                 keyval, mask,
-                                gtk.ACCEL_LOCKED | gtk.ACCEL_VISIBLE)
+                                Gtk.AccelFlags.LOCKED | Gtk.AccelFlags.VISIBLE)
 
             if isinstance(child, ToolbarButton):
                 if child.get_page() is not None:
@@ -147,7 +150,7 @@ class TerminalActivity(activity.Activity):
                 self._update_accelerators(child)
 
     def _create_edit_toolbar(self):
-        edit_toolbar = activity.EditToolbar()
+        edit_toolbar = EditToolbar()
         edit_toolbar.undo.props.visible = False
         edit_toolbar.redo.props.visible = False
         edit_toolbar.separator.props.visible = False
@@ -167,7 +170,7 @@ class TerminalActivity(activity.Activity):
         vt.paste_clipboard()
 
     def _create_view_toolbar(self):  # Zoom toolbar
-        view_toolbar = gtk.Toolbar()
+        view_toolbar = Gtk.Toolbar()
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
@@ -208,7 +211,7 @@ class TerminalActivity(activity.Activity):
         self.fullscreen()
 
     def _create_tab_toolbar(self):
-        tab_toolbar = gtk.Toolbar()
+        tab_toolbar = Gtk.Toolbar()
         new_tab_button = ToolButton('tab-add')
         new_tab_button.set_tooltip(_("Open New Tab"))
         new_tab_button.props.accelerator = '<Ctrl><Shift>T'
@@ -297,31 +300,31 @@ class TerminalActivity(activity.Activity):
         return True
 
     def _create_tab(self, tab_state):
-        vt = vte.Terminal()
+        vt = Vte.Terminal()
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         # FIXME have to resend motion events to parent, see #1402
         vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
-               [('text/plain', 0, 0), ('STRING', 0, 1)],
-               gtk.gdk.ACTION_DEFAULT |
-               gtk.gdk.ACTION_COPY)
-        vt.connect('drag_data_received', self.__drag_data_received_cb)
+        #vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
+        #       [('text/plain', 0, 0), ('STRING', 0, 1)],
+        #       Gdk.DragAction.DEFAULT |
+        #       Gdk.DragAction.COPY)
+        #vt.connect('drag_data_received', self.__drag_data_received_cb)
 
         self._configure_vt(vt)
 
         vt.show()
 
-        label = gtk.Label()
+        label = Gtk.Label()
 
-        scrollbar = gtk.VScrollbar(vt.get_adjustment())
+        scrollbar = Gtk.VScrollbar.new(vt.get_vadjustment())
         scrollbar.show()
 
-        box = gtk.HBox()
-        box.pack_start(vt)
-        box.pack_start(scrollbar)
+        box = Gtk.HBox()
+        box.pack_start(vt, True, True, 0)
+        box.pack_start(scrollbar, False, True, 0)
 
         box.vt = vt
         box.label = label
@@ -364,20 +367,31 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(l + '\r\n')
 
-        box.pid = vt.fork_command()
-
+        box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
+                                       os.environ["HOME"],
+                                       ["/bin/bash"],
+                                       [],
+                                       GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                       None,
+                                       None)
         self._notebook.props.page = index
         vt.grab_focus()
 
         return index
 
     def __motion_notify_cb(self, widget, event):
-        self.canvas.parent.emit('motion-notify-event', event)
+        self.emit('motion-notify-event', event)
 
     def __become_root_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.feed('\r\n')
-        vt.fork_command("/bin/su", ('/bin/su', '-'))
+        vt.fork_command_full(Vte.PtyFlags.DEFAULT,
+                             os.environ["HOME"],
+                             ["/bin/su"],
+                             [],
+                             GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                             None,
+                             None)
 
     def __key_press_cb(self, window, event):
         """Route some keypresses directly to the vte and then drop them.
@@ -392,14 +406,14 @@ class TerminalActivity(activity.Activity):
             vt = self._notebook.get_nth_page(current_page).vt
             vt.event(event)
 
-        key_name = gtk.gdk.keyval_name(event.keyval)
+        key_name = Gdk.keyval_name(event.keyval)
 
         # Escape is used in Sugar to cancel fullscreen mode.
         if key_name == 'Escape':
             event_to_vt(event)
             return True
 
-        elif event.get_state() & gtk.gdk.CONTROL_MASK:
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             if key_name in ['z', 'q']:
                 event_to_vt(event)
                 return True
@@ -414,8 +428,6 @@ class TerminalActivity(activity.Activity):
         text = fd.read()
         data = simplejson.loads(text)
         fd.close()
-
-        data_file = file_path
 
         # Clean out any existing tabs.
         while self._notebook.get_n_pages():
@@ -496,15 +508,15 @@ class TerminalActivity(activity.Activity):
             conf.add_section('terminal')
 
         font = self._get_conf(conf, 'font', 'Monospace')
-        vt.set_font(pango.FontDescription(font))
+        vt.set_font(Pango.FontDescription(font))
 
         fg_color = self._get_conf(conf, 'fg_color', '#000000')
         bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
-        vt.set_colors(gtk.gdk.color_parse(fg_color),
-                      gtk.gdk.color_parse(bg_color), [])
+        vt.set_colors(Gdk.color_parse(fg_color),
+                      Gdk.color_parse(bg_color), [])
 
         blink = self._get_conf(conf, 'cursor_blink', False)
-        vt.set_cursor_blinks(blink)
+        vt.set_cursor_blink_mode(blink)
 
         bell = self._get_conf(conf, 'bell', False)
         vt.set_audible_bell(bell)
