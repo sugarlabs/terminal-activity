@@ -307,6 +307,7 @@ class TerminalActivity(activity.Activity):
         # FIXME have to resend motion events to parent, see #1402
         vt.connect('motion-notify-event', self.__motion_notify_cb)
 
+        #FIXME Drag and drop not working SL#3655 
         #vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
         #       [('text/plain', 0, 0), ('STRING', 0, 1)],
         #       Gdk.DragAction.DEFAULT |
