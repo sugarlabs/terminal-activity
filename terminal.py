@@ -32,13 +32,15 @@ from gi.repository import Pango
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
-from sugar3.graphics.notebook import Notebook
 
 from sugar3.activity.widgets import EditToolbar
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from sugar3.activity import activity
 from sugar3 import env
+
+from widgets import BrowserNotebook
+from widgets import TabLabel
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
@@ -118,7 +120,8 @@ class TerminalActivity(activity.Activity):
         toolbar_box.show()
         self._update_accelerators(toolbar_box)
 
-        self._notebook = Notebook()
+        self._notebook = BrowserNotebook()
+        self._notebook.connect("tab-added", self.__open_tab_cb)
         self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
         self._notebook.set_scrollable(True)
         self._notebook.show()
@@ -248,16 +251,23 @@ class TerminalActivity(activity.Activity):
         index = self._create_tab(None)
         self._notebook.page = index
         if self._notebook.get_n_pages() == 2:
+            self._notebook.get_tab_label(self._notebook.get_nth_page(0
+                                                    )).show_close_button()
             self._delete_tab_button.props.sensitive = True
             self._previous_tab_button.props.sensitive = True
             self._next_tab_button.props.sensitive = True
 
-    def __close_tab_cb(self, btn):
-        self._close_tab(self._notebook.props.page)
+    def __close_tab_cb(self, btn, child):
+        index = self._notebook.page_num(child)
+        self._close_tab(index)
         if self._notebook.get_n_pages() == 1:
+            self._notebook.get_tab_label(self._notebook.get_nth_page(0
+                                                    )).hide_close_button()
             self._delete_tab_button.props.sensitive = False
             self._previous_tab_button.props.sensitive = False
             self._next_tab_button.props.sensitive = False
+
+        self._notebook.update_tab_sizes()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -305,9 +315,8 @@ class TerminalActivity(activity.Activity):
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         # FIXME have to resend motion events to parent, see #1402
-        vt.connect('motion-notify-event', self.__motion_notify_cb)
+        #vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        #FIXME Drag and drop not working SL#3655 
         #vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
         #       [('text/plain', 0, 0), ('STRING', 0, 1)],
         #       Gdk.DragAction.DEFAULT |
@@ -318,25 +327,32 @@ class TerminalActivity(activity.Activity):
 
         vt.show()
 
-        label = Gtk.Label()
-
         scrollbar = Gtk.VScrollbar.new(vt.get_vadjustment())
-        scrollbar.show()
 
         box = Gtk.HBox()
         box.pack_start(vt, True, True, 0)
         box.pack_start(scrollbar, False, True, 0)
 
         box.vt = vt
-        box.label = label
+        box.show()
 
-        index = self._notebook.append_page(box, label)
+        tablabel = TabLabel(box)
+        tablabel.connect('tab-close', self.__close_tab_cb)
+        tablabel.update_size(200)
+        box.label = tablabel
+
+        index = self._notebook.append_page(box, tablabel)
+        tablabel.show_all()
+
+        self._notebook.update_tab_sizes()
         self._notebook.show_all()
 
         # Uncomment this to only show the tab bar when there is at least
         # one tab. I think it's useful to always see it, since it displays
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
+        tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
+                                     else None
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -380,8 +396,8 @@ class TerminalActivity(activity.Activity):
 
         return index
 
-    def __motion_notify_cb(self, widget, event):
-        self.emit('motion-notify-event', event)
+#    def __motion_notify_cb(self, widget, event):
+#        self.emit('motion-notify-event', event)
 
     def __become_root_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
