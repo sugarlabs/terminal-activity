@@ -467,38 +467,39 @@ class TerminalActivity(activity.Activity):
             self._next_tab_button.props.sensitive = True
 
     def write_file(self, file_path):
-        if not self.metadata['mime_type']:
-            self.metadata['mime_type'] = 'text/plain'
-
-        data = {}
-        data['current-tab'] = self._notebook.get_current_page()
-        data['tabs'] = []
-
-        for i in range(self._notebook.get_n_pages()):
-            page = self._notebook.get_nth_page(i)
-
-            def selected_cb(terminal, c, row, cb_data):
-                return 1
-            scrollback_text = page.vt.get_text(selected_cb, False)
-
-            scrollback_lines = scrollback_text.split('\n')
-
-            # Note- this currently gets the child's initial environment
-            # rather than the current environment, making it not very useful.
-            environment = open('/proc/%d/environ' %
-                               page.pid, 'r').read().split('\0')
-
-            cwd = os.readlink('/proc/%d/cwd' % page.pid)
-
-            tab_state = {'env': environment, 'cwd': cwd,
-                         'scrollback': scrollback_lines}
-
-            data['tabs'].append(tab_state)
-
-        fd = open(file_path, 'w')
-        text = simplejson.dumps(data)
-        fd.write(text)
-        fd.close()
+        return
+#        if not self.metadata['mime_type']:
+#            self.metadata['mime_type'] = 'text/plain'
+#
+#        data = {}
+#        data['current-tab'] = self._notebook.get_current_page()
+#        data['tabs'] = []
+#
+#        for i in range(self._notebook.get_n_pages()):
+#            page = self._notebook.get_nth_page(i)
+#
+#            def selected_cb(terminal, c, row, cb_data):
+#                return 1
+#            scrollback_text = page.vt.get_text(selected_cb, False)
+#
+#            scrollback_lines = scrollback_text.split('\n')
+#
+#            # Note- this currently gets the child's initial environment
+#            # rather than the current environment, making it not very useful.
+#            environment = open('/proc/%d/environ' %
+#                               page.pid, 'r').read().split('\0')
+#
+#            cwd = os.readlink('/proc/%d/cwd' % page.pid)
+#
+#            tab_state = {'env': environment, 'cwd': cwd,
+#                         'scrollback': scrollback_lines}
+#
+#            data['tabs'].append(tab_state)
+#
+#        fd = open(file_path, 'w')
+#        text = simplejson.dumps(data)
+#        fd.write(text)
+#        fd.close()
 
     def _get_conf(self, conf, var, default):
         if conf.has_option('terminal', var):
