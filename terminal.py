@@ -468,6 +468,10 @@ class TerminalActivity(activity.Activity):
 
     def write_file(self, file_path):
         return
+
+# FIXME Bellow lines are commented in ording to have journal access but we are not still saving a 
+# file this is an upstream bug with Vte.Terminal.get_text, SL#3655
+#
 #        if not self.metadata['mime_type']:
 #            self.metadata['mime_type'] = 'text/plain'
 #
