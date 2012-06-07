@@ -6,4 +6,3 @@ exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
 license = GPLv2+
-
