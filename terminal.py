@@ -305,7 +305,7 @@ class TerminalActivity(activity.Activity):
 
     def __drag_data_received_cb(self, widget, context, x, y, selection,
                                 target, time):
-        widget.feed_child(selection.data)
+        widget.feed_child(selection.get_text(), -1)
         context.finish(True, False, time)
         return True
 
@@ -315,13 +315,14 @@ class TerminalActivity(activity.Activity):
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         # FIXME have to resend motion events to parent, see #1402
-        #vt.connect('motion-notify-event', self.__motion_notify_cb)
+        vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        #vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-        #       [('text/plain', 0, 0), ('STRING', 0, 1)],
-        #       Gdk.DragAction.DEFAULT |
-        #       Gdk.DragAction.COPY)
-        #vt.connect('drag_data_received', self.__drag_data_received_cb)
+        vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
+                         [Gtk.TargetEntry.new('text/plain', 0, 0),
+                          Gtk.TargetEntry.new('STRING', 0, 1)],
+                          Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
+        vt.drag_dest_add_text_targets()
+        vt.connect('drag_data_received', self.__drag_data_received_cb)
 
         self._configure_vt(vt)
 
@@ -396,8 +397,8 @@ class TerminalActivity(activity.Activity):
 
         return index
 
-#    def __motion_notify_cb(self, widget, event):
-#        self.emit('motion-notify-event', event)
+    def __motion_notify_cb(self, widget, event):
+        self.emit('motion-notify-event', Gdk.Event(event))
 
     def __become_root_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
