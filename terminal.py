@@ -118,7 +118,6 @@ class TerminalActivity(activity.Activity):
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
-        self._update_accelerators(toolbar_box)
 
         self._notebook = BrowserNotebook()
         self._notebook.connect("tab-added", self.__open_tab_cb)
@@ -129,28 +128,6 @@ class TerminalActivity(activity.Activity):
         self.set_canvas(self._notebook)
 
         self._create_tab(None)
-
-    def _update_accelerators(self, container):
-        for child in container.get_children():
-            if isinstance(child, ToolButton):
-                if child.props.accelerator is not None:
-                    # This code is copied from toolbutton.py
-                    # to solve workaround bug described in OLPC #10930
-                    accel_group = self.get_data('sugar-accel-group')
-                    keyval, mask = Gtk.accelerator_parse(
-                                                    child.props.accelerator)
-                    # the accelerator needs to be set at the child,
-                    # so the Gtk.AccelLabel
-                    # in the palette can pick it up.
-                    child.get_child().add_accelerator('clicked', accel_group,
-                                keyval, mask,
-                                Gtk.AccelFlags.LOCKED | Gtk.AccelFlags.VISIBLE)
-
-            if isinstance(child, ToolbarButton):
-                if child.get_page() is not None:
-                    self._update_accelerators(child.get_page())
-            if hasattr(child, 'get_children'):
-                self._update_accelerators(child)
 
     def _create_edit_toolbar(self):
         edit_toolbar = EditToolbar()
@@ -305,7 +282,7 @@ class TerminalActivity(activity.Activity):
 
     def __drag_data_received_cb(self, widget, context, x, y, selection,
                                 target, time):
-        widget.feed_child(selection.data)
+        widget.feed_child(selection.get_text(), -1)
         context.finish(True, False, time)
         return True
 
@@ -315,13 +292,14 @@ class TerminalActivity(activity.Activity):
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         # FIXME have to resend motion events to parent, see #1402
-        #vt.connect('motion-notify-event', self.__motion_notify_cb)
+        vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        #vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-        #       [('text/plain', 0, 0), ('STRING', 0, 1)],
-        #       Gdk.DragAction.DEFAULT |
-        #       Gdk.DragAction.COPY)
-        #vt.connect('drag_data_received', self.__drag_data_received_cb)
+        vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
+                         [Gtk.TargetEntry.new('text/plain', 0, 0),
+                          Gtk.TargetEntry.new('STRING', 0, 1)],
+                          Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
+        vt.drag_dest_add_text_targets()
+        vt.connect('drag_data_received', self.__drag_data_received_cb)
 
         self._configure_vt(vt)
 
@@ -396,8 +374,8 @@ class TerminalActivity(activity.Activity):
 
         return index
 
-#    def __motion_notify_cb(self, widget, event):
-#        self.emit('motion-notify-event', event)
+    def __motion_notify_cb(self, widget, event):
+        self.emit('motion-notify-event', Gdk.Event(event))
 
     def __become_root_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
@@ -468,10 +446,6 @@ class TerminalActivity(activity.Activity):
 
     def write_file(self, file_path):
         return
-
-# FIXME Bellow lines are commented in order to have journal access but we are not still saving a 
-# file this is an upstream bug with Vte.Terminal.get_text, SL#3655
-#
 #        if not self.metadata['mime_type']:
 #            self.metadata['mime_type'] = 'text/plain'
 #
