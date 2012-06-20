@@ -94,11 +94,11 @@ class TerminalActivity(activity.Activity):
         tab_toolbar_button.show()
 
         # Add a button that will be used to become root easily.
-        root_button = ToolButton('activity-become-root')
-        root_button.set_tooltip(_('Become root'))
-        root_button.connect('clicked', self.__become_root_cb)
-        toolbar_box.toolbar.insert(root_button, -1)
-        root_button.show()
+        #root_button = ToolButton('activity-become-root')
+        #root_button.set_tooltip(_('Become root'))
+        #root_button.connect('clicked', self.__become_root_cb)
+        #toolbar_box.toolbar.insert(root_button, -1)
+        #root_button.show()
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -374,10 +374,10 @@ class TerminalActivity(activity.Activity):
     def __motion_notify_cb(self, widget, event):
         self.canvas.parent.emit('motion-notify-event', event)
 
-    def __become_root_cb(self, button):
-        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
-        vt.feed('\r\n')
-        vt.fork_command("/bin/su", ('/bin/su', '-'))
+    #def __become_root_cb(self, button):
+    #    vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
+    #    vt.feed('\r\n')
+    #    vt.fork_command("/bin/su", ('/bin/su', '-'))
 
     def __key_press_cb(self, window, event):
         """Route some keypresses directly to the vte and then drop them.
