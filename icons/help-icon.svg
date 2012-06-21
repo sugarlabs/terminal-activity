@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="55px" height="55px">
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:3;stroke-linejoin:round"
+     d="M 48,28 A 20,20 0 1 1 8,28 A 20,20 0 1 1 48,28 z"/>
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round"
+     d="M 22,20 C 22,20 25,17 29,17 C 33,17 36,19 36,23 C 36,27 31,29 28,29 L 28,32" />
+  <path
+     style="fill:#ffffff"
+     d="M 25,40
+        a 3,3 0 1 1 6,0
+        a 3,3 0 1 1 -6,0 z" />
+</svg>

@@ -42,6 +42,9 @@ from sugar3 import env
 from widgets import BrowserNotebook
 from widgets import TabLabel
 
+from helpbutton import HelpButton
+
+
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
     'PPID']
@@ -103,6 +106,10 @@ class TerminalActivity(activity.Activity):
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
         separator.show()
+
+        helpbutton = self._create_help_button()
+        toolbar_box.toolbar.insert(helpbutton, -1)
+        helpbutton.show_all()
 
         stop_button = StopButton(self)
         stop_button.props.accelerator = '<Ctrl><Shift>Q'
@@ -182,6 +189,32 @@ class TerminalActivity(activity.Activity):
 
     def __fullscreen_cb(self, button):
         self.fullscreen()
+
+    def _create_help_button(self):
+        helpitem = HelpButton()
+
+        helpitem.add_section(_('Useful commands'))
+        helpitem.add_section(_('cd'))
+        helpitem.add_paragraph(_('Change directory'))
+        helpitem.add_paragraph(_('To use it, write: cd directory'))
+        helpitem.add_paragraph(_('If you call it without parameters, will change\nto the user directory'))
+        helpitem.add_section(_('ls'))
+        helpitem.add_paragraph(_('List the content of a directory.'))
+        helpitem.add_paragraph(_('To use it, write: ls directory'))
+        helpitem.add_paragraph(_('If you call it without parameters, will list\nthe working directory'))
+        helpitem.add_section(_('cp'))
+        helpitem.add_paragraph(_('Copy a file to a specific location'))
+        helpitem.add_paragraph(_('Call it with the file and the new location'))
+        helpitem.add_paragraph(_('Use: cp file directory/'))
+        helpitem.add_section(_('rm'))
+        helpitem.add_paragraph(_('Removes a file in any path'))
+        helpitem.add_paragraph(_('Use: rm file'))
+        helpitem.add_section(_('su'))
+        helpitem.add_paragraph(_('Login as superuser (root)'))
+        helpitem.add_paragraph(_('The root user is the administrator of the system'))
+        helpitem.add_paragraph(_('You must be careful, because you can modify system files'))
+
+        return helpitem
 
     def _create_tab_toolbar(self):
         tab_toolbar = Gtk.Toolbar()
