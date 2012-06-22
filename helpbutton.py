@@ -46,10 +46,11 @@ class HelpButton(Gtk.ToolItem):
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
         self._max_text_width = int(Gdk.Screen.width() / 3) - 600
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box()
+        self._vbox.set_orientation(Gtk.Orientation.VERTICAL)
         self._vbox.set_homogeneous(False)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box()
         hbox.pack_start(self._vbox, False, True, 0)
 
         sw.add_with_viewport(hbox)
@@ -63,7 +64,7 @@ class HelpButton(Gtk.ToolItem):
         self._palette.popup(immediate=True, state=1)
 
     def add_section(self, section_text):
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box()
         label = Gtk.Label()
         label.set_use_markup(True)
         label.set_markup('<b>%s</b>' % section_text)
@@ -73,7 +74,7 @@ class HelpButton(Gtk.ToolItem):
         self._vbox.pack_start(hbox, False, False, padding=5)
 
     def add_paragraph(self, text, icon=None):
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box()
         label = Gtk.Label(label=text)
         label.set_justify(Gtk.Justification.LEFT)
         label.set_line_wrap(True)
