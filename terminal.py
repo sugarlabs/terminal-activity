@@ -93,13 +93,6 @@ class TerminalActivity(activity.Activity):
         self._delete_tab_toolbar = None
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
-        tab_toolbar = self._create_tab_toolbar()
-        tab_toolbar_button = ToolbarButton(
-                page=tab_toolbar,
-                icon_name='toolbar-tab')
-        tab_toolbar.show()
-        toolbar_box.toolbar.insert(tab_toolbar_button, -1)
-        tab_toolbar_button.show()
 
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -215,40 +208,6 @@ class TerminalActivity(activity.Activity):
         helpitem.add_paragraph(_('You must be careful, because you can modify\nsystem files'))
 
         return helpitem
-
-    def _create_tab_toolbar(self):
-        tab_toolbar = Gtk.Toolbar()
-        new_tab_button = ToolButton('tab-add')
-        new_tab_button.set_tooltip(_("Open New Tab"))
-        new_tab_button.props.accelerator = '<Ctrl><Shift>T'
-        new_tab_button.connect('clicked', self.__open_tab_cb)
-        tab_toolbar.insert(new_tab_button, -1)
-        new_tab_button.show()
-
-        self._delete_tab_button = ToolButton('tab-remove')
-        self._delete_tab_button.set_tooltip(_("Close Tab"))
-        self._delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
-        self._delete_tab_button.props.sensitive = False
-        self._delete_tab_button.connect('clicked', self.__close_tab_cb)
-        tab_toolbar.insert(self._delete_tab_button, -1)
-        self._delete_tab_button.show()
-
-        self._previous_tab_button = ToolButton('tab-previous')
-        self._previous_tab_button.set_tooltip(_("Previous Tab"))
-        self._previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
-        self._previous_tab_button.props.sensitive = False
-        self._previous_tab_button.connect('clicked', self.__prev_tab_cb)
-        tab_toolbar.insert(self._previous_tab_button, -1)
-        self._previous_tab_button.show()
-
-        self._next_tab_button = ToolButton('tab-next')
-        self._next_tab_button.set_tooltip(_("Next Tab"))
-        self._next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
-        self._next_tab_button.props.sensitive = False
-        self._next_tab_button.connect('clicked', self.__next_tab_cb)
-        tab_toolbar.insert(self._next_tab_button, -1)
-        self._next_tab_button.show()
-        return tab_toolbar
 
     def __open_tab_cb(self, btn):
         index = self._create_tab(None)
