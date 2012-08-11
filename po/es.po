@@ -26,52 +26,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
-"PO-Revision-Date: 2011-08-29 20:07+0200\n"
-"Last-Translator: Gonzalo <godiard@sugarlabs.org>\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
+"PO-Revision-Date: 2012-08-06 21:55+0200\n"
+"Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "Convertirse en root"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "Reducir"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "Ampliar"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "Pantalla completa"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "Abrir lengüeta nueva"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "Cerrar lengüeta"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "Lengüeta anterior"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "Lengüeta siguiente"
+
+#~ msgid "Become root"
+#~ msgstr "Convertirse en root"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "Actividad Terminal"
