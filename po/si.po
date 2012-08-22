@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-30 16:49+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,37 +29,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "ටර්මිනලය"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "root වන්න"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "ඈත්කර පෙන්වන්න"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "ලංකර පෙන්වන්න"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "මුළු තිරයම"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "නව ටැබයක් විවෘත කරන්න"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "ටර්මිනලය වසන්න"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "පෙර ටැබය"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "මීළඟ ටැබය"
+
+#~ msgid "Become root"
+#~ msgstr "root වන්න"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "ටර්මිනලය ක්‍රියාකාරකම්"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-16 03:38+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,34 +29,33 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "Become root"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "Zoom out"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "Zoom in"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "Open New Tab"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "Close Tab"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "Previous Tab"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "Next Tab"
+
+#~ msgid "Become root"
+#~ msgstr "Become root"

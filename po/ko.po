@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2009-05-13 12:16-0400\n"
 "Last-Translator: Donghee Park <i4u_4ever@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,37 +29,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "터미널"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "루트 되기"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr ""
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr ""
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "전체화면"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "새로운 탭 열기"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "탭 닫기"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "이전 탭"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "다음 탭"
+
+#~ msgid "Become root"
+#~ msgstr "루트 되기"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "터미널 활동"

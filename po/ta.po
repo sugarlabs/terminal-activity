@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-31 18:01+0200\n"
 "Last-Translator: Thangamani <thangam.arunx@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,37 +29,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "முடிவு"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "முதன்மை பனர் ரூட்டாக மாறு"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "சிறிதாக்கிக் காட்டு"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "பெரிதாக்கிக் காட்டு"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "முழுத்திரை"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "புதிய நாடாவைத்திற"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "நாடாவை மூடு"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "முன்னைய நாடா"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "அடுத்த நாடா"
+
+#~ msgid "Become root"
+#~ msgstr "முதன்மை பனர் ரூட்டாக மாறு"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "செயற்பாட்டுமுடிவு"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-26 11:40+0200\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,37 +29,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "終端機"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "成為超級管理員"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "縮小"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "放大"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "全螢幕"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "開啟新的分頁"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "關閉分頁"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "上一個分頁"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "下一個分頁"
+
+#~ msgid "Become root"
+#~ msgstr "成為超級管理員"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "終端機活動"

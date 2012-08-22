@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-09-27 12:50+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,37 +41,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "Терминал"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "Давуу эрхтэй хэрэглэгч болох"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr ""
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr ""
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "Дэлгэц дүүрэн"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "Шинэ хавтгай нээх"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "Хавтгайг хаах"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "Өмнөх хавтгайд оч"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "Дараах хавтгайд оч"
+
+#~ msgid "Become root"
+#~ msgstr "Давуу эрхтэй хэрэглэгч болох"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "Терминалын үйл ажиллагаа"

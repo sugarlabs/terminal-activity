@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2010-05-18 17:55+0200\n"
 "Last-Translator: Zafimamy Gabriella Ralaivao <gabriella@intnet.mu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,34 +29,33 @@ msgstr ""
 msgid "Terminal"
 msgstr "Famaranana"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "Lasa fototra"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr ""
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr ""
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "Mameno efajery"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "Anokafy taby vaovao"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "Akatony ny taby"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "Taby teo aloha"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "Taby manaraka"
+
+#~ msgid "Become root"
+#~ msgstr "Lasa fototra"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-11-19 06:02+0200\n"
 "Last-Translator: Arnan (Roger) Sipitakiat <arnans@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,34 +29,33 @@ msgstr ""
 msgid "Terminal"
 msgstr "โปรแกรมเทอร์มินัล"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "เป็น root"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "ขยายออก"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "ขยายเข้า"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "เต็มจอ"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "เปิดแท็บใหม่"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "ปิดแท็บ"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "แท็บก่อนหน้า"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "แท็บถัดไป"
+
+#~ msgid "Become root"
+#~ msgstr "เป็น root"

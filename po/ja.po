@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-26 06:54+0200\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,37 +29,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "ターミナル"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "root（管理者ユーザ）になる"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "表示を縮小"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "表示を拡大"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "全画面"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "新しいタブを開く"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "タブを閉じる"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "前のタブ"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "次のタブ"
+
+#~ msgid "Become root"
+#~ msgstr "root（管理者ユーザ）になる"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "ターミナル アクティビティ"

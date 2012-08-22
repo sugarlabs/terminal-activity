@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 15:54-0500\n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
 "PO-Revision-Date: 2011-08-24 08:29+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
@@ -25,37 +25,36 @@ msgstr ""
 msgid "Terminal"
 msgstr "الطرفية"
 
-#: terminal.py:94
-msgid "Become root"
-msgstr "تحوّل إلى الجذر"
-
-#: terminal.py:169
+#: terminal.py:166
 msgid "Zoom out"
 msgstr "بعّد"
 
-#: terminal.py:176
+#: terminal.py:173
 msgid "Zoom in"
 msgstr "قرّب"
 
-#: terminal.py:183
+#: terminal.py:180
 msgid "Fullscreen"
 msgstr "ملء الشاشة"
 
-#: terminal.py:209
+#: terminal.py:206
 msgid "Open New Tab"
 msgstr "افتح لسانا جديدا"
 
-#: terminal.py:216
+#: terminal.py:213
 msgid "Close Tab"
 msgstr "أغلق اللسان"
 
-#: terminal.py:224
+#: terminal.py:221
 msgid "Previous Tab"
 msgstr "اللسان السابق"
 
-#: terminal.py:232
+#: terminal.py:229
 msgid "Next Tab"
 msgstr "اللسان التالي"
+
+#~ msgid "Become root"
+#~ msgstr "تحوّل إلى الجذر"
 
 #~ msgid "Terminal Activity"
 #~ msgstr "نشاط الطرفية"
