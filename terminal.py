@@ -190,11 +190,13 @@ class TerminalActivity(activity.Activity):
         helpitem.add_section(_('cd'))
         helpitem.add_paragraph(_('Change directory'))
         helpitem.add_paragraph(_('To use it, write: cd directory'))
-        helpitem.add_paragraph(_('If you call it without parameters, will change\nto the user directory'))
+        helpitem.add_paragraph(_(
+    'If you call it without parameters, will change\nto the user directory'))
         helpitem.add_section(_('ls'))
         helpitem.add_paragraph(_('List the content of a directory.'))
         helpitem.add_paragraph(_('To use it, write: ls directory'))
-        helpitem.add_paragraph(_('If you call it without parameters, will list the\nworking directory'))
+        helpitem.add_paragraph(
+    _('If you call it without parameters, will list the\nworking directory'))
         helpitem.add_section(_('cp'))
         helpitem.add_paragraph(_('Copy a file to a specific location'))
         helpitem.add_paragraph(_('Call it with the file and the new location'))
@@ -204,8 +206,10 @@ class TerminalActivity(activity.Activity):
         helpitem.add_paragraph(_('Use: rm file'))
         helpitem.add_section(_('su'))
         helpitem.add_paragraph(_('Login as superuser (root)'))
-        helpitem.add_paragraph(_('The root user is the administrator of the\nsystem'))
-        helpitem.add_paragraph(_('You must be careful, because you can modify\nsystem files'))
+        helpitem.add_paragraph(
+            _('The root user is the administrator of the\nsystem'))
+        helpitem.add_paragraph(
+            _('You must be careful, because you can modify\nsystem files'))
 
         return helpitem
 
@@ -420,8 +424,9 @@ class TerminalActivity(activity.Activity):
 
     def write_file(self, file_path):
         return
-# FIXME Bellow lines are commented in order to have journal access, but we are facing
-#  an upstream bug with Vte.Terminal.get_text, info on SL#3645, upstream gnome Bug #676999
+# FIXME Bellow lines are commented in order to have journal access,
+# but we are facing an upstream bug with Vte.Terminal.get_text,
+# info on SL#3645, upstream gnome Bug #676999
 #
 #        if not self.metadata['mime_type']:
 #            self.metadata['mime_type'] = 'text/plain'
