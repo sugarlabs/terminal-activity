@@ -219,9 +219,6 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 2:
             self._notebook.get_tab_label(self._notebook.get_nth_page(0
                                                     )).show_close_button()
-            self._delete_tab_button.props.sensitive = True
-            self._previous_tab_button.props.sensitive = True
-            self._next_tab_button.props.sensitive = True
 
     def __close_tab_cb(self, btn, child):
         index = self._notebook.page_num(child)
@@ -229,11 +226,6 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 1:
             self._notebook.get_tab_label(self._notebook.get_nth_page(0
                                                     )).hide_close_button()
-            self._delete_tab_button.props.sensitive = False
-            self._previous_tab_button.props.sensitive = False
-            self._next_tab_button.props.sensitive = False
-
-        self._notebook.update_tab_sizes()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -311,15 +303,13 @@ class TerminalActivity(activity.Activity):
         index = self._notebook.append_page(box, tablabel)
         tablabel.show_all()
 
-        self._notebook.update_tab_sizes()
-        self._notebook.show_all()
-
         # Uncomment this to only show the tab bar when there is at least
         # one tab. I think it's useful to always see it, since it displays
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
         tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
                                      else None
+        self._notebook.show_all()
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])

@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2011, One Laptop Per Child
 # Copyright (C) 2009, Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2012, Daniel Francis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,8 +53,6 @@ class TabAdd(Gtk.Button):
 
 
 class BrowserNotebook(Gtk.Notebook):
-    __gtype_name__ = 'BrowseNotebook'
-
     __gsignals__ = {
         'tab-added': (GObject.SignalFlags.RUN_FIRST,
                       None,
@@ -67,42 +64,48 @@ class BrowserNotebook(Gtk.Notebook):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.first_expose = True
         self.connect("draw", self._draw_cb)
         self._tab_add = TabAdd()
         self._tab_add.connect('tab-added', self.on_add_tab)
         self.set_action_widget(self._tab_add, Gtk.PackType.END)
         self._tab_add.show()
+        self.n_pages = 0
+        self.width = 0
+        self.button_size = 0
 
     def _draw_cb(self, widget, event):
-        if self.first_expose:
+        # Update tab sizes
+        n_pages = self.get_n_pages()
+        width = self.get_allocation().width
+        button_size = self._tab_add.get_allocation().width
+        if n_pages != self._n_pages or width !=\
+           self.width or self.button_size != button_size:
+            self.n_pages = n_pages
+            self.width = width
+            self.button_size = button_size
             self.update_tab_sizes()
-            self.first_expose = False
 
     def on_add_tab(self, obj):
         self.emit('tab-added')
 
     def update_tab_sizes(self):
-        n_pages = self.get_n_pages()
-        canvas_size = self.get_allocation()
-
-        # FIXME
-        # overlap_size = self.style_get_property('tab-overlap') * n_pages - 1
-        overlap_size = 0
-        allowed_size = canvas_size.width - overlap_size
-
-        tab_new_size = int(float(allowed_size) / (n_pages) -\
-                           self._tab_add.get_allocation().width - 5)
-
-        for page_idx in range(n_pages):
-            page = self.get_nth_page(page_idx)
-            label = self.get_tab_label(page)
-            label.update_size(tab_new_size)
+        allowed_size = self.width
+        if self._n_pages == 1:
+            tab_new_size = int(allowed_size / 2)
+            for page_idx in range(self.n_pages):
+                page = self.get_nth_page(page_idx)
+                label = self.get_tab_label(page)
+                self.child_set_property(page, 'tab-expand', False)
+                label.update_size(tab_new_size)
+        else:
+            for page_idx in range(self._n_pages):
+                page = self.get_nth_page(page_idx)
+                label = self.get_tab_label(page)
+                label.update_size(-1)
+                self.child_set_property(page, 'tab-expand', True)
 
 
 class TabLabel(Gtk.HBox):
-    __gtype_name__ = 'BrowseTabLabel'
-
     __gsignals__ = {
         'tab-close': (GObject.SignalFlags.RUN_FIRST,
                       None,
@@ -127,7 +130,6 @@ class TabLabel(Gtk.HBox):
         icon_box.pack_start(close_tab_icon, True, False, 0)
         button.add(icon_box)
         button.connect('clicked', self.__button_clicked_cb)
-        button.set_name('browse-tab-close')
         self.pack_start(button, False, True, 0)
         close_tab_icon.show()
         icon_box.show()
