@@ -25,8 +25,6 @@ from sugar3.graphics.icon import Icon
 
 
 class TabAdd(Gtk.Button):
-    __gtype_name__ = 'BrowseTabAdd'
-
     __gsignals__ = {
         'tab-added': (GObject.SignalFlags.RUN_FIRST,
                       None,
@@ -43,7 +41,6 @@ class TabAdd(Gtk.Button):
         icon_box.pack_start(add_tab_icon, True, False, 0)
         self.add(icon_box)
         self.connect('clicked', self.__button_clicked_cb)
-        self.set_name('browse-tab-add')
         add_tab_icon.show()
         icon_box.show()
         self.show()
@@ -78,7 +75,7 @@ class BrowserNotebook(Gtk.Notebook):
         n_pages = self.get_n_pages()
         width = self.get_allocation().width
         button_size = self._tab_add.get_allocation().width
-        if n_pages != self._n_pages or width !=\
+        if n_pages != self.n_pages or width !=\
            self.width or self.button_size != button_size:
             self.n_pages = n_pages
             self.width = width
@@ -90,7 +87,7 @@ class BrowserNotebook(Gtk.Notebook):
 
     def update_tab_sizes(self):
         allowed_size = self.width
-        if self._n_pages == 1:
+        if self.n_pages == 1:
             tab_new_size = int(allowed_size / 2)
             for page_idx in range(self.n_pages):
                 page = self.get_nth_page(page_idx)
@@ -98,7 +95,7 @@ class BrowserNotebook(Gtk.Notebook):
                 self.child_set_property(page, 'tab-expand', False)
                 label.update_size(tab_new_size)
         else:
-            for page_idx in range(self._n_pages):
+            for page_idx in range(self.n_pages):
                 page = self.get_nth_page(page_idx)
                 label = self.get_tab_label(page)
                 label.update_size(-1)
