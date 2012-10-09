@@ -6,4 +6,4 @@ exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
 license = GPLv2+
-
+summary = Here you have complete control over your computer. You are in charge!! 
