@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-06-20 00:32-0400\n"
+"PO-Revision-Date: 2012-09-04 13:18+0200\n"
+"Last-Translator: EdgarQuispeChambi <quispedgar@yahoo.es>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: aym\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
+
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr "Mayachaña"
+
+#  "Reducir"
+#: terminal.py:166
+msgid "Zoom out"
+msgstr "Jisk'aptayaña"
+
+#  "Ampliar"
+#: terminal.py:173
+msgid "Zoom in"
+msgstr "Jach'aptayaña"
+
+#  "Pantalla completa"
+#: terminal.py:180
+msgid "Fullscreen"
+msgstr "Maypacha uñtawi"
+
+#: terminal.py:206
+msgid "Open New Tab"
+msgstr "Jaqha wakichata chimpuru mantaña"
+
+#: terminal.py:213
+msgid "Close Tab"
+msgstr "Wakichata chimputa mistuña"
+
+#: terminal.py:221
+msgid "Previous Tab"
+msgstr "Nayrïri wakichata chimpu"
+
+#: terminal.py:229
+msgid "Next Tab"
+msgstr "Qhipïri wakichata chimpu"
