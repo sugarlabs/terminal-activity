@@ -94,15 +94,15 @@ class TerminalActivity(activity.Activity):
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
 
+        helpbutton = self._create_help_button()
+        toolbar_box.toolbar.insert(helpbutton, -1)
+        helpbutton.show_all()
+
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
         separator.show()
-
-        helpbutton = self._create_help_button()
-        toolbar_box.toolbar.insert(helpbutton, -1)
-        helpbutton.show_all()
 
         stop_button = StopButton(self)
         stop_button.props.accelerator = '<Ctrl><Shift>Q'
