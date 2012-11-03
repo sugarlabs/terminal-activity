@@ -339,15 +339,15 @@ class TerminalActivity(activity.Activity):
 
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
-                vt.feed(l + '\r\n')
+                vt.feed(str(l) + '\r\n')
 
-        box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
-                                       os.environ["HOME"],
-                                       ["/bin/bash"],
-                                       [],
-                                       GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                       None,
-                                       None)
+        sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
+                                            os.environ["HOME"],
+                                            ["/bin/bash"],
+                                            [],
+                                            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                            None,
+                                            None)
         self._notebook.props.page = index
         vt.grab_focus()
 
@@ -413,43 +413,39 @@ class TerminalActivity(activity.Activity):
             self._next_tab_button.props.sensitive = True
 
     def write_file(self, file_path):
-        return
-# FIXME Bellow lines are commented in order to have journal access,
-# but we are facing an upstream bug with Vte.Terminal.get_text,
-# info on SL#3645, upstream gnome Bug #676999
-#
-#        if not self.metadata['mime_type']:
-#            self.metadata['mime_type'] = 'text/plain'
-#
-#        data = {}
-#        data['current-tab'] = self._notebook.get_current_page()
-#        data['tabs'] = []
-#
-#        for i in range(self._notebook.get_n_pages()):
-#            page = self._notebook.get_nth_page(i)
-#
-#            def selected_cb(terminal, c, row, cb_data):
-#                return 1
-#            scrollback_text = page.vt.get_text(selected_cb, False)
-#
-#            scrollback_lines = scrollback_text.split('\n')
-#
-#            # Note- this currently gets the child's initial environment
-#            # rather than the current environment, making it not very useful.
-#            environment = open('/proc/%d/environ' %
-#                               page.pid, 'r').read().split('\0')
-#
-#            cwd = os.readlink('/proc/%d/cwd' % page.pid)
-#
-#            tab_state = {'env': environment, 'cwd': cwd,
-#                         'scrollback': scrollback_lines}
-#
-#            data['tabs'].append(tab_state)
-#
-#        fd = open(file_path, 'w')
-#        text = json.dumps(data)
-#        fd.write(text)
-#        fd.close()
+        if not self.metadata['mime_type']:
+            self.metadata['mime_type'] = 'text/plain'
+
+        data = {}
+        data['current-tab'] = self._notebook.get_current_page()
+        data['tabs'] = []
+
+        for i in range(self._notebook.get_n_pages()):
+
+            def is_selected(vte, *args):
+                return True
+
+            page = self._notebook.get_nth_page(i)
+            text, attr = page.vt.get_text(is_selected, None)
+
+            scrollback_lines = text.split('\n')
+
+            # Note- this currently gets the child's initial environment
+            # rather than the current environment, making it not very useful.
+            environment = open('/proc/%d/environ' %
+                               page.pid, 'r').read().split('\0')
+
+            cwd = os.readlink('/proc/%d/cwd' % page.pid)
+
+            tab_state = {'env': environment, 'cwd': cwd,
+                         'scrollback': scrollback_lines}
+
+            data['tabs'].append(tab_state)
+
+        fd = open(file_path, 'w')
+        text = json.dumps(data)
+        fd.write(text)
+        fd.close()
 
     def _get_conf(self, conf, var, default):
         if conf.has_option('terminal', var):
