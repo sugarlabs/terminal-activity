@@ -34,7 +34,7 @@ class HelpButton(Gtk.ToolItem):
     def __init__(self, **kwargs):
         GObject.GObject.__init__(self)
 
-        help_button = ToolButton('help-icon')
+        help_button = ToolButton('toolbar-help')
         help_button.set_tooltip(_('Help'))
         self.add(help_button)
 
