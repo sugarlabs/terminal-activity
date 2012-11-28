@@ -1,7 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Copyright (C) 2012, Gonzalo Odiard <godiard@gmail.com>
-
+# Main author:
+# Copyright (C) 2012, Gonzalo Odiard <godiard@laptop.org>
+# Minor changes and maintaining tasks:
+# Copyright (C) 2012, Agustin Zubiaga <aguz@sugarlabs.org>
+# Copyright (C) 2012, Daniel Francis <francis@sugarlabs.org>
+# Copyright (C) 2012, Manuel Kaufmann <humitos@gmail.com>
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
@@ -49,6 +52,7 @@ class HelpButton(Gtk.ToolItem):
         self._vbox = Gtk.Box()
         self._vbox.set_orientation(Gtk.Orientation.VERTICAL)
         self._vbox.set_homogeneous(False)
+        self._vbox.set_border_width(10)
 
         hbox = Gtk.Box()
         hbox.pack_start(self._vbox, False, True, 0)
