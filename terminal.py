@@ -18,7 +18,7 @@
 
 import os
 import sys
-import simplejson
+import json
 import ConfigParser
 import logging
 from gettext import gettext as _
@@ -389,7 +389,7 @@ class TerminalActivity(activity.Activity):
 
         fd = open(file_path, 'r')
         text = fd.read()
-        data = simplejson.loads(text)
+        data = json.loads(text)
         fd.close()
 
         # Clean out any existing tabs.
@@ -447,7 +447,7 @@ class TerminalActivity(activity.Activity):
 #            data['tabs'].append(tab_state)
 #
 #        fd = open(file_path, 'w')
-#        text = simplejson.dumps(data)
+#        text = json.dumps(data)
 #        fd.write(text)
 #        fd.close()
 
