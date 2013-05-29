@@ -407,11 +407,6 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
 
-        if self._notebook.get_n_pages() > 1:
-            self._delete_tab_button.props.sensitive = True
-            self._previous_tab_button.props.sensitive = True
-            self._next_tab_button.props.sensitive = True
-
     def write_file(self, file_path):
         if not self.metadata['mime_type']:
             self.metadata['mime_type'] = 'text/plain'
