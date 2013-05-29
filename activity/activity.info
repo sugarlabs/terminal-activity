@@ -1,6 +1,6 @@
 [Activity]
 name = Terminal
-activity_version = 41
+activity_version = 42
 bundle_id = org.laptop.Terminal
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
