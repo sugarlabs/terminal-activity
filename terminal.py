@@ -421,7 +421,12 @@ class TerminalActivity(activity.Activity):
                 return True
 
             page = self._notebook.get_nth_page(i)
-            text, attr = page.vt.get_text(is_selected, None)
+            try:
+                # get_text is only available in latest vte #676999
+                # and pygobject/gobject-introspection #690041
+                text, attr_ = page.vt.get_text(is_selected, None)
+            except AttributeError:
+                text = ''
 
             scrollback_lines = text.split('\n')
 
