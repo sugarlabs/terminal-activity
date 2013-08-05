@@ -37,12 +37,9 @@ class TabAdd(Gtk.Button):
         add_tab_icon = Icon(icon_name='add')
         self.props.relief = Gtk.ReliefStyle.NONE
         self.props.focus_on_click = False
-        icon_box = Gtk.HBox()
-        icon_box.pack_start(add_tab_icon, True, False, 0)
-        self.add(icon_box)
+        self.add(add_tab_icon)
         self.connect('clicked', self.__button_clicked_cb)
         add_tab_icon.show()
-        icon_box.show()
         self.show()
 
     def __button_clicked_cb(self, button):
@@ -121,15 +118,10 @@ class TabLabel(Gtk.HBox):
 
         close_tab_icon = Icon(icon_name='close-tab')
         button = Gtk.Button()
-        button.props.relief = Gtk.ReliefStyle.NONE
-        button.props.focus_on_click = False
-        icon_box = Gtk.HBox()
-        icon_box.pack_start(close_tab_icon, True, False, 0)
-        button.add(icon_box)
+        button.add(close_tab_icon)
         button.connect('clicked', self.__button_clicked_cb)
         self.pack_start(button, False, True, 0)
         close_tab_icon.show()
-        icon_box.show()
         button.show()
         self._close_button = button
 
