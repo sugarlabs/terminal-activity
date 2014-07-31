@@ -18,24 +18,32 @@
 
 import os
 import sys
-import simplejson
+import json
 import ConfigParser
 import logging
 from gettext import gettext as _
 
-import gtk
-import vte
-import pango
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import Vte
+from gi.repository import Pango
 
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.graphics.notebook import Notebook
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolbarbox import ToolbarButton
 
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.activity.widgets import StopButton
-from sugar.activity import activity
-from sugar import env
+from sugar3.activity.widgets import EditToolbar
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.activity.widgets import StopButton
+from sugar3.activity import activity
+from sugar3 import env
+
+from widgets import BrowserNotebook
+from widgets import TabLabel
+
+from helpbutton import HelpButton
+
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
@@ -85,15 +93,12 @@ class TerminalActivity(activity.Activity):
         self._delete_tab_toolbar = None
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
-        tab_toolbar = self._create_tab_toolbar()
-        tab_toolbar_button = ToolbarButton(
-                page=tab_toolbar,
-                icon_name='toolbar-tab')
-        tab_toolbar.show()
-        toolbar_box.toolbar.insert(tab_toolbar_button, -1)
-        tab_toolbar_button.show()
 
-        separator = gtk.SeparatorToolItem()
+        helpbutton = self._create_help_button()
+        toolbar_box.toolbar.insert(helpbutton, -1)
+        helpbutton.show_all()
+
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
@@ -106,10 +111,10 @@ class TerminalActivity(activity.Activity):
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
-        self._update_accelerators(toolbar_box)
 
-        self._notebook = Notebook()
-        self._notebook.set_property("tab-pos", gtk.POS_TOP)
+        self._notebook = BrowserNotebook()
+        self._notebook.connect("tab-added", self.__open_tab_cb)
+        self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
         self._notebook.set_scrollable(True)
         self._notebook.show()
 
@@ -117,30 +122,8 @@ class TerminalActivity(activity.Activity):
 
         self._create_tab(None)
 
-    def _update_accelerators(self, container):
-        for child in container.get_children():
-            if isinstance(child, ToolButton):
-                if child.props.accelerator is not None:
-                    # This code is copied from toolbutton.py
-                    # to solve workaround bug described in OLPC #10930
-                    accel_group = self.get_data('sugar-accel-group')
-                    keyval, mask = gtk.accelerator_parse(
-                                                    child.props.accelerator)
-                    # the accelerator needs to be set at the child,
-                    # so the gtk.AccelLabel
-                    # in the palette can pick it up.
-                    child.child.add_accelerator('clicked', accel_group,
-                                keyval, mask,
-                                gtk.ACCEL_LOCKED | gtk.ACCEL_VISIBLE)
-
-            if isinstance(child, ToolbarButton):
-                if child.get_page() is not None:
-                    self._update_accelerators(child.get_page())
-            if hasattr(child, 'get_children'):
-                self._update_accelerators(child)
-
     def _create_edit_toolbar(self):
-        edit_toolbar = activity.EditToolbar()
+        edit_toolbar = EditToolbar()
         edit_toolbar.undo.props.visible = False
         edit_toolbar.redo.props.visible = False
         edit_toolbar.separator.props.visible = False
@@ -160,7 +143,7 @@ class TerminalActivity(activity.Activity):
         vt.paste_clipboard()
 
     def _create_view_toolbar(self):  # Zoom toolbar
-        view_toolbar = gtk.Toolbar()
+        view_toolbar = Gtk.Toolbar()
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
@@ -200,54 +183,49 @@ class TerminalActivity(activity.Activity):
     def __fullscreen_cb(self, button):
         self.fullscreen()
 
-    def _create_tab_toolbar(self):
-        tab_toolbar = gtk.Toolbar()
-        new_tab_button = ToolButton('tab-add')
-        new_tab_button.set_tooltip(_("Open New Tab"))
-        new_tab_button.props.accelerator = '<Ctrl><Shift>T'
-        new_tab_button.connect('clicked', self.__open_tab_cb)
-        tab_toolbar.insert(new_tab_button, -1)
-        new_tab_button.show()
+    def _create_help_button(self):
+        helpitem = HelpButton()
 
-        self._delete_tab_button = ToolButton('tab-remove')
-        self._delete_tab_button.set_tooltip(_("Close Tab"))
-        self._delete_tab_button.props.accelerator = '<Ctrl><Shift>X'
-        self._delete_tab_button.props.sensitive = False
-        self._delete_tab_button.connect('clicked', self.__close_tab_cb)
-        tab_toolbar.insert(self._delete_tab_button, -1)
-        self._delete_tab_button.show()
+        helpitem.add_section(_('Useful commands'))
+        helpitem.add_section(_('cd'))
+        helpitem.add_paragraph(_('Change directory'))
+        helpitem.add_paragraph(_('To use it, write: cd directory'))
+        helpitem.add_paragraph(_(
+    'If you call it without parameters, will change\nto the user directory'))
+        helpitem.add_section(_('ls'))
+        helpitem.add_paragraph(_('List the content of a directory.'))
+        helpitem.add_paragraph(_('To use it, write: ls directory'))
+        helpitem.add_paragraph(
+    _('If you call it without parameters, will list the\nworking directory'))
+        helpitem.add_section(_('cp'))
+        helpitem.add_paragraph(_('Copy a file to a specific location'))
+        helpitem.add_paragraph(_('Call it with the file and the new location'))
+        helpitem.add_paragraph(_('Use: cp file directory/'))
+        helpitem.add_section(_('rm'))
+        helpitem.add_paragraph(_('Removes a file in any path'))
+        helpitem.add_paragraph(_('Use: rm file'))
+        helpitem.add_section(_('su'))
+        helpitem.add_paragraph(_('Login as superuser (root)'))
+        helpitem.add_paragraph(
+            _('The root user is the administrator of the\nsystem'))
+        helpitem.add_paragraph(
+            _('You must be careful, because you can modify\nsystem files'))
 
-        self._previous_tab_button = ToolButton('tab-previous')
-        self._previous_tab_button.set_tooltip(_("Previous Tab"))
-        self._previous_tab_button.props.accelerator = '<Ctrl><Shift>Left'
-        self._previous_tab_button.props.sensitive = False
-        self._previous_tab_button.connect('clicked', self.__prev_tab_cb)
-        tab_toolbar.insert(self._previous_tab_button, -1)
-        self._previous_tab_button.show()
-
-        self._next_tab_button = ToolButton('tab-next')
-        self._next_tab_button.set_tooltip(_("Next Tab"))
-        self._next_tab_button.props.accelerator = '<Ctrl><Shift>Right'
-        self._next_tab_button.props.sensitive = False
-        self._next_tab_button.connect('clicked', self.__next_tab_cb)
-        tab_toolbar.insert(self._next_tab_button, -1)
-        self._next_tab_button.show()
-        return tab_toolbar
+        return helpitem
 
     def __open_tab_cb(self, btn):
         index = self._create_tab(None)
         self._notebook.page = index
         if self._notebook.get_n_pages() == 2:
-            self._delete_tab_button.props.sensitive = True
-            self._previous_tab_button.props.sensitive = True
-            self._next_tab_button.props.sensitive = True
+            self._notebook.get_tab_label(self._notebook.get_nth_page(0
+                                                    )).show_close_button()
 
-    def __close_tab_cb(self, btn):
-        self._close_tab(self._notebook.props.page)
+    def __close_tab_cb(self, btn, child):
+        index = self._notebook.page_num(child)
+        self._close_tab(index)
         if self._notebook.get_n_pages() == 1:
-            self._delete_tab_button.props.sensitive = False
-            self._previous_tab_button.props.sensitive = False
-            self._next_tab_button.props.sensitive = False
+            self._notebook.get_tab_label(self._notebook.get_nth_page(0
+                                                    )).hide_close_button()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -285,47 +263,53 @@ class TerminalActivity(activity.Activity):
 
     def __drag_data_received_cb(self, widget, context, x, y, selection,
                                 target, time):
-        widget.feed_child(selection.data)
+        widget.feed_child(selection.get_text(), -1)
         context.finish(True, False, time)
         return True
 
     def _create_tab(self, tab_state):
-        vt = vte.Terminal()
+        vt = Vte.Terminal()
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
         # FIXME have to resend motion events to parent, see #1402
         vt.connect('motion-notify-event', self.__motion_notify_cb)
 
-        vt.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
-               [('text/plain', 0, 0), ('STRING', 0, 1)],
-               gtk.gdk.ACTION_DEFAULT |
-               gtk.gdk.ACTION_COPY)
+        vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
+                         [Gtk.TargetEntry.new('text/plain', 0, 0),
+                          Gtk.TargetEntry.new('STRING', 0, 1)],
+                          Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
+        vt.drag_dest_add_text_targets()
         vt.connect('drag_data_received', self.__drag_data_received_cb)
 
         self._configure_vt(vt)
 
         vt.show()
 
-        label = gtk.Label()
+        scrollbar = Gtk.VScrollbar.new(vt.get_vadjustment())
 
-        scrollbar = gtk.VScrollbar(vt.get_adjustment())
-        scrollbar.show()
-
-        box = gtk.HBox()
-        box.pack_start(vt)
-        box.pack_start(scrollbar)
+        box = Gtk.HBox()
+        box.pack_start(vt, True, True, 0)
+        box.pack_start(scrollbar, False, True, 0)
 
         box.vt = vt
-        box.label = label
+        box.show()
 
-        index = self._notebook.append_page(box, label)
-        self._notebook.show_all()
+        tablabel = TabLabel(box)
+        tablabel.connect('tab-close', self.__close_tab_cb)
+        tablabel.update_size(200)
+        box.label = tablabel
+
+        index = self._notebook.append_page(box, tablabel)
+        tablabel.show_all()
 
         # Uncomment this to only show the tab bar when there is at least
         # one tab. I think it's useful to always see it, since it displays
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
+        tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
+                                     else None
+        self._notebook.show_all()
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -355,17 +339,22 @@ class TerminalActivity(activity.Activity):
 
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
-                vt.feed(l + '\r\n')
+                vt.feed(str(l) + '\r\n')
 
-        box.pid = vt.fork_command()
-
+        sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
+                                            os.environ["HOME"],
+                                            ["/bin/bash"],
+                                            [],
+                                            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                            None,
+                                            None)
         self._notebook.props.page = index
         vt.grab_focus()
 
         return index
 
     def __motion_notify_cb(self, widget, event):
-        self.canvas.parent.emit('motion-notify-event', event)
+        self.emit('motion-notify-event', Gdk.Event(event))
 
     def __key_press_cb(self, window, event):
         """Route some keypresses directly to the vte and then drop them.
@@ -380,14 +369,14 @@ class TerminalActivity(activity.Activity):
             vt = self._notebook.get_nth_page(current_page).vt
             vt.event(event)
 
-        key_name = gtk.gdk.keyval_name(event.keyval)
+        key_name = Gdk.keyval_name(event.keyval)
 
         # Escape is used in Sugar to cancel fullscreen mode.
         if key_name == 'Escape':
             event_to_vt(event)
             return True
 
-        elif event.get_state() & gtk.gdk.CONTROL_MASK:
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             if key_name in ['z', 'q']:
                 event_to_vt(event)
                 return True
@@ -400,10 +389,8 @@ class TerminalActivity(activity.Activity):
 
         fd = open(file_path, 'r')
         text = fd.read()
-        data = simplejson.loads(text)
+        data = json.loads(text)
         fd.close()
-
-        data_file = file_path
 
         # Clean out any existing tabs.
         while self._notebook.get_n_pages():
@@ -420,11 +407,6 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
 
-        if self._notebook.get_n_pages() > 1:
-            self._delete_tab_button.props.sensitive = True
-            self._previous_tab_button.props.sensitive = True
-            self._next_tab_button.props.sensitive = True
-
     def write_file(self, file_path):
         if not self.metadata['mime_type']:
             self.metadata['mime_type'] = 'text/plain'
@@ -434,13 +416,19 @@ class TerminalActivity(activity.Activity):
         data['tabs'] = []
 
         for i in range(self._notebook.get_n_pages()):
+
+            def is_selected(vte, *args):
+                return True
+
             page = self._notebook.get_nth_page(i)
+            try:
+                # get_text is only available in latest vte #676999
+                # and pygobject/gobject-introspection #690041
+                text, attr_ = page.vt.get_text(is_selected, None)
+            except AttributeError:
+                text = ''
 
-            def selected_cb(terminal, c, row, cb_data):
-                return 1
-            scrollback_text = page.vt.get_text(selected_cb, False)
-
-            scrollback_lines = scrollback_text.split('\n')
+            scrollback_lines = text.split('\n')
 
             # Note- this currently gets the child's initial environment
             # rather than the current environment, making it not very useful.
@@ -455,7 +443,7 @@ class TerminalActivity(activity.Activity):
             data['tabs'].append(tab_state)
 
         fd = open(file_path, 'w')
-        text = simplejson.dumps(data)
+        text = json.dumps(data)
         fd.write(text)
         fd.close()
 
@@ -484,15 +472,15 @@ class TerminalActivity(activity.Activity):
             conf.add_section('terminal')
 
         font = self._get_conf(conf, 'font', 'Monospace')
-        vt.set_font(pango.FontDescription(font))
+        vt.set_font(Pango.FontDescription(font))
 
         fg_color = self._get_conf(conf, 'fg_color', '#000000')
         bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
-        vt.set_colors(gtk.gdk.color_parse(fg_color),
-                      gtk.gdk.color_parse(bg_color), [])
+        vt.set_colors(Gdk.color_parse(fg_color),
+                      Gdk.color_parse(bg_color), [])
 
         blink = self._get_conf(conf, 'cursor_blink', False)
-        vt.set_cursor_blinks(blink)
+        vt.set_cursor_blink_mode(blink)
 
         bell = self._get_conf(conf, 'bell', False)
         vt.set_audible_bell(bell)
