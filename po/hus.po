@@ -52,6 +52,3 @@ msgstr "Júnakej madhidh"
 
 #~ msgid "Become root"
 #~ msgstr "Kit wenk'on tit root"
-
-#~ msgid "Become root"
-#~ msgstr "Kit wenk'on tit root"
