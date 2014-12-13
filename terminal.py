@@ -200,7 +200,7 @@ class TerminalActivity(activity.Activity):
         helpitem.add_section(_('cp'))
         helpitem.add_paragraph(_('Copy a file to a specific location'))
         helpitem.add_paragraph(_('Call it with the file and the new location'))
-        helpitem.add_paragraph(_('Use: cp file directory/'))
+        helpitem.add_paragraph(_('Use: cp file directory'))
         helpitem.add_section(_('rm'))
         helpitem.add_paragraph(_('Removes a file in any path'))
         helpitem.add_paragraph(_('Use: rm file'))
