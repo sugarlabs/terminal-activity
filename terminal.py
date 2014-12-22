@@ -76,16 +76,17 @@ class TerminalActivity(activity.Activity):
 
         edit_toolbar = self._create_edit_toolbar()
         edit_toolbar_button = ToolbarButton(
-                page=edit_toolbar,
-                icon_name='toolbar-edit')
+            page=edit_toolbar,
+            icon_name='toolbar-edit'
+        )
         edit_toolbar.show()
         toolbar_box.toolbar.insert(edit_toolbar_button, -1)
         edit_toolbar_button.show()
 
         view_toolbar = self._create_view_toolbar()
         view_toolbar_button = ToolbarButton(
-                page=view_toolbar,
-                icon_name='toolbar-view')
+            page=view_toolbar,
+            icon_name='toolbar-view')
         view_toolbar.show()
         toolbar_box.toolbar.insert(view_toolbar_button, -1)
         view_toolbar_button.show()
@@ -190,13 +191,15 @@ class TerminalActivity(activity.Activity):
         helpitem.add_section(_('cd'))
         helpitem.add_paragraph(_('Change directory'))
         helpitem.add_paragraph(_('To use it, write: cd directory'))
-        helpitem.add_paragraph(_(
-    'If you call it without parameters, will change\nto the user directory'))
+        helpitem.add_paragraph(
+            _('If you call it without parameters, will change\n'
+                'to the user directory'))
         helpitem.add_section(_('ls'))
         helpitem.add_paragraph(_('List the content of a directory.'))
         helpitem.add_paragraph(_('To use it, write: ls directory'))
         helpitem.add_paragraph(
-    _('If you call it without parameters, will list the\nworking directory'))
+            _('If you call it without parameters, will list the\n'
+                'working directory'))
         helpitem.add_section(_('cp'))
         helpitem.add_paragraph(_('Copy a file to a specific location'))
         helpitem.add_paragraph(_('Call it with the file and the new location'))
@@ -217,15 +220,15 @@ class TerminalActivity(activity.Activity):
         index = self._create_tab(None)
         self._notebook.page = index
         if self._notebook.get_n_pages() == 2:
-            self._notebook.get_tab_label(self._notebook.get_nth_page(0
-                                                    )).show_close_button()
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).show_close_button()
 
     def __close_tab_cb(self, btn, child):
         index = self._notebook.page_num(child)
         self._close_tab(index)
         if self._notebook.get_n_pages() == 1:
-            self._notebook.get_tab_label(self._notebook.get_nth_page(0
-                                                    )).hide_close_button()
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).hide_close_button()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -278,7 +281,7 @@ class TerminalActivity(activity.Activity):
         vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [Gtk.TargetEntry.new('text/plain', 0, 0),
                           Gtk.TargetEntry.new('STRING', 0, 1)],
-                          Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
+                         Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
         vt.drag_dest_add_text_targets()
         vt.connect('drag_data_received', self.__drag_data_received_cb)
 
@@ -308,7 +311,7 @@ class TerminalActivity(activity.Activity):
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
         tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
-                                     else None
+            else None
         self._notebook.show_all()
 
         # Launch the default shell in the HOME directory.
@@ -342,12 +345,11 @@ class TerminalActivity(activity.Activity):
                 vt.feed(str(l) + '\r\n')
 
         sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
-                                            os.environ["HOME"],
-                                            ["/bin/bash"],
-                                            [],
-                                            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                            None,
-                                            None)
+                                                os.environ["HOME"],
+                                                ["/bin/bash"], [],
+                                                GLib.SpawnFlags.
+                                                DO_NOT_REAP_CHILD,
+                                                None, None)
         self._notebook.props.page = index
         vt.grab_focus()
 
@@ -429,7 +431,7 @@ class TerminalActivity(activity.Activity):
             except AttributeError:
                 text = ''
             """
-            #TODO: vt.get_text continue crashing at random
+            # TODO: vt.get_text continue crashing at random
             text = ''
 
             scrollback_lines = text.split('\n')
