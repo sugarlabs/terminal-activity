@@ -68,6 +68,8 @@ class TerminalActivity(activity.Activity):
 
         self.max_participants = 1
 
+        self._theme_state = "light"
+
         toolbar_box = ToolbarBox()
 
         activity_button = ActivityToolbarButton(self)
@@ -143,8 +145,37 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
-    def _create_view_toolbar(self):  # Zoom toolbar
+    def _toggled_theme(self, button):
+        if self._theme_state == "dark":
+            self._theme_state = "light"
+        elif self._theme_state == "light":
+            self._theme_state = "dark"
+        self._update_theme()
+
+    def _update_theme(self):
+        if self._theme_state == "light":
+            self._theme_toggler.set_icon_name('dark-theme')
+            self._theme_toggler.set_tooltip('Switch to Dark Theme')
+        elif self._theme_state == "dark":
+            self._theme_toggler.set_icon_name('light-theme')
+            self._theme_toggler.set_tooltip('Switch to Light Theme')
+
+        for i in range(self._notebook.get_n_pages()):
+            vt = self._notebook.get_nth_page(i).vt
+            self._configure_vt(vt)
+
+    def _create_view_toolbar(self):  # Color changer and Zoom toolbar
         view_toolbar = Gtk.Toolbar()
+
+        self._theme_toggler = ToolButton('dark-theme')
+        self._theme_toggler.set_tooltip('Switch to Dark Theme')
+        self._theme_toggler.connect('clicked', self._toggled_theme)
+        view_toolbar.insert(self._theme_toggler, -1)
+        self._theme_toggler.show()
+
+        sep = Gtk.SeparatorToolItem()
+        view_toolbar.insert(sep, -1)
+        sep.show()
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
@@ -405,6 +436,10 @@ class TerminalActivity(activity.Activity):
         # Restore active tab.
         self._notebook.props.page = data['current-tab']
 
+        # Restore theme
+        self._theme_state = data['theme']
+        self._update_theme()
+
         # Create a blank one if this state had no terminals.
         if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
@@ -415,6 +450,7 @@ class TerminalActivity(activity.Activity):
 
         data = {}
         data['current-tab'] = self._notebook.get_current_page()
+        data['theme'] = self._theme_state
         data['tabs'] = []
 
         for i in range(self._notebook.get_n_pages()):
@@ -480,8 +516,12 @@ class TerminalActivity(activity.Activity):
         font = self._get_conf(conf, 'font', 'Monospace')
         vt.set_font(Pango.FontDescription(font))
 
-        fg_color = self._get_conf(conf, 'fg_color', '#000000')
-        bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
+        self._theme_colors = {"light": {'fg_color': '#000000',
+                                       'bg_color': '#FFFFFF'},
+                             "dark": {'fg_color': '#FFFFFF',
+                                      'bg_color': '#000000'}}
+        fg_color = self._theme_colors[self._theme_state]['fg_color']
+        bg_color = self._theme_colors[self._theme_state]['bg_color']
         vt.set_colors(Gdk.color_parse(fg_color),
                       Gdk.color_parse(bg_color), [])
 
