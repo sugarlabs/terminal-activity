@@ -426,14 +426,12 @@ class TerminalActivity(activity.Activity):
                     if current_index == 0:
                         self._notebook.set_current_page(
                                        self._notebook.get_n_pages() - 1)
-                        return True
                     else:
                         self._notebook.set_current_page(current_index - 1)
-                        return True
                 elif key_name == 'T':
                     self._create_tab(None)
-                    return True
-
+                return True
+        
         return False
 
     def read_file(self, file_path):
