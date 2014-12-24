@@ -413,7 +413,26 @@ class TerminalActivity(activity.Activity):
             if key_name in ['z', 'q']:
                 event_to_vt(event)
                 return True
-
+            elif key_name == 'Tab':
+                current_index = self._notebook.get_current_page()
+                if current_index == self._notebook.get_n_pages() - 1:
+                    self._notebook.set_current_page(0)
+                else:
+                    self._notebook.set_current_page(current_index + 1)
+                return True
+            elif event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+                if key_name == 'ISO_Left_Tab':
+                    current_index = self._notebook.get_current_page()
+                    if current_index == 0:
+                        self._notebook.set_current_page(
+                                       self._notebook.get_n_pages() - 1)
+                    else:
+                        self._notebook.set_current_page(current_index - 1)
+                    return True
+                elif key_name == 'T':
+                    self._create_tab(None)
+                    return True
+        
         return False
 
     def read_file(self, file_path):
