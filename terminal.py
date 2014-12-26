@@ -371,6 +371,11 @@ class TerminalActivity(activity.Activity):
                     # ACLs may deny access
                     sys.stdout.write("Could not chdir to " + tab_state['cwd'])
 
+            if 'font_size' in tab_state:
+                font_desc = vt.get_font()
+                font_desc.set_size(tab_state['font_size'])
+                vt.set_font(font_desc)
+
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
@@ -448,16 +453,16 @@ class TerminalActivity(activity.Activity):
         while self._notebook.get_n_pages():
             self._notebook.remove_page(0)
 
+        # Restore theme
+        self._theme_state = data['theme']
+        self._update_theme()
+
         # Create new tabs from saved state.
         for tab_state in data['tabs']:
             self._create_tab(tab_state)
 
         # Restore active tab.
         self._notebook.props.page = data['current-tab']
-
-        # Restore theme
-        self._theme_state = data['theme']
-        self._update_theme()
 
         # Create a blank one if this state had no terminals.
         if self._notebook.get_n_pages() == 0:
@@ -498,7 +503,10 @@ class TerminalActivity(activity.Activity):
 
             cwd = os.readlink('/proc/%d/cwd' % page.pid)
 
+            font_desc = page.vt.get_font()
+
             tab_state = {'env': environment, 'cwd': cwd,
+                         'font_size': font_desc.get_size(),
                          'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
