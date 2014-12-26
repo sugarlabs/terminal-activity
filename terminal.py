@@ -29,6 +29,7 @@ from gi.repository import Gdk
 from gi.repository import Vte
 from gi.repository import Pango
 
+from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
@@ -44,10 +45,15 @@ from widgets import TabLabel
 
 from helpbutton import HelpButton
 
+from utils import EbookModeDetector
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
     'PPID']
+
+OSK_HEIGHT = [400, 300]
+TOOLBAR_HEIGHT = style.GRID_CELL_SIZE
+NOTEBOOK_HEIGHT = style.STANDARD_ICON_SIZE
 
 log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
@@ -69,29 +75,34 @@ class TerminalActivity(activity.Activity):
         self.max_participants = 1
 
         self._theme_state = "light"
+        self._has_osk = False
+        self._ebook_mode_detector = EbookModeDetector()
 
         toolbar_box = ToolbarBox()
 
-        activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, 0)
-        activity_button.show()
+        self._activity_button = ActivityToolbarButton(self)
+        toolbar_box.toolbar.insert(self._activity_button, 0)
+        self._activity_button.connect('clicked', self._fixed_resize_cb)
+        self._activity_button.show()
 
         edit_toolbar = self._create_edit_toolbar()
-        edit_toolbar_button = ToolbarButton(
+        self._edit_toolbar_button = ToolbarButton(
             page=edit_toolbar,
             icon_name='toolbar-edit'
         )
+        self._edit_toolbar_button.connect('clicked', self._fixed_resize_cb)
         edit_toolbar.show()
-        toolbar_box.toolbar.insert(edit_toolbar_button, -1)
-        edit_toolbar_button.show()
+        toolbar_box.toolbar.insert(self._edit_toolbar_button, -1)
+        self._edit_toolbar_button.show()
 
         view_toolbar = self._create_view_toolbar()
-        view_toolbar_button = ToolbarButton(
+        self._view_toolbar_button = ToolbarButton(
             page=view_toolbar,
             icon_name='toolbar-view')
+        self._view_toolbar_button.connect('clicked', self._fixed_resize_cb)
         view_toolbar.show()
-        toolbar_box.toolbar.insert(view_toolbar_button, -1)
-        view_toolbar_button.show()
+        toolbar_box.toolbar.insert(self._view_toolbar_button, -1)
+        self._view_toolbar_button.show()
 
         self._delete_tab_toolbar = None
         self._previous_tab_toolbar = None
@@ -116,6 +127,7 @@ class TerminalActivity(activity.Activity):
         toolbar_box.show()
 
         self._notebook = BrowserNotebook()
+        self._notebook.connect("switch-page", self.__page_switched)
         self._notebook.connect("tab-added", self.__open_tab_cb)
         self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
         self._notebook.set_scrollable(True)
@@ -124,6 +136,7 @@ class TerminalActivity(activity.Activity):
         self.set_canvas(self._notebook)
 
         self._create_tab(None)
+        Gdk.Screen.get_default().connect('size-changed', self._fixed_resize_cb)
 
     def _create_edit_toolbar(self):
         edit_toolbar = EditToolbar()
@@ -214,6 +227,7 @@ class TerminalActivity(activity.Activity):
 
     def __fullscreen_cb(self, button):
         self.fullscreen()
+        self._fixed_resize_cb()
 
     def _create_help_button(self):
         helpitem = HelpButton()
@@ -309,6 +323,9 @@ class TerminalActivity(activity.Activity):
         # FIXME have to resend motion events to parent, see #1402
         vt.connect('motion-notify-event', self.__motion_notify_cb)
 
+        vt.connect('focus-in-event', self._terminal_focus_in_cb)
+        vt.connect('focus-out-event', self._terminal_focus_out_cb)
+
         vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [Gtk.TargetEntry.new('text/plain', 0, 0),
                           Gtk.TargetEntry.new('STRING', 0, 1)],
@@ -325,16 +342,25 @@ class TerminalActivity(activity.Activity):
         box = Gtk.HBox()
         box.pack_start(vt, True, True, 0)
         box.pack_start(scrollbar, False, True, 0)
+        fixed = Gtk.Fixed()
+        fixed.put(box, 0, 0)
+        fixed.connect('size-allocate', self._fixed_resize_cb)
 
-        box.vt = vt
-        box.show()
+        width = Gdk.Screen.width()
+        height = Gdk.Screen.height() - TOOLBAR_HEIGHT - NOTEBOOK_HEIGHT
+
+        box.set_size_request(width, height)
+        fixed.show_all()
+
+        fixed.vt = vt
+        fixed.box = box
 
         tablabel = TabLabel(box)
         tablabel.connect('tab-close', self.__close_tab_cb)
         tablabel.update_size(200)
-        box.label = tablabel
+        fixed.label = tablabel
 
-        index = self._notebook.append_page(box, tablabel)
+        index = self._notebook.append_page(fixed, tablabel)
         tablabel.show_all()
 
         # Uncomment this to only show the tab bar when there is at least
@@ -380,7 +406,7 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
-        sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
+        sucess_, fixed.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
                                                 os.environ["HOME"],
                                                 ["/bin/bash"], [],
                                                 GLib.SpawnFlags.
@@ -576,3 +602,49 @@ class TerminalActivity(activity.Activity):
         vt.set_visible_bell(visible_bell)
 
         conf.write(open(conf_file, 'w'))
+
+    def _fixed_resize_cb(self, *args):
+        print NOTEBOOK_HEIGHT
+        if self._toolbar_expanded():
+            dy = (TOOLBAR_HEIGHT * 2) + NOTEBOOK_HEIGHT
+        else:
+            dy = TOOLBAR_HEIGHT + NOTEBOOK_HEIGHT
+
+        if self._is_fullscreen:
+            dy = NOTEBOOK_HEIGHT
+
+        if self._has_osk:
+            if Gdk.Screen.width() > Gdk.Screen.height():
+                dy += OSK_HEIGHT[0]
+            else:
+                dy += OSK_HEIGHT[1]
+
+        current_page = self._notebook.get_current_page()
+        fixed = self._notebook.get_nth_page(current_page)
+        box = fixed.box
+        box.set_size_request(Gdk.Screen.width(), Gdk.Screen.height() - dy)
+
+    def _toolbar_expanded(self):
+        activity_button = self._activity_button.is_expanded()
+        edit_button = self._edit_toolbar_button.is_expanded()
+        view_button = self._view_toolbar_button.is_expanded()
+        if activity_button or edit_button or view_button:
+            return True
+        return False
+
+    def _terminal_focus_in_cb(self, terminal, event):
+        if self._ebook_mode_detector.get_ebook_mode():
+            self._has_osk = True
+            self.fullscreen()
+        self._fixed_resize_cb()
+
+    def _terminal_focus_out_cb(self, terminal, event):
+        if self._ebook_mode_detector.get_ebook_mode():
+            self._has_osk = False
+        self._fixed_resize_cb()
+
+    def __page_switched(self, *args):
+        current_page = self._notebook.get_current_page()
+        fixed = self._notebook.get_nth_page(current_page)
+        vt = fixed.vt
+        vt.grab_focus()
