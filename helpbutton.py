@@ -45,7 +45,7 @@ class HelpButton(Gtk.ToolItem):
 
         sw = Gtk.ScrolledWindow()
         sw.set_size_request(int(Gdk.Screen.width() / 2.8),
-            Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)
+                            Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
         self._max_text_width = int(Gdk.Screen.width() / 3) - 600

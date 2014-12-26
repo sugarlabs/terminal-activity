@@ -425,7 +425,7 @@ class TerminalActivity(activity.Activity):
                     current_index = self._notebook.get_current_page()
                     if current_index == 0:
                         self._notebook.set_current_page(
-                                       self._notebook.get_n_pages() - 1)
+                            self._notebook.get_n_pages() - 1)
                     else:
                         self._notebook.set_current_page(current_index - 1)
                     return True
@@ -536,9 +536,9 @@ class TerminalActivity(activity.Activity):
         vt.set_font(Pango.FontDescription(font))
 
         self._theme_colors = {"light": {'fg_color': '#000000',
-                                       'bg_color': '#FFFFFF'},
-                             "dark": {'fg_color': '#FFFFFF',
-                                      'bg_color': '#000000'}}
+                                        'bg_color': '#FFFFFF'},
+                              "dark": {'fg_color': '#FFFFFF',
+                                       'bg_color': '#000000'}}
         fg_color = self._theme_colors[self._theme_state]['fg_color']
         bg_color = self._theme_colors[self._theme_state]['bg_color']
         vt.set_colors(Gdk.color_parse(fg_color),
