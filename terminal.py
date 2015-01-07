@@ -55,6 +55,13 @@ logging.basicConfig()
 
 ZOOM_STEP = 1024
 
+VTE_VERSION = 0
+try:
+    VTE_VERSION = Vte.MINOR_VERSION
+except:
+    # version is not published in old versions of vte
+    pass
+
 
 class TerminalActivity(activity.Activity):
 
@@ -380,12 +387,17 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
-        sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
-                                                os.environ["HOME"],
-                                                ["/bin/bash"], [],
-                                                GLib.SpawnFlags.
-                                                DO_NOT_REAP_CHILD,
-                                                None, None)
+        if hasattr(vt, 'fork_command'):
+            sucess_, box.pid = vt.fork_command_full(
+                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
+                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                None, None)
+        else:
+            sucess_, box.pid = vt.spawn_sync(
+                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
+                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                None, None)
+
         self._notebook.props.page = index
         vt.grab_focus()
 
@@ -483,16 +495,17 @@ class TerminalActivity(activity.Activity):
                 return True
 
             page = self._notebook.get_nth_page(i)
-            """
-            try:
-                # get_text is only available in latest vte #676999
-                # and pygobject/gobject-introspection #690041
-                text, attr_ = page.vt.get_text(is_selected, None)
-            except AttributeError:
-                text = ''
-            """
-            # TODO: vt.get_text continue crashing at random
+
             text = ''
+            if VTE_VERSION >= 38:
+                # in older versions of vte, get_text() makes crash
+                # the activity at random - SL #4627
+                try:
+                    # get_text is only available in latest vte #676999
+                    # and pygobject/gobject-introspection #690041
+                    text, attr_ = page.vt.get_text(is_selected, None)
+                except AttributeError:
+                    pass
 
             scrollback_lines = text.split('\n')
 
@@ -549,8 +562,16 @@ class TerminalActivity(activity.Activity):
                                        'bg_color': '#000000'}}
         fg_color = self._theme_colors[self._theme_state]['fg_color']
         bg_color = self._theme_colors[self._theme_state]['bg_color']
-        vt.set_colors(Gdk.color_parse(fg_color),
-                      Gdk.color_parse(bg_color), [])
+        try:
+            vt.set_colors(Gdk.color_parse(fg_color),
+                          Gdk.color_parse(bg_color), [])
+        except TypeError:
+            # Vte 0.38 requires the colors set as a different type
+            # in Fedora 21 we get a exception
+            # TypeError: argument foreground: Expected Gdk.RGBA,
+            # but got gi.overrides.Gdk.Color
+            vt.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
+                          Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
 
         blink = self._get_conf(conf, 'cursor_blink', False)
         vt.set_cursor_blink_mode(blink)
@@ -569,10 +590,14 @@ class TerminalActivity(activity.Activity):
         scroll_output = self._get_conf(conf, 'scroll_on_output', False)
         vt.set_scroll_on_output(scroll_output)
 
-        emulation = self._get_conf(conf, 'emulation', 'xterm')
-        vt.set_emulation(emulation)
+        if hasattr(vt, 'set_emulation'):
+            # set_emulation is not available after vte commit
+            # 4e253be9282829f594c8a55ca08d1299e80e471d
+            emulation = self._get_conf(conf, 'emulation', 'xterm')
+            vt.set_emulation(emulation)
 
-        visible_bell = self._get_conf(conf, 'visible_bell', False)
-        vt.set_visible_bell(visible_bell)
+        if hasattr(vt, 'set_visible_bell'):
+            visible_bell = self._get_conf(conf, 'visible_bell', False)
+            vt.set_visible_bell(visible_bell)
 
         conf.write(open(conf_file, 'w'))
