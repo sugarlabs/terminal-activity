@@ -387,7 +387,7 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
-        if hasattr(vt, 'fork_command'):
+        if hasattr(vt, 'fork_command_full'):
             sucess_, box.pid = vt.fork_command_full(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
                 ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
