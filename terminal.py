@@ -430,6 +430,9 @@ class TerminalActivity(activity.Activity):
             if key_name in ['z', 'q']:
                 event_to_vt(event)
                 return True
+            elif key_name in ['1','2','3','4','5','6','7','8','9']:
+                if int(key_name) <= self._notebook.get_n_pages():
+	            self._notebook.set_current_page(int(key_name) - 1)
             elif key_name == 'Tab':
                 current_index = self._notebook.get_current_page()
                 if current_index == self._notebook.get_n_pages() - 1:
