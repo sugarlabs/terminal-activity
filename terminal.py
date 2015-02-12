@@ -354,6 +354,7 @@ class TerminalActivity(activity.Activity):
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
+        os.environ["PS1"] = "\u@\h:\w\$ "
 
         if tab_state:
             # Restore the environment.
