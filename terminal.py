@@ -55,6 +55,13 @@ logging.basicConfig()
 
 ZOOM_STEP = 1024
 
+VTE_VERSION = 0
+try:
+    VTE_VERSION = Vte.MINOR_VERSION
+except:
+    # version is not published in old versions of vte
+    pass
+
 
 class TerminalActivity(activity.Activity):
 
@@ -68,6 +75,8 @@ class TerminalActivity(activity.Activity):
 
         self.max_participants = 1
 
+        self._theme_state = "light"
+
         toolbar_box = ToolbarBox()
 
         activity_button = ActivityToolbarButton(self)
@@ -76,16 +85,17 @@ class TerminalActivity(activity.Activity):
 
         edit_toolbar = self._create_edit_toolbar()
         edit_toolbar_button = ToolbarButton(
-                page=edit_toolbar,
-                icon_name='toolbar-edit')
+            page=edit_toolbar,
+            icon_name='toolbar-edit'
+        )
         edit_toolbar.show()
         toolbar_box.toolbar.insert(edit_toolbar_button, -1)
         edit_toolbar_button.show()
 
         view_toolbar = self._create_view_toolbar()
         view_toolbar_button = ToolbarButton(
-                page=view_toolbar,
-                icon_name='toolbar-view')
+            page=view_toolbar,
+            icon_name='toolbar-view')
         view_toolbar.show()
         toolbar_box.toolbar.insert(view_toolbar_button, -1)
         view_toolbar_button.show()
@@ -142,8 +152,37 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
-    def _create_view_toolbar(self):  # Zoom toolbar
+    def _toggled_theme(self, button):
+        if self._theme_state == "dark":
+            self._theme_state = "light"
+        elif self._theme_state == "light":
+            self._theme_state = "dark"
+        self._update_theme()
+
+    def _update_theme(self):
+        if self._theme_state == "light":
+            self._theme_toggler.set_icon_name('dark-theme')
+            self._theme_toggler.set_tooltip('Switch to Dark Theme')
+        elif self._theme_state == "dark":
+            self._theme_toggler.set_icon_name('light-theme')
+            self._theme_toggler.set_tooltip('Switch to Light Theme')
+
+        for i in range(self._notebook.get_n_pages()):
+            vt = self._notebook.get_nth_page(i).vt
+            self._configure_vt(vt)
+
+    def _create_view_toolbar(self):  # Color changer and Zoom toolbar
         view_toolbar = Gtk.Toolbar()
+
+        self._theme_toggler = ToolButton('dark-theme')
+        self._theme_toggler.set_tooltip('Switch to Dark Theme')
+        self._theme_toggler.connect('clicked', self._toggled_theme)
+        view_toolbar.insert(self._theme_toggler, -1)
+        self._theme_toggler.show()
+
+        sep = Gtk.SeparatorToolItem()
+        view_toolbar.insert(sep, -1)
+        sep.show()
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
@@ -190,17 +229,19 @@ class TerminalActivity(activity.Activity):
         helpitem.add_section(_('cd'))
         helpitem.add_paragraph(_('Change directory'))
         helpitem.add_paragraph(_('To use it, write: cd directory'))
-        helpitem.add_paragraph(_(
-    'If you call it without parameters, will change\nto the user directory'))
+        helpitem.add_paragraph(
+            _('If you call it without parameters, will change\n'
+                'to the user directory'))
         helpitem.add_section(_('ls'))
         helpitem.add_paragraph(_('List the content of a directory.'))
         helpitem.add_paragraph(_('To use it, write: ls directory'))
         helpitem.add_paragraph(
-    _('If you call it without parameters, will list the\nworking directory'))
+            _('If you call it without parameters, will list the\n'
+                'working directory'))
         helpitem.add_section(_('cp'))
         helpitem.add_paragraph(_('Copy a file to a specific location'))
         helpitem.add_paragraph(_('Call it with the file and the new location'))
-        helpitem.add_paragraph(_('Use: cp file directory/'))
+        helpitem.add_paragraph(_('Use: cp file directory'))
         helpitem.add_section(_('rm'))
         helpitem.add_paragraph(_('Removes a file in any path'))
         helpitem.add_paragraph(_('Use: rm file'))
@@ -217,15 +258,15 @@ class TerminalActivity(activity.Activity):
         index = self._create_tab(None)
         self._notebook.page = index
         if self._notebook.get_n_pages() == 2:
-            self._notebook.get_tab_label(self._notebook.get_nth_page(0
-                                                    )).show_close_button()
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).show_close_button()
 
     def __close_tab_cb(self, btn, child):
         index = self._notebook.page_num(child)
         self._close_tab(index)
         if self._notebook.get_n_pages() == 1:
-            self._notebook.get_tab_label(self._notebook.get_nth_page(0
-                                                    )).hide_close_button()
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).hide_close_button()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -278,7 +319,7 @@ class TerminalActivity(activity.Activity):
         vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [Gtk.TargetEntry.new('text/plain', 0, 0),
                           Gtk.TargetEntry.new('STRING', 0, 1)],
-                          Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
+                         Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
         vt.drag_dest_add_text_targets()
         vt.connect('drag_data_received', self.__drag_data_received_cb)
 
@@ -308,7 +349,7 @@ class TerminalActivity(activity.Activity):
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
         tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
-                                     else None
+            else None
         self._notebook.show_all()
 
         # Launch the default shell in the HOME directory.
@@ -337,17 +378,26 @@ class TerminalActivity(activity.Activity):
                     # ACLs may deny access
                     sys.stdout.write("Could not chdir to " + tab_state['cwd'])
 
+            if 'font_size' in tab_state:
+                font_desc = vt.get_font()
+                font_desc.set_size(tab_state['font_size'])
+                vt.set_font(font_desc)
+
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
-        sucess_, box.pid = vt.fork_command_full(Vte.PtyFlags.DEFAULT,
-                                            os.environ["HOME"],
-                                            ["/bin/bash"],
-                                            [],
-                                            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                            None,
-                                            None)
+        if hasattr(vt, 'fork_command_full'):
+            sucess_, box.pid = vt.fork_command_full(
+                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
+                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                None, None)
+        else:
+            sucess_, box.pid = vt.spawn_sync(
+                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
+                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                None, None)
+
         self._notebook.props.page = index
         vt.grab_focus()
 
@@ -380,6 +430,25 @@ class TerminalActivity(activity.Activity):
             if key_name in ['z', 'q']:
                 event_to_vt(event)
                 return True
+            elif key_name == 'Tab':
+                current_index = self._notebook.get_current_page()
+                if current_index == self._notebook.get_n_pages() - 1:
+                    self._notebook.set_current_page(0)
+                else:
+                    self._notebook.set_current_page(current_index + 1)
+                return True
+            elif event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+                if key_name == 'ISO_Left_Tab':
+                    current_index = self._notebook.get_current_page()
+                    if current_index == 0:
+                        self._notebook.set_current_page(
+                            self._notebook.get_n_pages() - 1)
+                    else:
+                        self._notebook.set_current_page(current_index - 1)
+                    return True
+                elif key_name == 'T':
+                    self._create_tab(None)
+                    return True
 
         return False
 
@@ -395,6 +464,10 @@ class TerminalActivity(activity.Activity):
         # Clean out any existing tabs.
         while self._notebook.get_n_pages():
             self._notebook.remove_page(0)
+
+        # Restore theme
+        self._theme_state = data['theme']
+        self._update_theme()
 
         # Create new tabs from saved state.
         for tab_state in data['tabs']:
@@ -413,6 +486,7 @@ class TerminalActivity(activity.Activity):
 
         data = {}
         data['current-tab'] = self._notebook.get_current_page()
+        data['theme'] = self._theme_state
         data['tabs'] = []
 
         for i in range(self._notebook.get_n_pages()):
@@ -421,16 +495,17 @@ class TerminalActivity(activity.Activity):
                 return True
 
             page = self._notebook.get_nth_page(i)
-            """
-            try:
-                # get_text is only available in latest vte #676999
-                # and pygobject/gobject-introspection #690041
-                text, attr_ = page.vt.get_text(is_selected, None)
-            except AttributeError:
-                text = ''
-            """
-            #TODO: vt.get_text continue crashing at random
+
             text = ''
+            if VTE_VERSION >= 38:
+                # in older versions of vte, get_text() makes crash
+                # the activity at random - SL #4627
+                try:
+                    # get_text is only available in latest vte #676999
+                    # and pygobject/gobject-introspection #690041
+                    text, attr_ = page.vt.get_text(is_selected, None)
+                except AttributeError:
+                    pass
 
             scrollback_lines = text.split('\n')
 
@@ -441,7 +516,10 @@ class TerminalActivity(activity.Activity):
 
             cwd = os.readlink('/proc/%d/cwd' % page.pid)
 
+            font_desc = page.vt.get_font()
+
             tab_state = {'env': environment, 'cwd': cwd,
+                         'font_size': font_desc.get_size(),
                          'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
@@ -478,10 +556,22 @@ class TerminalActivity(activity.Activity):
         font = self._get_conf(conf, 'font', 'Monospace')
         vt.set_font(Pango.FontDescription(font))
 
-        fg_color = self._get_conf(conf, 'fg_color', '#000000')
-        bg_color = self._get_conf(conf, 'bg_color', '#FFFFFF')
-        vt.set_colors(Gdk.color_parse(fg_color),
-                      Gdk.color_parse(bg_color), [])
+        self._theme_colors = {"light": {'fg_color': '#000000',
+                                        'bg_color': '#FFFFFF'},
+                              "dark": {'fg_color': '#FFFFFF',
+                                       'bg_color': '#000000'}}
+        fg_color = self._theme_colors[self._theme_state]['fg_color']
+        bg_color = self._theme_colors[self._theme_state]['bg_color']
+        try:
+            vt.set_colors(Gdk.color_parse(fg_color),
+                          Gdk.color_parse(bg_color), [])
+        except TypeError:
+            # Vte 0.38 requires the colors set as a different type
+            # in Fedora 21 we get a exception
+            # TypeError: argument foreground: Expected Gdk.RGBA,
+            # but got gi.overrides.Gdk.Color
+            vt.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
+                          Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
 
         blink = self._get_conf(conf, 'cursor_blink', False)
         vt.set_cursor_blink_mode(blink)
@@ -500,10 +590,14 @@ class TerminalActivity(activity.Activity):
         scroll_output = self._get_conf(conf, 'scroll_on_output', False)
         vt.set_scroll_on_output(scroll_output)
 
-        emulation = self._get_conf(conf, 'emulation', 'xterm')
-        vt.set_emulation(emulation)
+        if hasattr(vt, 'set_emulation'):
+            # set_emulation is not available after vte commit
+            # 4e253be9282829f594c8a55ca08d1299e80e471d
+            emulation = self._get_conf(conf, 'emulation', 'xterm')
+            vt.set_emulation(emulation)
 
-        visible_bell = self._get_conf(conf, 'visible_bell', False)
-        vt.set_visible_bell(visible_bell)
+        if hasattr(vt, 'set_visible_bell'):
+            visible_bell = self._get_conf(conf, 'visible_bell', False)
+            vt.set_visible_bell(visible_bell)
 
         conf.write(open(conf_file, 'w'))
