@@ -289,7 +289,7 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 0:
             self.close()
 
-    def __tab_child_exited_cb(self, vt):
+    def __tab_child_exited_cb(self, vt, status=None):
         for i in range(self._notebook.get_n_pages()):
             if self._notebook.get_nth_page(i).vt == vt:
                 self._close_tab(i)
