@@ -15,27 +15,28 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2009-08-24 11:46-0400\n"
-"Last-Translator: Camille Robert <camille.robert@gmail.com>\n"
+"PO-Revision-Date: 2015-09-07 23:54+0000\n"
+"Last-Translator: Robert <rbuj@fedoraproject.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1441670068.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "Terminal"
 
 #: terminal.py:166
 msgid "Zoom out"
-msgstr ""
+msgstr "Allunya"
 
 #: terminal.py:173
 msgid "Zoom in"
-msgstr ""
+msgstr "Apropa"
 
 #: terminal.py:180
 msgid "Fullscreen"
@@ -43,11 +44,11 @@ msgstr "Pantalla completa"
 
 #: terminal.py:206
 msgid "Open New Tab"
-msgstr "Obrir pestanya nova"
+msgstr "Obre una pestanya nova"
 
 #: terminal.py:213
 msgid "Close Tab"
-msgstr "Tancar pestanya"
+msgstr "Tanca la pestanya"
 
 #: terminal.py:221
 msgid "Previous Tab"
