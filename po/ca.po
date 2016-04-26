@@ -1,22 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2015, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2015-09-07 23:54+0000\n"
-"Last-Translator: Robert <rbuj@fedoraproject.org>\n"
+"POT-Creation-Date: 2016-04-06 06:42+0000\n"
+"PO-Revision-Date: 2016-04-26 16:28+0000\n"
+"Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -24,42 +16,125 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1441670068.000000\n"
+"X-POOTLE-MTIME: 1461688116.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr ""
+"Aquí teniu el control total sobre el vostre ordinador. En sou l'encarregat!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Ajuda"
+
+#: terminal.py:188
 msgid "Zoom out"
-msgstr "Allunya"
+msgstr "Redueix el zoom"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
-msgstr "Apropa"
+msgstr "Amplia el zoom"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
 msgstr "Pantalla completa"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "Obre una pestanya nova"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "Tanca la pestanya"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "Pestanya anterior"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Ordres útils"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "Pestanya següent"
+msgid "cd"
+msgstr "cd"
 
-#~ msgid "Edit"
-#~ msgstr "Editar"
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Canvia el directori"
 
-#~ msgid "Tab"
-#~ msgstr "Pestanya"
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Per a utilitzar-ho, escriviu: cd directori"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Si ho crideu sense cap paràmetre, canviarà\n"
+"al directori d'usuari"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Llista el contingut d'un directori."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Per a utilitzar-ho, escriviu: ls directori"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Si ho crideu sense cap paràmetre, llistarà\n"
+"el directori de treball"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Copia un fitxer a una ubicació específica"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Crideu-ho amb el fitxer i la nova ubicació"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Ús: cp fitxer directori"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Suprimeix un fitxer en qualsevol camí"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Ús: rm fitxer"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Inicia la sessió com a superusuari (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"L'usuari root és l'administrador del\n"
+"sistema"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Heu de tenir cura, perquè podeu modificar\n"
+"els fitxers del sistema"
