@@ -387,15 +387,16 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
+        shell_cmd = os.environ.get('SHELL') or '/bin/bash'
         if hasattr(vt, 'fork_command_full'):
             sucess_, box.pid = vt.fork_command_full(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                [shell_cmd], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
                 None, None)
         else:
             sucess_, box.pid = vt.spawn_sync(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                ["/bin/bash"], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                [shell_cmd], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
                 None, None)
 
         self._notebook.props.page = index
