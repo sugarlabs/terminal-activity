@@ -510,12 +510,17 @@ class TerminalActivity(activity.Activity):
 
             scrollback_lines = text.split('\n')
 
-            # Note- this currently gets the child's initial environment
-            # rather than the current environment, making it not very useful.
-            environment = open('/proc/%d/environ' %
-                               page.pid, 'r').read().split('\0')
+            environ_file = '/proc/%d/environ' % page.pid
+            if os.path.isfile(environ_file):
+                # Note- this currently gets the child's initial environment
+                # rather than the current environment, making it not very useful.
+                environment = open(environ_file, 'r').read().split('\0')
 
-            cwd = os.readlink('/proc/%d/cwd' % page.pid)
+                cwd = os.readlink('/proc/%d/cwd' % page.pid)
+            else:
+                # terminal killed by the user
+                environment = []
+                cwd = '~'
 
             font_desc = page.vt.get_font()
 
