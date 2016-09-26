@@ -10,49 +10,150 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2016-04-06 06:42+0000\n"
+"PO-Revision-Date: 2016-09-24 00:29+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: yo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.1.1rc4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1474676982.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "Ebute"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Nibi ti o ni pipe Iṣakoso lori kọmputa rẹ. Ti o ba wa ni idiyele!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Egba mi o"
+
+#: terminal.py:188
 msgid "Zoom out"
-msgstr ""
+msgstr "Fẹ̀ẹ́ Síta"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
-msgstr ""
+msgstr "Fẹ̀ẹ́ Sinú"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
-msgstr ""
+msgstr "Ojú kọ̀ǹpùtà kíkún"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr ""
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr ""
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr ""
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Wulo ase"
 
 #: terminal.py:229
-msgid "Next Tab"
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Ayipada liana"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Lati lo o, kọ: cd liana"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
 msgstr ""
+"Ti o ba pe o lai sile, yoo yi\n"
+"to awọn olumulo liana"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Akojö awọn akoonu ti a liana."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Lati lo o, kọ: ls liana"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Ti o ba pe o lai sile, yoo akojö awọn\n"
+"working liana"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Da a faili lati kan pato ipo"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Pe o pẹlu awọn faili ati awọn ipo titun"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Lilo: cp faili liana"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "RM"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Yọ faili kan ninu eyikeyi ona"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Lilo: rn file"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Wiwọle bi didara julọ (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"Awọn root olumulo ni awọn ni idiyele ti awọn\n"
+"kọmputa"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"O gbọdọ jẹ ṣọra, nitori ti o le yipada\n"
+"eto awọn faili"
+
+#~ msgid "Open New Tab"
+#~ msgstr "Ṣi nínú Táàbù Tuntun"
+
+#~ msgid "Close Tab"
+#~ msgstr "Ti táàbù"
+
+#~ msgid "Previous Tab"
+#~ msgstr "Táàbù Tilẹ̀"
+
+#~ msgid "Next Tab"
+#~ msgstr "Táàbù Tókàn"
