@@ -262,6 +262,10 @@ class TerminalActivity(activity.Activity):
         return helpitem
 
     def __open_tab_cb(self, btn):
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
+        font_desc = vt.get_font()
+        self._font_size = font_desc.get_size() / Pango.SCALE
+
         index = self._create_tab(None)
         self._notebook.page = index
         if self._notebook.get_n_pages() == 2:
