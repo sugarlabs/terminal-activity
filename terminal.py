@@ -59,7 +59,6 @@ log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
-ZOOM_STEP = 1024
 
 VTE_VERSION = 0
 try:
@@ -216,14 +215,14 @@ class TerminalActivity(activity.Activity):
         current_page = self._notebook.get_current_page()
         vt = self._notebook.get_nth_page(current_page).vt
         font_desc = vt.get_font()
-        font_desc.set_size(font_desc.get_size() + step)
+        font_desc.set_size(font_desc.get_size() + Pango.SCALE * step)
         vt.set_font(font_desc)
 
     def __zoom_out_cb(self, button):
-        self._zoom(ZOOM_STEP * -1)
+        self._zoom(-1)
 
     def __zoom_in_cb(self, button):
-        self._zoom(ZOOM_STEP)
+        self._zoom(1)
 
     def __fullscreen_cb(self, button):
         self.fullscreen()
