@@ -59,6 +59,7 @@ log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
+FONT_SIZE = 10
 
 VTE_VERSION = 0
 try:
@@ -81,6 +82,7 @@ class TerminalActivity(activity.Activity):
         self.max_participants = 1
 
         self._theme_state = "light"
+        self._font_size = FONT_SIZE
 
         toolbar_box = ToolbarBox()
 
@@ -558,8 +560,15 @@ class TerminalActivity(activity.Activity):
         else:
             conf.add_section('terminal')
 
+        font_desc = vt.get_font()
+        if font_desc is None:
+            font_size = self._font_size * Pango.SCALE
+        else:
+            font_size = font_desc.get_size()
         font = self._get_conf(conf, 'font', 'Monospace')
-        vt.set_font(Pango.FontDescription(font))
+        font_desc = Pango.FontDescription(font)
+        font_desc.set_size(font_size)
+        vt.set_font(font_desc)
 
         self._theme_colors = {"light": {'fg_color': '#000000',
                                         'bg_color': '#FFFFFF'},
