@@ -268,16 +268,10 @@ class TerminalActivity(activity.Activity):
 
         index = self._create_tab(None)
         self._notebook.page = index
-        if self._notebook.get_n_pages() == 2:
-            self._notebook.get_tab_label(
-                self._notebook.get_nth_page(0)).show_close_button()
 
     def __close_tab_cb(self, btn, child):
         index = self._notebook.page_num(child)
         self._close_tab(index)
-        if self._notebook.get_n_pages() == 1:
-            self._notebook.get_tab_label(
-                self._notebook.get_nth_page(0)).hide_close_button()
 
     def __prev_tab_cb(self, btn):
         if self._notebook.props.page == 0:
@@ -299,6 +293,9 @@ class TerminalActivity(activity.Activity):
         self._notebook.remove_page(index)
         if self._notebook.get_n_pages() == 0:
             self.close()
+        if self._notebook.get_n_pages() == 1:
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).hide_close_button()
 
     def __tab_child_exited_cb(self, vt, status=None):
         for i in range(self._notebook.get_n_pages()):
@@ -356,8 +353,11 @@ class TerminalActivity(activity.Activity):
         # one tab. I think it's useful to always see it, since it displays
         # the 'window title'.
         # self._notebook.props.show_tabs = self._notebook.get_n_pages() > 1
-        tablabel.hide_close_button() if self._notebook.get_n_pages() == 1\
-            else None
+        if self._notebook.get_n_pages() == 1:
+            tablabel.hide_close_button()
+        if self._notebook.get_n_pages() == 2:
+            self._notebook.get_tab_label(
+                self._notebook.get_nth_page(0)).show_close_button()
         self._notebook.show_all()
 
         # Launch the default shell in the HOME directory.
