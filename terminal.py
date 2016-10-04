@@ -23,6 +23,12 @@ import ConfigParser
 import logging
 from gettext import gettext as _
 
+import gi
+
+vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0', 'Vte': '2.91'}
+for api, ver in vs.iteritems():
+    gi.require_version(api, ver)
+
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
