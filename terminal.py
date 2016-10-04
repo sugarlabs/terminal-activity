@@ -319,9 +319,6 @@ class TerminalActivity(activity.Activity):
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
-        # FIXME have to resend motion events to parent, see #1402
-        vt.connect('motion-notify-event', self.__motion_notify_cb)
-
         vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [Gtk.TargetEntry.new('text/plain', 0, 0),
                           Gtk.TargetEntry.new('STRING', 0, 1)],
@@ -409,9 +406,6 @@ class TerminalActivity(activity.Activity):
         vt.grab_focus()
 
         return index
-
-    def __motion_notify_cb(self, widget, event):
-        self.emit('motion-notify-event', Gdk.Event(event))
 
     def __key_press_cb(self, window, event):
         """Route some keypresses directly to the vte and then drop them.
