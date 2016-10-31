@@ -14,48 +14,150 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2010-02-14 18:57+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2016-04-06 06:42+0000\n"
+"PO-Revision-Date: 2016-10-29 22:16+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1477779394.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr "Terminali"
+msgstr "Terminal"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr ""
+"Prej këtu, keni kontroll të plotë mbi kompjuterin tuaj. Tani komandoni ju!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Ndihmë"
+
+#: terminal.py:188
 msgid "Zoom out"
-msgstr ""
+msgstr "Zvogëloje"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
-msgstr ""
+msgstr "Zmadhoje"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
-msgstr "Ekran të plotë"
+msgstr "Sa krejt ekrani"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "Hape një lidhëse të ri"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "Mbyll lidhësen"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "Lidhësja e mëparshme"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Urdhra të dobishëm"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "Lidhësja tjetër"
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Ndryshoni drejtori"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Për ta përdorur, shkruani: cd drejtori"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Nëse e zbatoni pa parametra, do të bëjë kalimin\n"
+"te drejtoria e përdoruesit"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Paraqitni lëndën e një drejtorie.Shtoni drejtori te lista."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Për ta përdorur, shkruani: ls drejtori"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Nëse e zbatoni pa parametra, do të bëjë shfaqë\n"
+"drejtorinë ku po punohet"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Kopjojeni një kartelë te një vendndodhje e dhënë"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Zbatojeni me kartelën dhe vendin e ri"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Përdorimi: cp kartelë drejtori"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Heq një kartelë nga çfarëdo shtegu"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Përdorimi: rm kartelë"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Hyni si superpërdorues (rrënjë)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"Përdoruesi rrënjë është përgjegjësi\n"
+"i sistemit"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Duhet të jeni i kujdesshëm, mundeni të ndryshoni\n"
+"kartela sistemi"
+
+#~ msgid "Open New Tab"
+#~ msgstr "Hape një lidhëse të ri"
+
+#~ msgid "Close Tab"
+#~ msgstr "Mbyll lidhësen"
+
+#~ msgid "Previous Tab"
+#~ msgstr "Lidhësja e mëparshme"
+
+#~ msgid "Next Tab"
+#~ msgstr "Lidhësja tjetër"
 
 #~ msgid "Become root"
 #~ msgstr "Bëhu rrënjësori"
