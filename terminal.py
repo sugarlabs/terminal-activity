@@ -183,6 +183,7 @@ class TerminalActivity(activity.Activity):
 
         self._theme_toggler = ToolButton('dark-theme')
         self._theme_toggler.set_tooltip('Switch to Dark Theme')
+        self._theme_toggler.props.accelerator = '<Ctrl><Shift>I'
         self._theme_toggler.connect('clicked', self._toggled_theme)
         view_toolbar.insert(self._theme_toggler, -1)
         self._theme_toggler.show()
