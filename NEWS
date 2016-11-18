@@ -1,3 +1,15 @@
+44.1
+
+* Fix for Terminal not stopping on child process exit (Cameron),
+* New translations,
+* Regenerate POT file (Cameron),
+* Use the user's shell, rather than always BASH (Parkinson),
+* Don't cause keep failure if user Ctrl-D closes their shell (Parkinson),
+* Suppress warnings (Cameron),
+* Keep font size on theme change and when opening new tabs (Cameron),
+* Fix missing close button (Cameron),
+* Add shortcut for theme change (Cameron),
+
 35
 
 *New translations

@@ -1,10 +1,10 @@
 [Activity]
 name = Terminal
-activity_version = 44
+activity_version = 44.1
 bundle_id = org.laptop.Terminal
 exec = sugar-activity terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
 license = GPLv2+
 summary = Here you have complete control over your computer. You are in charge!! 
-repository = https://github.com/godiard/terminal-activity.git
+repository = https://github.com/quozl/terminal-activity.git
