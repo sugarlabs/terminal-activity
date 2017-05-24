@@ -1,0 +1,138 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Terminal package.
+# Božidar Putanec <bozidarp@yahoo.com>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: Terminal\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-05-16 15:31-0700\n"
+"Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
+"Language-Team: Croatian <LL@li.org>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.1\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr "Terminal"
+
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Ovdje imaš potpuni nadzor nad svojim računalom. Sad ti upravljaš!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Pomoć"
+
+#: terminal.py:188
+msgid "Zoom out"
+msgstr "Smanjivanje"
+
+#: terminal.py:195
+msgid "Zoom in"
+msgstr "Povećavanje"
+
+#: terminal.py:202
+msgid "Fullscreen"
+msgstr "Cijeli ekran"
+
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Korisne naredbe"
+
+#: terminal.py:229
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Služi za promjenu direktorija"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Koristiš ju ovako: cd direktorij"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Ako uneseš samo cd (bez imena direktorija), cd će te\n"
+"premjestiti u korisnikov domaći direktorij"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Služi za ispis sadržaja direktorija."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Koristiš ju ovako: ls direktorij"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Ako uneseš samo ls (bez parametra), ls će ispisati\n"
+"sadržaj radnog (trenutačnog) direktorija"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Služi za kopiranje datoteke u novu lokaciju ili pod drugim imenom"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Koristiš ju s imenom datoteke i nazivom nove lokacije ili imena"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Koristiš ju ovako: cp datoteka direktorij (ili novo ime)"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Služi za brisanje datoteke u navedenoj putanji"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Koristiš ju ovako: rm datoteka"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Prijava kao superuser (korijen, engleski root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"Superuser (root) je administrator sustava i ima\n"
+"prava mijenjati stanje sustava"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Moraš biti oprezan jer sada možeš mijenjati\n"
+"datoteke sustava, a time ga i nehotice oštetiti"

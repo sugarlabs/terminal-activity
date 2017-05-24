@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-03-26 11:32+0000\n"
+"Last-Translator: Anders <anders.jonsson@norsjovallen.se>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490527952.000000\n"
+
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr "Terminal"
+
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Här har du fullständig kontroll över din dator. Du bestämmer!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Hjälp"
+
+#: terminal.py:188
+msgid "Zoom out"
+msgstr "Zooma ut"
+
+#: terminal.py:195
+msgid "Zoom in"
+msgstr "Zooma in"
+
+#: terminal.py:202
+msgid "Fullscreen"
+msgstr "Helskärm"
+
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Användbara kommandon"
+
+#: terminal.py:229
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Ändra katalog"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "För att använda det, skriv: cd katalog"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Om du anropar det utan parametrar ändrar\n"
+"det till användarkatalogen"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Lista innehållet för en katalog."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "För att använda det, skriv: ls katalog"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Om du anropar det utan parametrar kommer\n"
+"arbetskatalogen att listas"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Kopiera en fil till en angiven plats"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Anropa det med filen och den nya platsen"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Använd: cp fil katalog"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Tar bort en fil i valfri sökväg"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Använd: rm fil"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Logga in som superanvändare (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"Användaren root är systemets\n"
+"administratör"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Du måste vara försiktig eftersom du kan\n"
+"ändra systemfiler"

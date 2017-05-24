@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-05-10 02:40+0000\n"
+"Last-Translator: Ben_Fox <john.reid036@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1494384008.000000\n"
+
+#: activity/activity.info:2
+#, fuzzy
+msgid "Terminal"
+msgstr "Terminal-o"
+
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Ĉi tie vi havas tutan kontrolon super via komputilo. Vi estas zorge!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Helpo"
+
+#: terminal.py:188
+msgid "Zoom out"
+msgstr "Malzomi"
+
+#: terminal.py:195
+msgid "Zoom in"
+msgstr "Zomi"
+
+# Ĉu "Plena-ekrane" aŭ "Plena-ekrano"?
+#: terminal.py:202
+msgid "Fullscreen"
+msgstr "Plena-ekrane"
+
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Utilaj komandoj"
+
+#: terminal.py:229
+#, fuzzy
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Ŝanĝu dosierujo"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Por uzi ĝin, skribu: cd dosierujo"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Se vi nomas ĝin sen parametroj, ŝanĝos\n"
+"al la uzanto dosierujo"
+
+#: terminal.py:235
+#, fuzzy
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Listigi la enhavon de dosierujo."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Por uzi ĝin, skribu: ls dosierujo"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Se vi nomas ĝin sen parametroj, listos la\n"
+"laboranta dosierujo"
+
+#: terminal.py:241
+#, fuzzy
+msgid "cp"
+msgstr "cp"
+
+# Ĉu "Kopii" estas la angla "Copy" en Esperanto?
+#: terminal.py:242
+#, fuzzy
+msgid "Copy a file to a specific location"
+msgstr "Kopiu dosieron al specifa loko"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Nomu ĝin per la dosiero kaj la nova loko"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Uzu: cp dosiero dosierujo"
+
+#: terminal.py:245
+#, fuzzy
+msgid "rm"
+msgstr "rm"
+
+# Mi komprenas "Any path", sed mi ne komprenas "Ajna vojo".
+#: terminal.py:246
+#, fuzzy
+msgid "Removes a file in any path"
+msgstr "Forigas dosieron en ajna vojo"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Uzu: rm dosieron"
+
+#: terminal.py:248
+#, fuzzy
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Ensaluti kiel superusanto (radiko)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"La radika uzanto estas la administranto de la\n"
+"sistemo"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Vi devas atenti, ĉar vi povas modifi\n"
+"sistemo dosierojn"
