@@ -2,110 +2,139 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2011-08-14 23:34+0200\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2016-04-07 19:56+0000\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1460058977.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr ""
+"Hier hast du die volle Kontrolle über deinen Rechner. Es ist deine Sache!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Hilfe"
+
+#: terminal.py:188
 msgid "Zoom out"
 msgstr "Verkleinern"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
 msgstr "Vergrößern"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "Neuen Reiter öffnen"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "Reiter schließen"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "Vorheriger Reiter"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Nützliche Befehle"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "Nächster Reiter"
+msgid "cd"
+msgstr "cd"
 
-#~ msgid "Become root"
-#~ msgstr "Root werden"
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Verzeichnis wechseln"
 
-#~ msgid "Terminal Activity"
-#~ msgstr "Terminal-Aktivitität"
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Du benutzt es mit: cd Verzeichnis"
 
-#~ msgid "Edit"
-#~ msgstr "Bearbeiten"
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Wenn du keinen Verzeichnisamen angibst, wechselt\n"
+"es in das Benutzerverzeichnis."
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Verzeichnisinhalt auflisten"
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Du benutzt es mit: ls Verzeichnis"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Wenn du keinen Verzeichnisnamen angibst, listet es den\n"
+"Inhalt des aktuellen Arbeitsverzeichnisses auf."
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Datei an einen bestimmten Ort kopieren"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Ruf es mit dem Namen der Datei und dem neuen Speicherort auf"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Benutze: cp Datei Verzeichnis"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Datei in einem beliebigen Verzeichnispfad löschen"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Benutze: rm Datei"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Als Superuser (root) anmelden"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"Der Benutzer root ist der Administrator\n"
+"des Systems."
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Du musst vorsichtig sein, weil du\n"
+"Systemdateien verändern kannst."

@@ -2,73 +2,138 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2011-10-25 19:49+0200\n"
-"Last-Translator: whe <heppew@yahoo.com>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2016-04-25 15:33+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1461598429.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Hier heb je de complete besturing over je computer. Jij bent de baas!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Help"
+
+#: terminal.py:188
 msgid "Zoom out"
 msgstr "Uitzoomen"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
 msgstr "Inzoomen"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
 msgstr "Schermvullend maken"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "Nieuw tabblad openen"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "Tabblad sluiten"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "Vorig tabblad"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Bruikbare commando's"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "Volgend tabblad"
+msgid "cd"
+msgstr "cd"
 
-#~ msgid "Become root"
-#~ msgstr "Root worden"
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Map wijzigen"
 
-#~ msgid "Terminal Activity"
-#~ msgstr "Terminal activiteit"
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "Om te gebruiken, schrijf: cd map"
 
-#~ msgid "Edit"
-#~ msgstr "Bewerken"
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"Als je het gebruikt zonder parameters, wijzigt het\n"
+"naar de gebruikersmap"
 
-#~ msgid "Tab"
-#~ msgstr "Tabblad"
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "Toont de inhoud van een map."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "Om te gebruiken, schrijf: ls map"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"Als je het gebruikt zonder parameters, toont het\n"
+"de werkmap"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Kopieer een bestand naar een bepaalde plaats"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Gebruik het met het bestand en de nieuwe plaats"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Gebruik: cp bestand map"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Verwijdert een bestand in een pad"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Gebruik: rm bestand"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Login als supergebruiker (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"De root gebruiker is de administrator van\n"
+"het systeem"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"Je moet voorzichtig zijn, want je kunt\n"
+"systeembestanden wijzigen"

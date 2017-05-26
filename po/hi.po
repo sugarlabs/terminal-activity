@@ -2,64 +2,138 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2011-10-04 09:27+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2016-04-09 15:10+0000\n"
+"Last-Translator: iamutkarshtiwari <iamutkarshtiwari@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1460214629.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "टर्मिनल"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "यहाँ आपके पास अपने कंप्यूटर पर पूरा नियंत्रण है। आप प्रभारी हो!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "मदद"
+
+#: terminal.py:188
 msgid "Zoom out"
 msgstr "ज़ूम आउट"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
 msgstr "ज़ूम इन"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
 msgstr "पूरा पट"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "नया टैब खोलें"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "टैब बंद"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "पिछला टैब"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "उपयोगी कमांड"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "अगला टैब"
+msgid "cd"
+msgstr "cd"
 
-#~ msgid "Become root"
-#~ msgstr "रूट बनें"
+#: terminal.py:230
+msgid "Change directory"
+msgstr "डॉयरेक्ट्री बदलें"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "इसका इस्तेमाल करने के लिए, लिखें : cd directory"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"अगर आप मानकों के बिना इसे लिखतें हैं, \n"
+" तो यह उपयोगकर्ता की डायरेक्टरी में बदल जायेगा"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "एक निर्देशिका की सामग्री की सूची दिखता है"
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "इसका इस्तेमाल करने के लिए, लिखें : cd directory"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"अगर आप मानकों के बिना इसे लिखतें हैं, \n"
+" तो ये कार्यकारी डायरेक्टरी दिखायेगा"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "एक विशिष्ट स्थान पर एक फ़ाइल की प्रतिलिपि बनाता है"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "इसे एक फ़ाइल और एक नए स्थान के साथ लिखें"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "इस्तेमाल करने के लिए लिखें : cp file directory"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "किसी भी स्थान में एक फ़ाइल को मिटाता है"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "इस्तेमाल करने के लिए लिखें : rm file"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "सुपर-उपयोक्ता के रूप में लॉग इन करें (रुट)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"रूट उपयोक्ता प्रणाली के \n"
+" व्यवस्थापक है"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"सावधानी बरतें क्योंकि आप सिस्टम फ़ाइलें \n"
+" संशोधित कर सकते हैं"

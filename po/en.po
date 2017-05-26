@@ -2,49 +2,138 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2016-04-07 04:54+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.11.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1460004854.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "Terminal"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "Here you have complete control over your computer. You are in charge!!"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "Help"
+
+#: terminal.py:188
 msgid "Zoom out"
-msgstr ""
+msgstr "Zoom out"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
-msgstr ""
+msgstr "Zoom in"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
-msgstr ""
+msgstr "Fullscreen"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr ""
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr ""
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr ""
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "Useful commands"
 
 #: terminal.py:229
-msgid "Next Tab"
+msgid "cd"
+msgstr "cd"
+
+#: terminal.py:230
+msgid "Change directory"
+msgstr "Change directory"
+
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "To use it, write: cd directory"
+
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
 msgstr ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "List the content of a directory."
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "To use it, write: ls directory"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"If you call it without parameters, will list the\n"
+"working directory"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "Copy a file to a specific location"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "Call it with the file and the new location"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "Use: cp file directory"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "Removes a file in any path"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "Use: rm file"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "Login as superuser (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"The root user is the administrator of the\n"
+"system"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"You must be careful, because you can modify\n"
+"system files"
