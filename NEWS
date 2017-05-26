@@ -9,6 +9,7 @@
 * Keep font size on theme change and when opening new tabs (Cameron),
 * Fix missing close button (Cameron),
 * Add shortcut for theme change (Cameron),
+* Add theme accelerator (ctrl+shift+i) for reverse video toggle (Cameron),
 
 35
 
