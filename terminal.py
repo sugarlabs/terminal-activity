@@ -25,9 +25,14 @@ from gettext import gettext as _
 
 import gi
 
-vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0', 'Vte': '2.91'}
+vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0'}
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
+
+try:
+    gi.require_version('Vte', '2.91')
+except:
+    gi.require_version('Vte', '2.90')
 
 from gi.repository import GLib
 from gi.repository import Gtk
