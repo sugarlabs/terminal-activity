@@ -64,7 +64,15 @@ log = logging.getLogger('Terminal')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
-FONT_SIZE = 10
+try:
+    olpc_build = file('/boot/olpc_build', 'r').readline()
+except:
+    olpc_build = ''
+
+if olpc_build.startswith('13'):
+    FONT_SIZE = 8
+else:
+    FONT_SIZE = 12
 
 VTE_VERSION = 0
 try:
