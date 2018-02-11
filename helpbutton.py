@@ -37,6 +37,7 @@ class HelpButton(Gtk.ToolItem):
     def __init__(self, **kwargs):
         GObject.GObject.__init__(self)
 
+        self.help_on = False
         help_button = ToolButton('toolbar-help')
         help_button.set_tooltip(_('Help'))
         self.add(help_button)
@@ -65,7 +66,12 @@ class HelpButton(Gtk.ToolItem):
         help_button.connect('clicked', self.__help_button_clicked_cb)
 
     def __help_button_clicked_cb(self, button):
-        self._palette.popup(immediate=True)
+        if self.help_on:
+            self._palette.popdown(immediate=True)
+            self.help_on = False
+        else:
+            self._palette.popup(immediate=True)
+            self.help_on = True
 
     def add_section(self, section_text):
         hbox = Gtk.Box()
