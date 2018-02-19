@@ -156,6 +156,14 @@ class TerminalActivity(activity.Activity):
 
         self._create_tab(None)
 
+    def fullscreen(self):
+        self._notebook.set_show_tabs(False)
+        activity.Activity.fullscreen(self)
+
+    def unfullscreen(self):
+        self._notebook.set_show_tabs(True)
+        activity.Activity.unfullscreen(self)
+
     def _create_edit_toolbar(self):
         edit_toolbar = EditToolbar()
         edit_toolbar.undo.props.visible = False
