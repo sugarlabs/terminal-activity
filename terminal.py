@@ -19,14 +19,14 @@
 import os
 import sys
 import json
-import ConfigParser
+import configparser
 import logging
 from gettext import gettext as _
 
 import gi
 
 vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0'}
-for api, ver in vs.iteritems():
+for api, ver in vs.items():
     gi.require_version(api, ver)
 
 try:
@@ -65,7 +65,7 @@ log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
 try:
-    olpc_build = file('/boot/olpc_build', 'r').readline()
+    olpc_build = open('/boot/olpc_build', 'r').readline()
 except:
     olpc_build = ''
 
@@ -422,7 +422,7 @@ class TerminalActivity(activity.Activity):
 
             # Restore the scrollback buffer.
             for l in tab_state['scrollback']:
-                vt.feed(str(l) + '\r\n')
+                vt.feed(l.encode('utf-8') + b'\r\n')
 
         argv = [os.environ.get('SHELL') or '/bin/bash']
         envv = ['SUGAR_TERMINAL_VERSION=%s' %
@@ -593,12 +593,12 @@ class TerminalActivity(activity.Activity):
             else:
                 return conf.get('terminal', var)
         else:
-            conf.set('terminal', var, default)
+            conf.set('terminal', var, str(default))
 
             return default
 
     def _configure_vt(self, vt):
-        conf = ConfigParser.ConfigParser()
+        conf = configparser.ConfigParser()
         conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
 
         if os.path.isfile(conf_file):
