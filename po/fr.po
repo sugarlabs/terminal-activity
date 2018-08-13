@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2016-12-21 21:41+0000\n"
-"Last-Translator: agathe <agathe.battestini@gmail.com>\n"
+"PO-Revision-Date: 2017-06-02 18:11+0000\n"
+"Last-Translator: François <francois.jarriges@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1482356499.000000\n"
+"X-POOTLE-MTIME: 1496427105.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "Terminal"
 
 #: activity/activity.info:3
-#, fuzzy
 msgid "Here you have complete control over your computer. You are in charge!!"
-msgstr "Ici tu as le contrôle complet de ton ordinateur. Tu es le patron!!"
+msgstr "Ici tu as le contrôle complet de ton ordinateur. Tu es responsable!!"
 
 #: helpbutton.py:41
 msgid "Help"
@@ -64,6 +63,8 @@ msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
+"Si tu l'appelles sans paramètre, c'est\n"
+"le répertoire utilisateur qui est choisi"
 
 #: terminal.py:235
 msgid "ls"
@@ -82,51 +83,61 @@ msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"Si tu l'appelles sans paramètre, c'est\n"
+"le répertoire courant qui est choisi"
 
 #: terminal.py:241
 msgid "cp"
-msgstr ""
+msgstr "cp"
 
 #: terminal.py:242
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "Copie un fichier à un endroit donné"
 
 #: terminal.py:243
 msgid "Call it with the file and the new location"
 msgstr ""
+"Appelle le avec les noms du fichier et \n"
+"du nouvel endroit"
 
 #: terminal.py:244
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "Utilise: cp fichier répertoire"
 
 #: terminal.py:245
 msgid "rm"
-msgstr ""
+msgstr "rm"
 
 #: terminal.py:246
 msgid "Removes a file in any path"
 msgstr ""
+"Supprime un fichier selon le chemin \n"
+"spécifié"
 
 #: terminal.py:247
 msgid "Use: rm file"
-msgstr ""
+msgstr "Utilise: rm fichier"
 
 #: terminal.py:248
 msgid "su"
-msgstr ""
+msgstr "su"
 
 #: terminal.py:249
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "Connexion en super-utilisateur (root)"
 
 #: terminal.py:251
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"L'utilisateur root est l'administrateur du \n"
+"système"
 
 #: terminal.py:253
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"Tu dois être prudent, car tu peux modifier\n"
+"des fichiers du système"

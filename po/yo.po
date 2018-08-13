@@ -2,19 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-06 06:42+0000\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2016-09-24 00:29+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -145,15 +137,3 @@ msgid ""
 msgstr ""
 "O gbọdọ jẹ ṣọra, nitori ti o le yipada\n"
 "eto awọn faili"
-
-#~ msgid "Open New Tab"
-#~ msgstr "Ṣi nínú Táàbù Tuntun"
-
-#~ msgid "Close Tab"
-#~ msgstr "Ti táàbù"
-
-#~ msgid "Previous Tab"
-#~ msgstr "Táàbù Tilẹ̀"
-
-#~ msgid "Next Tab"
-#~ msgstr "Táàbù Tókàn"

@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2011-09-12 17:25+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2017-12-18 12:46+0000\n"
+"Last-Translator: jszu <jszu@protonmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1513601197.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
@@ -25,10 +26,12 @@ msgstr "Terminal"
 #: activity/activity.info:3
 msgid "Here you have complete control over your computer. You are in charge!!"
 msgstr ""
+"W tym miejscu zyskujesz całkowitą kontrolę nad swoim komputerem. Ty tu "
+"rządzisz!!"
 
 #: helpbutton.py:41
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
 #: terminal.py:188
 msgid "Zoom out"
@@ -44,88 +47,97 @@ msgstr "Pełny ekran"
 
 #: terminal.py:228
 msgid "Useful commands"
-msgstr ""
+msgstr "Użyteczne polecenia"
 
 #: terminal.py:229
 msgid "cd"
-msgstr ""
+msgstr "cd"
 
 #: terminal.py:230
 msgid "Change directory"
-msgstr ""
+msgstr "Przejdź do innego katalogu"
 
 #: terminal.py:231
 msgid "To use it, write: cd directory"
-msgstr ""
+msgstr "By tego użyć, napisz: cd nazwa_katalogu"
 
 #: terminal.py:233
 msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
+"Gdy wywołasz to polecenie bez parametrów, przejdziesz\n"
+"do katalogu domowego użytkownika"
 
 #: terminal.py:235
 msgid "ls"
-msgstr ""
+msgstr "ls"
 
 #: terminal.py:236
 msgid "List the content of a directory."
-msgstr ""
+msgstr "Pokazuje zawartość katalogu"
 
 #: terminal.py:237
 msgid "To use it, write: ls directory"
-msgstr ""
+msgstr "By użyć tego polecenia, wpisz: ls nazwa_katalogu"
 
 #: terminal.py:239
 msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"Gdy wpiszesz to polecenie bez parametrów, \n"
+"zobaczysz zawartość bieżącego katalogu"
 
 #: terminal.py:241
 msgid "cp"
-msgstr ""
+msgstr "cp"
 
 #: terminal.py:242
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "Kopiuje plik do wybranego katalogu"
 
 #: terminal.py:243
 msgid "Call it with the file and the new location"
 msgstr ""
+"Wywołaj to polecenie podając nazwę pliku i katalog docelowy jako parametry"
 
 #: terminal.py:244
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "Przykład użycia: cp nazwa_pliku nazwa_katalogu_docelowego"
 
 #: terminal.py:245
 msgid "rm"
-msgstr ""
+msgstr "rm"
 
 #: terminal.py:246
 msgid "Removes a file in any path"
-msgstr ""
+msgstr "Usuwa plik dla dowolnej ścieżki"
 
 #: terminal.py:247
 msgid "Use: rm file"
-msgstr ""
+msgstr "Przykład użycia: rm nazwa_pliku"
 
 #: terminal.py:248
 msgid "su"
-msgstr ""
+msgstr "su"
 
 #: terminal.py:249
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "Zaloguj się jako administrator (root):"
 
 #: terminal.py:251
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"Użytkownik root jest administratorem \n"
+"systemu"
 
 #: terminal.py:253
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"Zachowaj ostrożność, ponieważ będziesz mógł \n"
+"modyfikować pliki systemowe"

@@ -2,69 +2,138 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-20 00:32-0400\n"
-"PO-Revision-Date: 2011-08-26 11:40+0200\n"
-"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-03-25 11:55+0000\n"
+"Last-Translator: Yuan <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490442922.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
 msgstr "終端機"
 
-#: terminal.py:166
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr "這裡你可以擁有這台電腦完整的控制權。你就是老大！"
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr "輔助說明"
+
+#: terminal.py:188
 msgid "Zoom out"
 msgstr "縮小"
 
-#: terminal.py:173
+#: terminal.py:195
 msgid "Zoom in"
 msgstr "放大"
 
-#: terminal.py:180
+#: terminal.py:202
 msgid "Fullscreen"
 msgstr "全螢幕"
 
-#: terminal.py:206
-msgid "Open New Tab"
-msgstr "開啟新的分頁"
-
-#: terminal.py:213
-msgid "Close Tab"
-msgstr "關閉分頁"
-
-#: terminal.py:221
-msgid "Previous Tab"
-msgstr "上一個分頁"
+#: terminal.py:228
+msgid "Useful commands"
+msgstr "常用指令"
 
 #: terminal.py:229
-msgid "Next Tab"
-msgstr "下一個分頁"
+msgid "cd"
+msgstr "cd"
 
-#~ msgid "Become root"
-#~ msgstr "成為超級管理員"
+#: terminal.py:230
+msgid "Change directory"
+msgstr "改變目錄"
 
-#~ msgid "Terminal Activity"
-#~ msgstr "終端機活動"
+#: terminal.py:231
+msgid "To use it, write: cd directory"
+msgstr "使用語法: cd 目錄"
 
-#~ msgid "Edit"
-#~ msgstr "編輯"
+#: terminal.py:233
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+"如果你沒有指定目錄參數，將會切換\n"
+"至使用者的家目錄"
 
-#~ msgid "Tab"
-#~ msgstr "分頁"
+#: terminal.py:235
+msgid "ls"
+msgstr "ls"
+
+#: terminal.py:236
+msgid "List the content of a directory."
+msgstr "顯示目錄中的檔案列表"
+
+#: terminal.py:237
+msgid "To use it, write: ls directory"
+msgstr "使用語法: ls 目錄"
+
+#: terminal.py:239
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+"如果你沒有指定目錄參數，將會顯示\n"
+"當前使用的目錄中的檔案列表"
+
+#: terminal.py:241
+msgid "cp"
+msgstr "cp"
+
+#: terminal.py:242
+msgid "Copy a file to a specific location"
+msgstr "複製檔案到特定的位置"
+
+#: terminal.py:243
+msgid "Call it with the file and the new location"
+msgstr "使用時指定檔案名稱與新的目的位址"
+
+#: terminal.py:244
+msgid "Use: cp file directory"
+msgstr "使用語法: cp 檔案 目錄"
+
+#: terminal.py:245
+msgid "rm"
+msgstr "rm"
+
+#: terminal.py:246
+msgid "Removes a file in any path"
+msgstr "刪除目錄中的一個檔案"
+
+#: terminal.py:247
+msgid "Use: rm file"
+msgstr "使用語法: rm 檔案"
+
+#: terminal.py:248
+msgid "su"
+msgstr "su"
+
+#: terminal.py:249
+msgid "Login as superuser (root)"
+msgstr "登入成為超級使用者 (root)"
+
+#: terminal.py:251
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+"root 使用者是系統的\n"
+"管理員"
+
+#: terminal.py:253
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
+"請小心，因為您可以修改\n"
+"系統檔案"

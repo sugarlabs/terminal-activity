@@ -7,123 +7,133 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2008-07-03 07:02-0400\n"
-"Last-Translator: salman minhas <sulmanminhas@gmail.com>\n"
+"PO-Revision-Date: 2018-02-14 16:25+0000\n"
+"Last-Translator: Berend <berendy@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ur\n"
+"Language: fy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1518625552.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr "ٹرمينل"
+msgstr "Terminal"
 
 #: activity/activity.info:3
 msgid "Here you have complete control over your computer. You are in charge!!"
-msgstr ""
+msgstr "Hjir hast de hiele bestjoering oer dyn kompjûter. Do bist de baas!!"
 
 #: helpbutton.py:41
 msgid "Help"
-msgstr ""
+msgstr "Help"
 
 #: terminal.py:188
 msgid "Zoom out"
-msgstr ""
+msgstr "Zoom út"
 
 #: terminal.py:195
 msgid "Zoom in"
-msgstr ""
+msgstr "Zoom yn"
 
 #: terminal.py:202
 msgid "Fullscreen"
-msgstr ""
+msgstr "Folslein skerm"
 
 #: terminal.py:228
 msgid "Useful commands"
-msgstr ""
+msgstr "Brûkbere kommando's"
 
 #: terminal.py:229
 msgid "cd"
-msgstr ""
+msgstr "cd"
 
 #: terminal.py:230
 msgid "Change directory"
-msgstr ""
+msgstr "Map feroarje"
 
 #: terminal.py:231
 msgid "To use it, write: cd directory"
-msgstr ""
+msgstr "Om te brûken, skriuw: cd map"
 
 #: terminal.py:233
 msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
+"Ast it sûnder parameters brûkst, sil it de\n"
+"brûkers map feroarje"
 
 #: terminal.py:235
 msgid "ls"
-msgstr ""
+msgstr "Is"
 
 #: terminal.py:236
 msgid "List the content of a directory."
-msgstr ""
+msgstr "Lit de ynhâld fan in map sjen."
 
 #: terminal.py:237
 msgid "To use it, write: ls directory"
-msgstr ""
+msgstr "Om te brûken, skriuwL ls map"
 
 #: terminal.py:239
 msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"As jo it brûke sûnder parameters, lit it\n"
+"de wurkmap sjen"
 
 #: terminal.py:241
 msgid "cp"
-msgstr ""
+msgstr "cp"
 
 #: terminal.py:242
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "Kopiearje in triem nei in beskate lokaasje"
 
 #: terminal.py:243
 msgid "Call it with the file and the new location"
-msgstr ""
+msgstr "Brûkt it mei de triem en de nije lokaasje"
 
 #: terminal.py:244
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "Brûkme: cp triem map"
 
 #: terminal.py:245
 msgid "rm"
-msgstr ""
+msgstr "rm"
 
 #: terminal.py:246
 msgid "Removes a file in any path"
-msgstr ""
+msgstr "Wisket in triem yn in paad"
 
 #: terminal.py:247
 msgid "Use: rm file"
-msgstr ""
+msgstr "Brûkme: rm triem"
 
 #: terminal.py:248
 msgid "su"
-msgstr ""
+msgstr "su"
 
 #: terminal.py:249
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "Ynlogge as superbrûker (root)"
 
 #: terminal.py:251
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"De root brûker is de behearder fan\n"
+"it systeem"
 
 #: terminal.py:253
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"Do moast foarsichtich wêze, want do kinst\n"
+"systeem triemmen feroarje"

@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2016-08-20 01:30+0000\n"
-"Last-Translator: Fusion <hello@befusion.org>\n"
+"PO-Revision-Date: 2017-06-14 21:07+0000\n"
+"Last-Translator: Mariana <dias.inkscape@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1471656643.000000\n"
+"X-POOTLE-MTIME: 1497474449.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
@@ -84,51 +84,57 @@ msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"Caso executado sem parâmetros, este ativará\n"
+"o diretório de trabalho"
 
 #: terminal.py:241
 msgid "cp"
-msgstr ""
+msgstr "cp"
 
 #: terminal.py:242
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "Copiar um arquivo para uma localização especifica"
 
 #: terminal.py:243
 msgid "Call it with the file and the new location"
-msgstr ""
+msgstr "Executar o mesmo em conjunto com o arquivo e sua localização"
 
 #: terminal.py:244
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "Use: cp arquivo diretório"
 
 #: terminal.py:245
 msgid "rm"
-msgstr ""
+msgstr "rm"
 
 #: terminal.py:246
 msgid "Removes a file in any path"
-msgstr ""
+msgstr "Exclui arquivos em qualquer localização"
 
 #: terminal.py:247
 msgid "Use: rm file"
-msgstr ""
+msgstr "Use: rm arquivo"
 
 #: terminal.py:248
 msgid "su"
-msgstr ""
+msgstr "su"
 
 #: terminal.py:249
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "O login é feito como o super usuário (root)"
 
 #: terminal.py:251
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"O usuário root é o administrador do\n"
+"sistema"
 
 #: terminal.py:253
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"Você deve ser cuidadoso, pois pode alterar\n"
+"arquivos do sistema"
