@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-06 06:42+0000\n"
+"POT-Creation-Date: 2018-08-13 17:43+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,101 +29,101 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: terminal.py:188
+#: terminal.py:221
 msgid "Zoom out"
 msgstr ""
 
-#: terminal.py:195
+#: terminal.py:228
 msgid "Zoom in"
 msgstr ""
 
-#: terminal.py:202
+#: terminal.py:235
 msgid "Fullscreen"
 msgstr ""
 
-#: terminal.py:228
+#: terminal.py:261
 msgid "Useful commands"
 msgstr ""
 
-#: terminal.py:229
+#: terminal.py:262
 msgid "cd"
 msgstr ""
 
-#: terminal.py:230
+#: terminal.py:263
 msgid "Change directory"
 msgstr ""
 
-#: terminal.py:231
+#: terminal.py:264
 msgid "To use it, write: cd directory"
 msgstr ""
 
-#: terminal.py:233
+#: terminal.py:266
 msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
 
-#: terminal.py:235
+#: terminal.py:268
 msgid "ls"
 msgstr ""
 
-#: terminal.py:236
+#: terminal.py:269
 msgid "List the content of a directory."
 msgstr ""
 
-#: terminal.py:237
+#: terminal.py:270
 msgid "To use it, write: ls directory"
 msgstr ""
 
-#: terminal.py:239
+#: terminal.py:272
 msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
 
-#: terminal.py:241
+#: terminal.py:274
 msgid "cp"
 msgstr ""
 
-#: terminal.py:242
+#: terminal.py:275
 msgid "Copy a file to a specific location"
 msgstr ""
 
-#: terminal.py:243
+#: terminal.py:276
 msgid "Call it with the file and the new location"
 msgstr ""
 
-#: terminal.py:244
+#: terminal.py:277
 msgid "Use: cp file directory"
 msgstr ""
 
-#: terminal.py:245
+#: terminal.py:278
 msgid "rm"
 msgstr ""
 
-#: terminal.py:246
+#: terminal.py:279
 msgid "Removes a file in any path"
 msgstr ""
 
-#: terminal.py:247
+#: terminal.py:280
 msgid "Use: rm file"
 msgstr ""
 
-#: terminal.py:248
+#: terminal.py:281
 msgid "su"
 msgstr ""
 
-#: terminal.py:249
+#: terminal.py:282
 msgid "Login as superuser (root)"
 msgstr ""
 
-#: terminal.py:251
+#: terminal.py:284
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
 
-#: terminal.py:253
+#: terminal.py:286
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
