@@ -78,13 +78,9 @@ VTE_VERSION = 0
 try:
     VTE_VERSION = Vte.MINOR_VERSION
 except:
-    # version is not published in some versions of vte, notably 2.90
+    # version is not published in old versions of vte
     pass
 
-if VTE_VERSION == 0:
-    if hasattr(Vte, '_version'):
-        major, minor = Vte._version.split('.')
-        VTE_VERSION = minor
 
 class TerminalActivity(activity.Activity):
 
