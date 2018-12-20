@@ -540,7 +540,8 @@ class TerminalActivity(activity.Activity):
             environ_file = '/proc/%d/environ' % page.pid
             if os.path.isfile(environ_file):
                 # Note- this currently gets the child's initial environment
-                # rather than the current environment, making it not very useful.
+                # rather than the current environment,
+                # making it not very useful.
                 environment = open(environ_file, 'r').read().split('\0')
 
                 cwd = os.readlink('/proc/%d/cwd' % page.pid)
