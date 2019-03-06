@@ -424,17 +424,31 @@ class TerminalActivity(activity.Activity):
             for l in tab_state['scrollback']:
                 vt.feed(str(l) + '\r\n')
 
-        shell_cmd = os.environ.get('SHELL') or '/bin/bash'
+        argv = [os.environ.get('SHELL') or '/bin/bash']
+        envv = ['SUGAR_TERMINAL_VERSION=%s' %
+                    os.environ['SUGAR_BUNDLE_VERSION']]
+
+        saved = {}
+        for name in ['SUGAR_BUNDLE_PATH', 'SUGAR_ACTIVITY_ROOT',
+                         'SUGAR_BUNDLE_ID', 'SUGAR_BUNDLE_NAME',
+                         'SUGAR_BUNDLE_VERSION']:
+            if name in os.environ:
+                saved[name] = os.environ[name]
+                del os.environ[name]
+
         if hasattr(vt, 'fork_command_full'):
-            sucess_, box.pid = vt.fork_command_full(
+            _, box.pid = vt.fork_command_full(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                [shell_cmd], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                 None, None)
         else:
-            sucess_, box.pid = vt.spawn_sync(
+            _, box.pid = vt.spawn_sync(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                [shell_cmd], [], GLib.SpawnFlags. DO_NOT_REAP_CHILD,
+                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                 None, None)
+
+        for name in saved:
+            os.environ[name] = saved[name]
 
         self._notebook.props.page = index
         vt.grab_focus()
