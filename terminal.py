@@ -124,6 +124,12 @@ class TerminalActivity(activity.Activity):
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
 
+        self.clear = ToolButton('edit-clear')
+        self.clear.set_tooltip(_('Clear Output'))
+        self.clear.connect('clicked', self.__clear_cb)
+        toolbar_box.toolbar.insert(self.clear, -1)
+        self.clear.show()
+
         helpbutton = self._create_help_button()
         toolbar_box.toolbar.insert(helpbutton, -1)
         helpbutton.show_all()
@@ -642,3 +648,8 @@ class TerminalActivity(activity.Activity):
             vt.set_visible_bell(visible_bell)
 
         conf.write(open(conf_file, 'w'))
+
+    def __clear_cb(self, button):
+        print("tes")
+        vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
+        vt.feed_child('reset \n')
