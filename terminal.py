@@ -124,12 +124,6 @@ class TerminalActivity(activity.Activity):
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
 
-        self.clear = ToolButton('edit-clear')
-        self.clear.set_tooltip(_('Clear Output'))
-        self.clear.connect('clicked', self.__clear_cb)
-        toolbar_box.toolbar.insert(self.clear, -1)
-        self.clear.show()
-
         helpbutton = self._create_help_button()
         toolbar_box.toolbar.insert(helpbutton, -1)
         helpbutton.show_all()
@@ -175,6 +169,13 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.copy.props.accelerator = '<Ctrl><Shift>C'
         edit_toolbar.paste.connect('clicked', self.__paste_cb)
         edit_toolbar.paste.props.accelerator = '<Ctrl><Shift>V'
+
+        clear = ToolButton('edit-clear')
+        clear.set_tooltip(_('Clear scrollback'))
+        clear.connect('clicked', self.__clear_cb)
+        edit_toolbar.insert(clear, -1)
+        clear.show()
+
         return edit_toolbar
 
     def __copy_cb(self, button):
@@ -650,6 +651,7 @@ class TerminalActivity(activity.Activity):
         conf.write(open(conf_file, 'w'))
 
     def __clear_cb(self, button):
-        print("tes")
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
-        vt.feed_child('reset \n')
+        n = vt.get_scrollback_lines()
+        vt.set_scrollback_lines(0)
+        vt.set_scrollback_lines(n)
