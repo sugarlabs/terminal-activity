@@ -20,6 +20,7 @@ import os
 import sys
 import json
 import ConfigParser
+import vteterm
 import logging
 from gettext import gettext as _
 
@@ -346,7 +347,7 @@ class TerminalActivity(activity.Activity):
         return True
 
     def _create_tab(self, tab_state):
-        vt = Vte.Terminal()
+        vt = vteterm.Terminal(self)
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
