@@ -1,8 +1,4 @@
-# Tie up everything and the lose ends as per guake
-import os
-import sys
-import logging
-from gettext import gettext as _
+# coding=utf-8
 import subprocess
 import gi
 
@@ -12,18 +8,30 @@ except:
     gi.require_version('Vte', '2.90')
 
 from gi.repository import Vte
-from gi.repository import GLib
-from gi.repository import Gtk
 from gi.repository import Gdk
 
-VTE_VERSION = 0
-try:
-    VTE_VERSION = Vte.MINOR_VERSION
-except:
-    # version is not published in old versions of vte
-    pass
-
 TERMINAL_MATCH_TAGS = ['schema', 'http', 'https', 'email', 'ftp']
+
+TERMINAL_MATCH_EXPRS = [
+    "(news:|telnet:|nntp:|file:\/|https?:|ftps?:|webcal:)\/\/([-[:alnum:]]+"
+    "(:[-[:alnum:],?;.:\/!%$^\*&~\"#']+)?\@)?[-[:alnum:]]+(\.[-[:alnum:]]+)*"
+    "(:[0-9]{1,5})?(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#'%]*[^].> \t\r\n,\\\"])?",
+    "(www|ftp)[-[:alnum:]]*\.[-[:alnum:]]+(\.[-[:alnum:]]+)*(:[0-9]{1,5})?"
+    "(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#%]*[^]'.>) \t\r\n,\\\"])?",
+    "(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\.[-[:alnum:]]+(\\.[-[:alnum:]]+)*",
+    "HtTp://déjà-vu.com:10000/déjà/vu",
+    "HTTP://joe:sEcReT@➡.ws:1080",
+    "https://cömbining-áccents",
+    "https://[dead::beef]:12345/ipv6",
+    "https://[dead::beef:11.22.33.44]",
+    "https://dead",
+    "http://[dead::beef:111.222.333.444]",
+    "http://safeguy:!#$%^&*@host",
+    "http://dudewithnopassword:@example.com",
+    "http://invalidusername!@host",
+    "http://ab.cd/ef?g=h&i=j|k=l#m=n:o=p",
+]
+
 
 class Terminal(Vte.Terminal):
     """ A Vte.Terminal with some properties set """
@@ -31,14 +39,20 @@ class Terminal(Vte.Terminal):
     def __init__(self, activity):
         super(Terminal, self).__init__()
         self.activity = activity
-        self.handler_ids = []
-        self.handler_ids.append(self.connect('button-press-event', self._button_press))
-    
+        self.connect('button-press-event', self._button_press)
         if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 50):
             self.set_allow_hyperlink(True)
-    
+        self.check_matches()
         self.matched_value = ''
         self.found_link = None
+
+    def check_matches(self):
+        for expr in TERMINAL_MATCH_EXPRS:
+            regex = Vte.Regex.new_for_match(expr, len(expr), 0)
+            tag = self.match_add_regex(
+                regex, 0
+            )
+            self.match_set_cursor_name(tag, "pointer")
 
     def _button_press(self, terminal, event):
         self.matched_value = ''
@@ -46,7 +60,8 @@ class Terminal(Vte.Terminal):
             matched_string = self.match_check_event(event)
         else:
             matched_string = self.match_check(
-                int(event.x / self.get_char_width()), int(event.y / self.get_char_height())
+                int(event.x / self.get_char_width()), \
+                    int(event.y / self.get_char_height())
             )
         self.found_link = None
 
@@ -83,7 +98,6 @@ class Terminal(Vte.Terminal):
                 value = 'ftp://%s' % value
             elif TERMINAL_MATCH_TAGS[tag] == 'email':
                 value = 'mailto:%s' % value
-        
         if value:
             return value
 
@@ -91,6 +105,5 @@ class Terminal(Vte.Terminal):
         if not self.found_link:
             return
         cmd = ["xdg-open", self.found_link]
-        subprocess.Popen(cmd, shell=False)  # Here is where the activity call is being made
-        
-        
+        # Here is where the activity call is being made
+        subprocess.Popen(cmd, shell=False)
