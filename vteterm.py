@@ -1,6 +1,7 @@
 # coding=utf-8
-import subprocess
 import gi
+import os
+import time
 
 try:
     gi.require_version('Vte', '2.91')
@@ -9,6 +10,14 @@ except:
 
 from gi.repository import Vte
 from gi.repository import Gdk
+
+from sugar3.datastore import datastore
+from sugar3 import profile
+try:
+    from sugar3.activity.activity import launch_bundle
+    _HAS_BUNDLE_LAUNCHER = True
+except ImportError:
+    _HAS_BUNDLE_LAUNCHER = False
 
 TERMINAL_MATCH_TAGS = ['schema', 'http', 'https', 'email', 'ftp']
 
@@ -104,6 +113,21 @@ class Terminal(Vte.Terminal):
     def browse_link_under_cursor(self):
         if not self.found_link:
             return
-        cmd = ["xdg-open", self.found_link]
-        # Here is where the activity call is being made
-        subprocess.Popen(cmd, shell=False)
+        path = os.path.join(self.activity.get_activity_root(), 'instance', '%i' % time.time())
+        self.create_journal_entry(path, self.found_link)
+
+    def create_journal_entry(self, path, URL):
+        fd = open(path, "w+")
+        fd.write(URL)
+        fd.close()
+        journal_entry = datastore.create()
+        journal_entry.metadata['title'] = 'Browse Activity'
+        journal_entry.metadata['title_set_by_user'] = '1'
+        journal_entry.metadata['keep'] = '0'
+        journal_entry.metadata['mime_type'] = 'text/uri-list'
+        journal_entry.metadata['icon-color'] = profile.get_color().to_string()
+        journal_entry.metadata['description'] = "This is the URL opening of " + URL
+        journal_entry.file_path = path
+        datastore.write(journal_entry)
+        self._object_id = journal_entry.object_id
+        launch_bundle(object_id=self._object_id)
