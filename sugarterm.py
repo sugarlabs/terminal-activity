@@ -40,9 +40,13 @@ from typing import Tuple
 from urllib.parse import unquote
 from urllib.parse import urlparse
 
-from time import sleep
+from time import sleep, time
 
 import gi
+from sugar3 import profile
+from sugar3.activity.activity import launch_bundle
+from sugar3.datastore import datastore
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')  # vte-0.38
 
@@ -374,13 +378,6 @@ class SugarTerminal(Vte.Terminal):
     def get_link_under_cursor(self):
         return self.found_link
 
-    def browse_link_under_cursor(self):
-        if not self.found_link:
-            return
-        log.debug("Opening link: %s", self.found_link)
-        cmd = ["xdg-open", self.found_link]
-        subprocess.Popen(cmd, shell=False)
-
     def increase_font_size(self):
         self.font_scale += 1
 
@@ -496,3 +493,25 @@ class SugarTerminal(Vte.Terminal):
             self.custom_palette = [self._color_from_list(col) for col in palette]
         else:
             self.custom_palette = None
+
+    def browse_link_under_cursor(self):
+        if not self.found_link:
+            return
+        path = os.path.join(self.activity.get_activity_root(), 'instance', '%i' % time.time())
+        self.create_journal_entry(path, self.found_link)
+
+    def create_journal_entry(self, path, URL):
+        fd = open(path, "w+")
+        fd.write(URL)
+        fd.close()
+        journal_entry = datastore.create()
+        journal_entry.metadata['title'] = 'Browse Activity'
+        journal_entry.metadata['title_set_by_user'] = '1'
+        journal_entry.metadata['keep'] = '0'
+        journal_entry.metadata['mime_type'] = 'text/uri-list'
+        journal_entry.metadata['icon-color'] = profile.get_color().to_string()
+        journal_entry.metadata['description'] = "This is the URL opening of " + URL
+        journal_entry.file_path = path
+        datastore.write(journal_entry)
+        self._object_id = journal_entry.object_id
+        launch_bundle(object_id=self._object_id)
