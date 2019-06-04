@@ -28,17 +28,6 @@ TERMINAL_MATCH_EXPRS = [
     "(www|ftp)[-[:alnum:]]*\.[-[:alnum:]]+(\.[-[:alnum:]]+)*(:[0-9]{1,5})?"
     "(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#%]*[^]'.>) \t\r\n,\\\"])?",
     "(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\.[-[:alnum:]]+(\\.[-[:alnum:]]+)*",
-    "HtTp://déjà-vu.com:10000/déjà/vu",
-    "HTTP://joe:sEcReT@➡.ws:1080",
-    "https://cömbining-áccents",
-    "https://[dead::beef]:12345/ipv6",
-    "https://[dead::beef:11.22.33.44]",
-    "https://dead",
-    "http://[dead::beef:111.222.333.444]",
-    "http://safeguy:!#$%^&*@host",
-    "http://dudewithnopassword:@example.com",
-    "http://invalidusername!@host",
-    "http://ab.cd/ef?g=h&i=j|k=l#m=n:o=p",
 ]
 
 
