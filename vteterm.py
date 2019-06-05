@@ -110,12 +110,12 @@ class Terminal(Vte.Terminal):
         fd.write(URL)
         fd.close()
         journal_entry = datastore.create()
-        journal_entry.metadata['title'] = 'Browse Activity'
+        journal_entry.metadata['title'] = URL
         journal_entry.metadata['title_set_by_user'] = '1'
         journal_entry.metadata['keep'] = '0'
         journal_entry.metadata['mime_type'] = 'text/uri-list'
         journal_entry.metadata['icon-color'] = profile.get_color().to_string()
-        journal_entry.metadata['description'] = "This is the URL opening of " + URL
+        journal_entry.metadata['description'] = "A URL shown by Terminal-activity"
         journal_entry.file_path = path
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
