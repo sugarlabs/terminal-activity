@@ -38,7 +38,7 @@ class Terminal(Vte.Terminal):
         super(Terminal, self).__init__()
         self.activity = activity
         self.connect('button-press-event', self._button_press)
-        if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 50):
+        if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 52):
             self.set_allow_hyperlink(True)
         self.check_matches()
         self.matched_value = ''
@@ -106,17 +106,28 @@ class Terminal(Vte.Terminal):
         self.create_journal_entry(path, self.found_link)
 
     def create_journal_entry(self, path, URL):
-        fd = open(path, "w+")
-        fd.write(URL)
-        fd.close()
-        journal_entry = datastore.create()
-        journal_entry.metadata['title'] = URL
-        journal_entry.metadata['title_set_by_user'] = '1'
-        journal_entry.metadata['keep'] = '0'
-        journal_entry.metadata['mime_type'] = 'text/uri-list'
-        journal_entry.metadata['icon-color'] = profile.get_color().to_string()
-        journal_entry.metadata['description'] = "A URL shown by Terminal-activity"
-        journal_entry.file_path = path
-        datastore.write(journal_entry)
-        self._object_id = journal_entry.object_id
+        # Query existing Journal objects for the same URL
+        flag = False
+        entries, num_entries = datastore.find({})
+        for entry in entries:
+            if entry.metadata['mime_type'] == 'text/uri-list' and entry.metadata['url'] == URL:
+                flag = True
+                break
+        if flag is False:
+            fd = open(path, "w+")
+            fd.write(URL)
+            fd.close()
+            journal_entry = datastore.create()
+            journal_entry.metadata['title'] = URL
+            journal_entry.metadata['keep'] = '0'
+            journal_entry.metadata['mime_type'] = 'text/uri-list'
+            journal_entry.metadata['icon-color'] = profile.get_color().to_string()
+            journal_entry.metadata['description'] = "A URL shown by Terminal-activity"
+            journal_entry.metadata['url'] = URL
+            journal_entry.file_path = path
+            datastore.write(journal_entry)
+            os.remove(path)
+            self._object_id = journal_entry.object_id
+        else:
+            self._object_id = entry.object_id
         launch_bundle(object_id=self._object_id)

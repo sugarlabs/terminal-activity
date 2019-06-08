@@ -347,7 +347,11 @@ class TerminalActivity(activity.Activity):
         return True
 
     def _create_tab(self, tab_state):
-        vt = vteterm.Terminal(self)
+
+        if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 52):
+            vt = vteterm.Terminal(self)
+        else:
+            vt = Vte.Terminal()
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
