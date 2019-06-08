@@ -110,7 +110,7 @@ class Terminal(Vte.Terminal):
         flag = False
         entries, num_entries = datastore.find({})
         for entry in entries:
-            if entry.metadata['mime_type'] == 'text/uri-list' and entry.metadata['url'] == URL:
+            if entry.metadata['mime_type'] == 'text/uri-list':
                 flag = True
                 break
         if flag is False:
@@ -123,7 +123,6 @@ class Terminal(Vte.Terminal):
             journal_entry.metadata['mime_type'] = 'text/uri-list'
             journal_entry.metadata['icon-color'] = profile.get_color().to_string()
             journal_entry.metadata['description'] = "A URL shown by Terminal-activity"
-            journal_entry.metadata['url'] = URL
             journal_entry.file_path = path
             datastore.write(journal_entry)
             os.remove(path)
