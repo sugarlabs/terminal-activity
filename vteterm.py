@@ -43,6 +43,7 @@ class Terminal(Vte.Terminal):
         self.check_matches()
         self.matched_value = ''
         self.found_link = None
+        self._journal_object_map_url = {}
 
     def check_matches(self):
         for expr in TERMINAL_MATCH_EXPRS:
@@ -106,14 +107,9 @@ class Terminal(Vte.Terminal):
         self.create_journal_entry(path, self.found_link)
 
     def create_journal_entry(self, path, URL):
-        # Query existing Journal objects for the same URL
-        flag = False
-        entries, num_entries = datastore.find({})
-        for entry in entries:
-            if entry.metadata['mime_type'] == 'text/uri-list':
-                flag = True
-                break
-        if flag is False:
+        if URL in self._journal_object_map_url:
+            self._object_id = self._journal_object_map_url[URL]
+        else:
             fd = open(path, "w+")
             fd.write(URL)
             fd.close()
@@ -127,6 +123,5 @@ class Terminal(Vte.Terminal):
             datastore.write(journal_entry)
             os.remove(path)
             self._object_id = journal_entry.object_id
-        else:
-            self._object_id = entry.object_id
+            self._journal_object_map_url[URL] = journal_entry.object_id
         launch_bundle(object_id=self._object_id)
