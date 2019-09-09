@@ -1,3 +1,10 @@
+47
+
+* Add missing NEWS (James Cameron),
+* Rename and update README (James Cameron),
+* Port to Python 3 (Rahul Bothra),
+* Fix help button no response to click (James Cameron),
+
 46
 
 * Add button to clear history (Hrishi Patel),
