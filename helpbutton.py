@@ -65,7 +65,7 @@ class HelpButton(Gtk.ToolItem):
         help_button.connect('clicked', self.__help_button_clicked_cb)
 
     def __help_button_clicked_cb(self, button):
-        self._palette.popup(immediate=True, state=1)
+        self._palette.popup(immediate=True)
 
     def add_section(self, section_text):
         hbox = Gtk.Box()
