@@ -666,6 +666,6 @@ class TerminalActivity(activity.Activity):
 
     def __clear_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
-        n = vt.get_scrollback_lines()
+        n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
