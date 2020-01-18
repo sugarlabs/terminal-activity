@@ -49,12 +49,13 @@ from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from sugar3.activity import activity
 from sugar3 import env
+from sugar3.graphics.colorbutton import ColorToolButton
 
 from widgets import BrowserNotebook
 from widgets import TabLabel
 
 from helpbutton import HelpButton
-
+from sugarterm import SugarTerminal
 
 MASKED_ENVIRONMENT = [
     'DBUS_SESSION_BUS_ADDRESS',
@@ -80,6 +81,7 @@ try:
 except:
     # version is not published in old versions of vte
     pass
+
 
 
 class TerminalActivity(activity.Activity):
@@ -111,6 +113,11 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.show()
         toolbar_box.toolbar.insert(edit_toolbar_button, -1)
         edit_toolbar_button.show()
+
+        color = ColorToolButton('color')
+        #color.connect('notify::color', self.__color_notify_cb)
+        toolbar_box.toolbar.insert(color, -1)
+        color.show()
 
         view_toolbar = self._create_view_toolbar()
         view_toolbar_button = ToolbarButton(
@@ -346,7 +353,7 @@ class TerminalActivity(activity.Activity):
         return True
 
     def _create_tab(self, tab_state):
-        vt = Vte.Terminal()
+        vt = SugarTerminal()
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
@@ -669,3 +676,4 @@ class TerminalActivity(activity.Activity):
         n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
+
