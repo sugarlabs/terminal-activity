@@ -216,7 +216,8 @@ class TerminalActivity(activity.Activity):
             self._theme_state = "dark"
         else:
             self._theme_state = "light"
-        self._update_custom_theme(previous_theme['fg_color'], previous_theme['bg_color'])
+        self._update_custom_theme(
+            previous_theme['fg_color'], previous_theme['bg_color'])
         self._update_theme()
 
     def _update_theme(self):
@@ -580,7 +581,8 @@ class TerminalActivity(activity.Activity):
 
         data = {}
         data['current-tab'] = self._notebook.get_current_page()
-        data['theme'] = 'custom'  # make sures this doesn't conflict with older terminal version
+        # make sures this doesn't conflict with older terminal version
+        data['theme'] = 'custom'
         data['theme_hex'] = self._theme_colors['custom']
         data['tabs'] = []
 
