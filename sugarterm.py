@@ -87,7 +87,8 @@ try:
         at_exit_call(libutempter.utempter_remove_added_record)
 except Exception as e:
     libutempter = None
-    sys.stderr.write("[WARN] ===================================================================\n")
+    sys.stderr.write(
+        "[WARN] ===================================================================\n")
     sys.stderr.write("[WARN] Unable to load the library libutempter !\n")
     sys.stderr.write(
         "[WARN] Some feature might not work:\n"
@@ -118,6 +119,7 @@ class SugarTerminal(Vte.Terminal):
     """
     Just a vte.Terminal with some properties already set.
     """
+
     def __init__(self, activity):
         super(SugarTerminal, self).__init__()
         self.activity = activity
@@ -126,8 +128,10 @@ class SugarTerminal(Vte.Terminal):
         self.add_matches()
         self.handler_ids = []
         self.read_config()
-        self.handler_ids.append(self.connect('button-press-event', self.button_press))
-        self.connect('child-exited', self.on_child_exited)  # Call on_child_exited, don't remove it
+        self.handler_ids.append(self.connect(
+            'button-press-event', self.button_press))
+        # Call on_child_exited, don't remove it
+        self.connect('child-exited', self.on_child_exited)
         self.matched_value = ''
         self.font_scale_index = 0
         self._pid = None
@@ -251,10 +255,10 @@ class SugarTerminal(Vte.Terminal):
             VTE_REGEX_FLAGS = 0x40080400
             for expr in TERMINAL_MATCH_EXPRS:
                 tag = self.match_add_regex(
-                    Vte.Regex.new_for_match(expr, len(expr), VTE_REGEX_FLAGS), 0
+                    Vte.Regex.new_for_match(
+                        expr, len(expr), VTE_REGEX_FLAGS), 0
                 )
                 self.match_set_cursor_type(tag, Gdk.CursorType.HAND2)
-
 
         except (GLib.Error, AttributeError) as e:  # pylint: disable=catching-non-exception
             try:
@@ -262,16 +266,17 @@ class SugarTerminal(Vte.Terminal):
                 if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 44):
                     compile_flag = GLib.RegexCompileFlags.MULTILINE
                 for expr in TERMINAL_MATCH_EXPRS:
-                    tag = self.match_add_gregex(GLib.Regex.new(expr, compile_flag, 0), 0)
+                    tag = self.match_add_gregex(
+                        GLib.Regex.new(expr, compile_flag, 0), 0)
                     self.match_set_cursor_type(tag, Gdk.CursorType.HAND2)
-
 
             except GLib.Error as e:  # pylint: disable=catching-non-exception
                 log.error(
                     "ERROR: PCRE2 does not seems to be enabled on your system. "
                     "Quick Edit and other Ctrl+click features are disabled. "
                     "Please update your VTE package or contact your distribution to ask "
-                    "to enable regular expression support in VTE. Exception: '%s'", str(e)
+                    "to enable regular expression support in VTE. Exception: '%s'", str(
+                        e)
                 )
 
     def get_current_directory(self):
@@ -343,7 +348,8 @@ class SugarTerminal(Vte.Terminal):
         try:
             if pt.exists():
                 lineno = find_lineno(text, pt, lineno, py_func)
-                log.info("File exists: %r, line=%r", pt.absolute().as_posix(), lineno)
+                log.info("File exists: %r, line=%r",
+                         pt.absolute().as_posix(), lineno)
                 return (pt, lineno, colno)
             log.debug("No file found matching: %r", text)
             cwd = self.get_current_directory()
@@ -351,7 +357,8 @@ class SugarTerminal(Vte.Terminal):
             log.debug("checking file existance: %r", pt)
             if pt.exists():
                 lineno = find_lineno(text, pt, lineno, py_func)
-                log.info("File exists: %r, line=%r", pt.absolute().as_posix(), lineno)
+                log.info("File exists: %r, line=%r",
+                         pt.absolute().as_posix(), lineno)
                 return (pt, lineno, colno)
             log.debug("file does not exist: %s", str(pt))
         except OSError:
@@ -368,7 +375,8 @@ class SugarTerminal(Vte.Terminal):
             matched_string = self.match_check_event(event)
         else:
             matched_string = self.match_check(
-                int(event.x / self.get_char_width()), int(event.y / self.get_char_height())
+                int(event.x / self.get_char_width()
+                    ), int(event.y / self.get_char_height())
             )
 
         self.found_link = None
@@ -401,7 +409,6 @@ class SugarTerminal(Vte.Terminal):
             text = data.get_text()
             if text:
                 self.feed_child(text)
-
 
     def _on_ctrl_click_matcher(self, matched_string):
         value, tag = matched_string
@@ -486,14 +493,15 @@ class SugarTerminal(Vte.Terminal):
 
     def set_color_bold(self, font_color, *args, **kwargs):
         real_fgcolor = self.custom_fgcolor if self.custom_fgcolor else font_color
-        super(SugarTerminal, self).set_color_bold(real_fgcolor, *args, **kwargs)
+        super(SugarTerminal, self).set_color_bold(
+            real_fgcolor, *args, **kwargs)
 
     def set_term_colors(self, custom_colors):
         fg_color = custom_colors['fg_color']
         bg_color = custom_colors['bg_color']
         try:
             self.set_colors(Gdk.color_parse(fg_color),
-                          Gdk.color_parse(bg_color), [])
+                            Gdk.color_parse(bg_color), [])
         except TypeError:
             # Vte 0.38 requires the colors set as a different type
             # in Fedora 21 we get a exception
@@ -529,14 +537,16 @@ class SugarTerminal(Vte.Terminal):
 
         palette = colors_dict.get('palette', None)
         if isinstance(palette, list):
-            self.custom_palette = [self._color_from_list(col) for col in palette]
+            self.custom_palette = [
+                self._color_from_list(col) for col in palette]
         else:
             self.custom_palette = None
 
     def browse_link_under_cursor(self):
         if not self.found_link:
             return
-        path = os.path.join(self.activity.get_activity_root(), 'instance', '%i' % time.time())
+        path = os.path.join(self.activity.get_activity_root(),
+                            'instance', '%i' % time.time())
         self.create_journal_entry(path, self.found_link)
 
     def create_journal_entry(self, path, URL):
