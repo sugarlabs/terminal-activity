@@ -1,6 +1,7 @@
 # -*- coding: utf-8; -*-
 """
 Copyright (C) 2007-2013 Guake authors
+Copyright (C) 2020 SugarLabs
 Copyright (c) 2020 Srevin Saju <srevin03@gmail.com>
 
 This program is free software; you can redistribute it and/or
