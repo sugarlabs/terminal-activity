@@ -49,7 +49,7 @@ from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from sugar3.activity import activity
 from sugar3 import env
-from sugar3.graphics.colorbutton import ColorToolButton
+from sugar3.graphics.colorbutton import ColorToolButton, get_svg_color_string
 
 from widgets import BrowserNotebook
 from widgets import TabLabel
@@ -83,7 +83,6 @@ except:
     pass
 
 
-
 class TerminalActivity(activity.Activity):
 
     def __init__(self, handle):
@@ -93,10 +92,17 @@ class TerminalActivity(activity.Activity):
         # This is related with http://bugs.sugarlabs.org/ticket/440
         self.disconnect_by_func(self._Window__key_press_cb)
         self.connect('key-press-event', self.__key_press_cb)
-
+        self.vt = None
         self.max_participants = 1
-
+        self._theme_colors = {"light": {'fg_color': '#000000',
+                                        'bg_color': '#FFFFFF'},
+                              "dark": {'fg_color': '#FFFFFF',
+                                       'bg_color': '#000000'},
+                              "custom": {'fg_color': '#000000',
+                                         'bg_color': '#FFFFFF'}
+                              }
         self._theme_state = "light"
+
         self._font_size = FONT_SIZE
 
         toolbar_box = ToolbarBox()
@@ -113,11 +119,6 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.show()
         toolbar_box.toolbar.insert(edit_toolbar_button, -1)
         edit_toolbar_button.show()
-
-        color = ColorToolButton('color')
-        color.connect('notify::color', self.__color_notify_cb)
-        toolbar_box.toolbar.insert(color, -1)
-        color.show()
 
         view_toolbar = self._create_view_toolbar()
         view_toolbar_button = ToolbarButton(
@@ -177,11 +178,26 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.paste.connect('clicked', self.__paste_cb)
         edit_toolbar.paste.props.accelerator = '<Ctrl><Shift>V'
 
+        fg_color = ColorToolButton('color-preview')
+        fg_color._tooltip = "Set Foreground Text color"
+        fg_color.set_title('Foreground Color')
+        fg_color.connect('notify::color', self.__fg_color_notify_cb)
+        edit_toolbar.insert(fg_color, -1)
+        fg_color.show()
+
+        bg_color = ColorToolButton('color-preview')
+        bg_color._tooltip = "Set Background color"
+        bg_color.set_title('Background Color')
+        bg_color.connect('notify::color', self.__bg_color_notify_cb)
+        edit_toolbar.insert(bg_color, -1)
+        bg_color.show()
+
         clear = ToolButton('edit-clear')
         clear.set_tooltip(_('Clear scrollback'))
         clear.connect('clicked', self.__clear_cb)
         edit_toolbar.insert(clear, -1)
         clear.show()
+
 
         return edit_toolbar
 
@@ -194,11 +210,31 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
+    def __bg_color_notify_cb(self, button, pdesc):
+        color = button.get_color()
+        self._theme_state = 'custom'
+        self._theme_colors['custom']['bg_color'] = get_svg_color_string(color)
+        self._update_theme()
+
+    def __fg_color_notify_cb(self, button, pdesc):
+        color = button.get_color()
+        self._theme_state = 'custom'
+        self._theme_colors['custom']['fg_color'] = get_svg_color_string(color)
+        self._update_theme()
+
+    def _update_custom_theme(self, fg_color, bg_color):
+        self._theme_colors['custom']['fg_color'] = fg_color
+        self._theme_colors['custom']['bg_color'] = bg_color
+
     def _toggled_theme(self, button):
+        previous_theme = self._theme_colors[self._theme_state]
         if self._theme_state == "dark":
             self._theme_state = "light"
         elif self._theme_state == "light":
             self._theme_state = "dark"
+        else:
+            self._theme_state = "light"
+        self._update_custom_theme(previous_theme['fg_color'], previous_theme['bg_color'])
         self._update_theme()
 
     def _update_theme(self):
@@ -208,10 +244,13 @@ class TerminalActivity(activity.Activity):
         elif self._theme_state == "dark":
             self._theme_toggler.set_icon_name('light-theme')
             self._theme_toggler.set_tooltip('Switch to Light Theme')
+        else:
+            self._theme_toggler.set_icon_name('light-theme')
+            self._theme_toggler.set_tooltip('Switch to Light Theme')
 
         for i in range(self._notebook.get_n_pages()):
             vt = self._notebook.get_nth_page(i).vt
-            self._configure_vt(vt)
+            vt.set_term_colors(self._theme_colors['custom'])
 
     def _create_view_toolbar(self):  # Color changer and Zoom toolbar
         view_toolbar = Gtk.Toolbar()
@@ -250,6 +289,7 @@ class TerminalActivity(activity.Activity):
         return view_toolbar
 
     def _zoom(self, step):
+
         current_page = self._notebook.get_current_page()
         vt = self._notebook.get_nth_page(current_page).vt
         font_desc = vt.get_font()
@@ -274,13 +314,13 @@ class TerminalActivity(activity.Activity):
         helpitem.add_paragraph(_('To use it, write: cd directory'))
         helpitem.add_paragraph(
             _('If you call it without parameters, will change\n'
-                'to the user directory'))
+              'to the user directory'))
         helpitem.add_section(_('ls'))
         helpitem.add_paragraph(_('List the content of a directory.'))
         helpitem.add_paragraph(_('To use it, write: ls directory'))
         helpitem.add_paragraph(
             _('If you call it without parameters, will list the\n'
-                'working directory'))
+              'working directory'))
         helpitem.add_section(_('cp'))
         helpitem.add_paragraph(_('Copy a file to a specific location'))
         helpitem.add_paragraph(_('Call it with the file and the new location'))
@@ -364,7 +404,7 @@ class TerminalActivity(activity.Activity):
         vt.drag_dest_add_text_targets()
         vt.connect('drag_data_received', self.__drag_data_received_cb)
 
-        self._configure_vt(vt)
+        vt.set_term_colors(self._theme_colors['custom'])
 
         vt.show()
 
@@ -433,12 +473,12 @@ class TerminalActivity(activity.Activity):
 
         argv = [os.environ.get('SHELL') or '/bin/bash']
         envv = ['SUGAR_TERMINAL_VERSION=%s' %
-                    os.environ['SUGAR_BUNDLE_VERSION']]
+                os.environ['SUGAR_BUNDLE_VERSION']]
 
         saved = {}
         for name in ['SUGAR_BUNDLE_PATH', 'SUGAR_ACTIVITY_ROOT',
-                         'SUGAR_BUNDLE_ID', 'SUGAR_BUNDLE_NAME',
-                         'SUGAR_BUNDLE_VERSION']:
+                     'SUGAR_BUNDLE_ID', 'SUGAR_BUNDLE_NAME',
+                     'SUGAR_BUNDLE_VERSION']:
             if name in os.environ:
                 saved[name] = os.environ[name]
                 del os.environ[name]
@@ -516,13 +556,15 @@ class TerminalActivity(activity.Activity):
         text = fd.read()
         data = json.loads(text)
         fd.close()
-
         # Clean out any existing tabs.
         while self._notebook.get_n_pages():
             self._notebook.remove_page(0)
 
         # Restore theme
-        self._theme_state = data['theme']
+        if data['theme'] == 'custom':
+            self._theme_colors['custom'] = data['theme_hex']
+        else:
+            self._theme_colors['custom'] = self._theme_colors[data['theme']]
         self._update_theme()
 
         # Create new tabs from saved state.
@@ -542,7 +584,8 @@ class TerminalActivity(activity.Activity):
 
         data = {}
         data['current-tab'] = self._notebook.get_current_page()
-        data['theme'] = self._theme_state
+        data['theme'] = 'custom'  # make sures this doesn't conflict with older terminal version
+        data['theme_hex'] = self._theme_colors['custom']
         data['tabs'] = []
 
         for i in range(self._notebook.get_n_pages()):
@@ -585,95 +628,14 @@ class TerminalActivity(activity.Activity):
                          'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
-
+        print(data)
         fd = open(file_path, 'w')
         text = json.dumps(data)
         fd.write(text)
         fd.close()
-
-    def _get_conf(self, conf, var, default):
-        if conf.has_option('terminal', var):
-            if isinstance(default, bool):
-                return conf.getboolean('terminal', var)
-            elif isinstance(default, int):
-                return conf.getint('terminal', var)
-            else:
-                return conf.get('terminal', var)
-        else:
-            conf.set('terminal', var, str(default))
-
-            return default
-
-    def _configure_vt(self, vt):
-        conf = configparser.ConfigParser()
-        conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
-
-        if os.path.isfile(conf_file):
-            f = open(conf_file, 'r')
-            conf.readfp(f)
-            f.close()
-        else:
-            conf.add_section('terminal')
-
-        font_desc = vt.get_font()
-        if font_desc is None:
-            font_size = self._font_size * Pango.SCALE
-        else:
-            font_size = font_desc.get_size()
-        font = self._get_conf(conf, 'font', 'Monospace')
-        font_desc = Pango.FontDescription(font)
-        font_desc.set_size(font_size)
-        vt.set_font(font_desc)
-
-        self._theme_colors = {"light": {'fg_color': '#000000',
-                                        'bg_color': '#FFFFFF'},
-                              "dark": {'fg_color': '#FFFFFF',
-                                       'bg_color': '#000000'}}
-        fg_color = self._theme_colors[self._theme_state]['fg_color']
-        bg_color = self._theme_colors[self._theme_state]['bg_color']
-        try:
-            vt.set_colors(Gdk.color_parse(fg_color),
-                          Gdk.color_parse(bg_color), [])
-        except TypeError:
-            # Vte 0.38 requires the colors set as a different type
-            # in Fedora 21 we get a exception
-            # TypeError: argument foreground: Expected Gdk.RGBA,
-            # but got gi.overrides.Gdk.Color
-            vt.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
-                          Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
-
-        blink = self._get_conf(conf, 'cursor_blink', False)
-        vt.set_cursor_blink_mode(blink)
-
-        bell = self._get_conf(conf, 'bell', False)
-        vt.set_audible_bell(bell)
-
-        scrollback_lines = self._get_conf(conf, 'scrollback_lines', 1000)
-        vt.set_scrollback_lines(scrollback_lines)
-
-        vt.set_allow_bold(True)
-
-        scroll_key = self._get_conf(conf, 'scroll_on_keystroke', True)
-        vt.set_scroll_on_keystroke(scroll_key)
-
-        scroll_output = self._get_conf(conf, 'scroll_on_output', False)
-        vt.set_scroll_on_output(scroll_output)
-
-        if hasattr(vt, 'set_emulation'):
-            # set_emulation is not available after vte commit
-            # 4e253be9282829f594c8a55ca08d1299e80e471d
-            emulation = self._get_conf(conf, 'emulation', 'xterm')
-            vt.set_emulation(emulation)
-
-        if hasattr(vt, 'set_visible_bell'):
-            visible_bell = self._get_conf(conf, 'visible_bell', False)
-            vt.set_visible_bell(visible_bell)
-
-        conf.write(open(conf_file, 'w'))
 
     def __clear_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
-

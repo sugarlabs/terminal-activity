@@ -23,6 +23,7 @@ https://github.com/Guake/guake/blob/master/guake/terminal.py
 
 """
 import code
+import configparser
 import logging
 import os
 import re
@@ -43,7 +44,7 @@ from urllib.parse import urlparse
 from time import sleep, time
 
 import gi
-from sugar3 import profile
+from sugar3 import profile, env
 from sugar3.activity.activity import launch_bundle
 from sugar3.datastore import datastore
 
@@ -118,9 +119,11 @@ class SugarTerminal(Vte.Terminal):
     """
     def __init__(self):
         super(SugarTerminal, self).__init__()
-
+        self.conf = None
+        self.conf_file = None
         self.add_matches()
         self.handler_ids = []
+        self.read_config()
         self.handler_ids.append(self.connect('button-press-event', self.button_press))
         self.connect('child-exited', self.on_child_exited)  # Call on_child_exited, don't remove it
         self.matched_value = ''
@@ -137,6 +140,60 @@ class SugarTerminal(Vte.Terminal):
         self.custom_palette = None
 
         self.setup_drag_and_drop()
+
+    def configure_terminal(self):
+        blink = self._get_conf(self.conf, 'cursor_blink', False)
+        self.set_cursor_blink_mode(blink)
+
+        bell = self._get_conf(self.conf, 'bell', False)
+        self.set_audible_bell(bell)
+
+        scrollback_lines = self._get_conf(self.conf, 'scrollback_lines', 1000)
+        self.set_scrollback_lines(scrollback_lines)
+
+        self.set_allow_bold(True)
+
+        scroll_key = self._get_conf(self.conf, 'scroll_on_keystroke', True)
+        self.set_scroll_on_keystroke(scroll_key)
+
+        scroll_output = self._get_conf(self.conf, 'scroll_on_output', False)
+        self.set_scroll_on_output(scroll_output)
+
+        if hasattr(self, 'set_emulation'):
+            # set_emulation is not available after vte commit
+            # 4e253be9282829f594c8a55ca08d1299e80e471d
+            emulation = self._get_conf(self.conf, 'emulation', 'xterm')
+            self.set_emulation(emulation)
+
+        if hasattr(self, 'set_visible_bell'):
+            visible_bell = self._get_conf(self.conf, 'visible_bell', False)
+            self.set_visible_bell(visible_bell)
+
+        self.conf.write(open(self.conf_file, 'w'))
+
+    def _get_conf(self, conf, var, default):
+        if conf.has_option('terminal', var):
+            if isinstance(default, bool):
+                return conf.getboolean('terminal', var)
+            elif isinstance(default, int):
+                return conf.getint('terminal', var)
+            else:
+                return conf.get('terminal', var)
+        else:
+            conf.set('terminal', var, str(default))
+
+            return default
+
+    def read_config(self):
+        self.conf = configparser.ConfigParser()
+        self.conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
+
+        if os.path.isfile(self.conf_file):
+            f = open(self.conf_file, 'r')
+            self.conf.readfp(f)
+            f.close()
+        else:
+            self.conf.add_section('terminal')
 
     def setup_drag_and_drop(self):
         self.targets = Gtk.TargetList()
@@ -384,6 +441,17 @@ class SugarTerminal(Vte.Terminal):
     def decrease_font_size(self):
         self.font_scale -= 1
 
+    def configure_font(self):
+        font_desc = self.get_font()
+        if font_desc is None:
+            font_size = self._font_size * Pango.SCALE
+        else:
+            font_size = font_desc.get_size()
+        font = self._get_conf(conf, 'font', 'Monospace')
+        font_desc = Pango.FontDescription(font)
+        font_desc.set_size(font_size)
+        self.set_font(font_desc)
+
     def kill(self):
         pid = self.pid
         threading.Thread(target=self.delete_shell, args=(pid, )).start()
@@ -414,54 +482,23 @@ class SugarTerminal(Vte.Terminal):
         except OSError:
             pass
 
-    def set_color_foreground(self, font_color, *args, **kwargs):
-        real_fgcolor = self.custom_fgcolor if self.custom_fgcolor else font_color
-        super(SugarTerminal, self).set_color_foreground(real_fgcolor, *args, **kwargs)
-
-    def set_color_background(self, bgcolor, *args, **kwargs):
-        real_bgcolor = self.custom_bgcolor if self.custom_bgcolor else bgcolor
-        super(SugarTerminal, self).set_color_background(real_bgcolor, *args, **kwargs)
-
     def set_color_bold(self, font_color, *args, **kwargs):
         real_fgcolor = self.custom_fgcolor if self.custom_fgcolor else font_color
         super(SugarTerminal, self).set_color_bold(real_fgcolor, *args, **kwargs)
 
-    def set_colors(self, font_color, bg_color, palette_list, *args, **kwargs):
-        real_bgcolor = self.custom_bgcolor if self.custom_bgcolor else bg_color
-        real_fgcolor = self.custom_fgcolor if self.custom_fgcolor else font_color
-        real_palette = self.custom_palette if self.custom_palette else palette_list
-        super(SugarTerminal,
-              self).set_colors(real_fgcolor, real_bgcolor, real_palette, *args, **kwargs)
-
-    def set_color_foreground_custom(self, fgcolor, *args, **kwargs):
-        """Sets custom foreground color for this terminal"""
-        print('set_color_foreground_custom: %s' % self.uuid)
-        self.custom_fgcolor = fgcolor
-        super(SugarTerminal, self).set_color_foreground(self.custom_fgcolor, *args, **kwargs)
-
-    def set_color_background_custom(self, bgcolor, *args, **kwargs):
-        """Sets custom background color for this terminal"""
-        self.custom_bgcolor = bgcolor
-        super(SugarTerminal, self).set_color_background(self.custom_bgcolor, *args, **kwargs)
-
-    def reset_custom_colors(self):
-        self.custom_fgcolor = None
-        self.custom_bgcolor = None
-        self.custom_palette = None
-
-    @staticmethod
-    def _color_to_list(color):
-        """This method is used for serialization."""
-        if color is None:
-            return None
-        return [color.red, color.green, color.blue, color.alpha]
-
-    @staticmethod
-    def _color_from_list(color_list):
-        """This method is used for deserialization."""
-        return Gdk.RGBA(
-            red=color_list[0], green=color_list[1], blue=color_list[2], alpha=color_list[3]
-        )
+    def set_term_colors(self, custom_colors):
+        fg_color = custom_colors['fg_color']
+        bg_color = custom_colors['bg_color']
+        try:
+            self.set_colors(Gdk.color_parse(fg_color),
+                          Gdk.color_parse(bg_color), [])
+        except TypeError:
+            # Vte 0.38 requires the colors set as a different type
+            # in Fedora 21 we get a exception
+            # TypeError: argument foreground: Expected Gdk.RGBA,
+            # but got gi.overrides.Gdk.Color
+            self.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
+                            Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
 
     def get_custom_colors_dict(self):
         """Returns dictionary of custom colors."""
