@@ -37,7 +37,7 @@ import uuid
 from urllib import unquote
 import urlparse
 
-from time import sleep, time
+import time
 
 import gi
 from sugar3 import profile, env
@@ -112,8 +112,9 @@ class SugarTerminal(Vte.Terminal):
     """
     Just a vte.Terminal with some properties already set.
     """
-    def __init__(self):
+    def __init__(self, activity):
         super(SugarTerminal, self).__init__()
+        self.activity = activity
         self.conf = None
         self.conf_file = None
         self.add_matches()
@@ -330,7 +331,7 @@ class SugarTerminal(Vte.Terminal):
             font_size = self._font_size * Pango.SCALE
         else:
             font_size = font_desc.get_size()
-        font = self._get_conf(conf, 'font', 'Monospace')
+        font = self._get_conf(self.conf, 'font', 'Monospace')
         font_desc = Pango.FontDescription(font)
         font_desc.set_size(font_size)
         self.set_font(font_desc)

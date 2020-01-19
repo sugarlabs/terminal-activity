@@ -19,7 +19,6 @@
 import os
 import sys
 import json
-import ConfigParser
 import logging
 from gettext import gettext as _
 
@@ -48,7 +47,6 @@ from sugar3.activity.widgets import EditToolbar
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from sugar3.activity import activity
-from sugar3 import env
 from sugar3.graphics.colorbutton import ColorToolButton, get_svg_color_string
 
 from widgets import BrowserNotebook
@@ -178,27 +176,11 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.paste.connect('clicked', self.__paste_cb)
         edit_toolbar.paste.props.accelerator = '<Ctrl><Shift>V'
 
-        fg_color = ColorToolButton('color-preview')
-        fg_color._tooltip = "Set Foreground Text color"
-        fg_color.set_title('Foreground Color')
-        fg_color.connect('notify::color', self.__fg_color_notify_cb)
-        edit_toolbar.insert(fg_color, -1)
-        fg_color.show()
-
-        bg_color = ColorToolButton('color-preview')
-        bg_color._tooltip = "Set Background color"
-        bg_color.set_title('Background Color')
-        bg_color.connect('notify::color', self.__bg_color_notify_cb)
-        edit_toolbar.insert(bg_color, -1)
-        bg_color.show()
-
         clear = ToolButton('edit-clear')
         clear.set_tooltip(_('Clear scrollback'))
         clear.connect('clicked', self.__clear_cb)
         edit_toolbar.insert(clear, -1)
         clear.show()
-
-
         return edit_toolbar
 
     def __copy_cb(self, button):
@@ -261,6 +243,20 @@ class TerminalActivity(activity.Activity):
         self._theme_toggler.connect('clicked', self._toggled_theme)
         view_toolbar.insert(self._theme_toggler, -1)
         self._theme_toggler.show()
+
+        fg_color = ColorToolButton('color-preview')
+        fg_color._tooltip = "Set Foreground Text color"
+        fg_color.set_title('Foreground Color')
+        fg_color.connect('notify::color', self.__fg_color_notify_cb)
+        view_toolbar.insert(fg_color, -1)
+        fg_color.show()
+
+        bg_color = ColorToolButton('color-preview')
+        bg_color._tooltip = "Set Background color"
+        bg_color.set_title('Background Color')
+        bg_color.connect('notify::color', self.__bg_color_notify_cb)
+        view_toolbar.insert(bg_color, -1)
+        bg_color.show()
 
         sep = Gtk.SeparatorToolItem()
         view_toolbar.insert(sep, -1)
@@ -393,7 +389,7 @@ class TerminalActivity(activity.Activity):
         return True
 
     def _create_tab(self, tab_state):
-        vt = SugarTerminal()
+        vt = SugarTerminal(self)
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
@@ -628,7 +624,6 @@ class TerminalActivity(activity.Activity):
                          'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
-        print(data)
         fd = open(file_path, 'w')
         text = json.dumps(data)
         fd.write(text)
