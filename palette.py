@@ -129,7 +129,7 @@ class TerminalPalette(Palette):
         self.parent.browse_link_under_cursor()
 
     def __copy_cb(self, button):
-        self.parent.copy_clipboard()
+        self.parent.copy_clipboard(None, self._link)
 
     def __paste_cb(self, button):
         self.parent.paste_clipboard()
