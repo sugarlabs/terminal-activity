@@ -216,13 +216,18 @@ class SugarTerminal(Vte.Terminal):
             command += "\n"
         self.feed_child(command)
 
-    def copy_clipboard(self, widget=None):
-        if self.get_has_selection():
+    def copy_clipboard(self, widget=None, content=None):
+        if self.get_has_selection() and (content is None):
+            super(SugarTerminal, self).copy_clipboard()
+        elif content:
+            self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+            self.clipboard.set_text(content, -1)
+            self.clipboard.store()
+        elif self.get_has_selection():
             super(SugarTerminal, self).copy_clipboard()
 
     def paste_clipboard(self, widget=None):
-        if self.get_has_selection():
-            super(SugarTerminal, self).paste_clipboard()
+        super(SugarTerminal, self).paste_clipboard()
 
     def add_matches(self):
         """Adds all regular expressions declared in
