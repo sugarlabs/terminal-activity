@@ -50,6 +50,8 @@ from sugar3.activity.activity import launch_bundle
 from sugar3.datastore import datastore
 from sugar3.graphics.palette import Palette
 
+from palette import TerminalPalette, ContentInvoker
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')  # vte-0.38
 
@@ -145,24 +147,7 @@ class SugarTerminal(Vte.Terminal):
         self.custom_bgcolor = None
         self.custom_fgcolor = None
         self.custom_palette = None
-        self._create_menu()
         self.setup_drag_and_drop()
-
-    def _create_menu(self):
-        self.menu = Gtk.Menu.new()
-        self.menu_copy = Gtk.MenuItem("Copy Text (Ctrl + Shift + C) ")
-        self.menu.append(self.menu_copy)
-        self.menu_paste = Gtk.MenuItem("Paste Text (Ctrl + Shift + V)")
-        self.menu.append(self.menu_paste)
-        self.menu_copy_link = Gtk.MenuItem("Copy Link (Ctrl + Shift + C)")
-        self.menu.append(self.menu_copy_link)
-        self.menu_open_link = Gtk.MenuItem("Open Link in Browser (Ctrl + Click)")
-        self.menu.append(self.menu_open_link)
-        # connect menu items
-        self.menu_copy.connect_object("activate", self.copy_clipboard, None)
-        self.menu_paste.connect_object("activate", self.paste_clipboard, None)
-        self.menu_copy_link.connect_object("activate", self.copy_clipboard, None)
-        self.menu_open_link.connect_object("activate", self.copy_clipboard, None)
 
     def configure_terminal(self):
         blink = self._get_conf(self.conf, 'cursor_blink', False)
@@ -414,17 +399,7 @@ class SugarTerminal(Vte.Terminal):
             self.matched_value = matched_string[0]
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            if self.found_link:
-                self.menu_copy_link.show()
-                self.menu_open_link.show()
-                self.menu_copy.hide()
-                self.menu_paste.hide()
-            else:
-                self.menu_copy_link.hide()
-                self.menu_open_link.hide()
-                self.menu_copy.show()
-                self.menu_paste.show()
-            self.menu.popup(None, None, None, None, event.button, event.time)
+            menu = ContentInvoker(self, self.found_link)
 
     def on_child_exited(self, target, status, *user_data):
         if libutempter is not None:
@@ -577,6 +552,7 @@ class SugarTerminal(Vte.Terminal):
 
     def browse_link_under_cursor(self):
         if not self.found_link:
+            log.warning("No link under cursor")
             return
         path = os.path.join(self.activity.get_activity_root(),
                             'instance', '%i' % time.time())
