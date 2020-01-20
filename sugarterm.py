@@ -559,7 +559,7 @@ class SugarTerminal(Vte.Terminal):
         journal_entry.metadata['keep'] = '0'
         journal_entry.metadata['mime_type'] = 'text/uri-list'
         journal_entry.metadata['icon-color'] = profile.get_color().to_string()
-        journal_entry.metadata['description'] = "This is the URL opening of " + URL
+        journal_entry.metadata['description'] = "Opening {} from the Terminal".format(URL)
         journal_entry.file_path = path
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
