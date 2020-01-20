@@ -48,6 +48,7 @@ import gi
 from sugar3 import profile, env
 from sugar3.activity.activity import launch_bundle
 from sugar3.datastore import datastore
+from sugar3.graphics.palette import Palette
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')  # vte-0.38
@@ -144,8 +145,24 @@ class SugarTerminal(Vte.Terminal):
         self.custom_bgcolor = None
         self.custom_fgcolor = None
         self.custom_palette = None
-
+        self._create_menu()
         self.setup_drag_and_drop()
+
+    def _create_menu(self):
+        self.menu = Gtk.Menu.new()
+        self.menu_copy = Gtk.MenuItem("Copy Text")
+        self.menu.append(self.menu_copy)
+        self.menu_paste = Gtk.MenuItem("Paste Text")
+        self.menu.append(self.menu_paste)
+        self.menu_copy_link = Gtk.MenuItem("Copy Link")
+        self.menu.append(self.menu_copy_link)
+        self.menu_open_link = Gtk.MenuItem("Open Link in Browser")
+        self.menu.append(self.menu_open_link)
+        # connect menu items
+        self.menu_copy.connect_object("activate", self.copy_clipboard, None)
+        self.menu_paste.connect_object("activate", self.paste_clipboard, None)
+        self.menu_copy_link.connect_object("activate", self.copy_clipboard, None)
+        self.menu_open_link.connect_object("activate", self.copy_clipboard, None)
 
     def configure_terminal(self):
         blink = self._get_conf(self.conf, 'cursor_blink', False)
@@ -237,11 +254,13 @@ class SugarTerminal(Vte.Terminal):
             command += "\n"
         self.feed_child(command)
 
-    def copy_clipboard(self):
+    def copy_clipboard(self, widget=None):
         if self.get_has_selection():
             super(SugarTerminal, self).copy_clipboard()
-        elif self.matched_value:
-            log.warning('Not Implemented Sugar')
+
+    def paste_clipboard(self, widget=None):
+        if self.get_has_selection():
+            super(SugarTerminal, self).paste_clipboard()
 
     def add_matches(self):
         """Adds all regular expressions declared in
@@ -394,6 +413,19 @@ class SugarTerminal(Vte.Terminal):
             self.found_link = self.handleTerminalMatch(matched_string)
             self.matched_value = matched_string[0]
 
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
+            if self.found_link:
+                self.menu_copy_link.show()
+                self.menu_open_link.show()
+                self.menu_copy.hide()
+                self.menu_paste.hide()
+            else:
+                self.menu_copy_link.hide()
+                self.menu_open_link.hide()
+                self.menu_copy.show()
+                self.menu_paste.show()
+            self.menu.popup(None, None, None, None, event.button, event.time)
+
     def on_child_exited(self, target, status, *user_data):
         if libutempter is not None:
             if self.get_pty() is not None:
@@ -542,6 +574,7 @@ class SugarTerminal(Vte.Terminal):
         else:
             self.custom_palette = None
 
+
     def browse_link_under_cursor(self):
         if not self.found_link:
             return
@@ -564,3 +597,4 @@ class SugarTerminal(Vte.Terminal):
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
         launch_bundle(object_id=self._object_id)
+
