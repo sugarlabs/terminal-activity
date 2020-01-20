@@ -145,13 +145,13 @@ class SugarTerminal(Vte.Terminal):
 
     def _create_menu(self):
         self.menu = Gtk.Menu.new()
-        self.menu_copy = Gtk.MenuItem("Copy Text")
+        self.menu_copy = Gtk.MenuItem("Copy Text (Ctrl + Shift + C) ")
         self.menu.append(self.menu_copy)
-        self.menu_paste = Gtk.MenuItem("Paste Text")
+        self.menu_paste = Gtk.MenuItem("Paste Text (Ctrl + Shift + V)")
         self.menu.append(self.menu_paste)
-        self.menu_copy_link = Gtk.MenuItem("Copy Link")
+        self.menu_copy_link = Gtk.MenuItem("Copy Link (Ctrl + Shift + C)")
         self.menu.append(self.menu_copy_link)
-        self.menu_open_link = Gtk.MenuItem("Open Link in Browser")
+        self.menu_open_link = Gtk.MenuItem("Open Link in Browser (Ctrl + Click)")
         self.menu.append(self.menu_open_link)
         # connect menu items
         self.menu_copy.connect_object("activate", self.copy_clipboard, None)
