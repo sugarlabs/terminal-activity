@@ -24,6 +24,7 @@ from gettext import gettext as _
 
 import gi
 
+
 vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0'}
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
@@ -182,6 +183,7 @@ class TerminalActivity(activity.Activity):
         edit_toolbar.insert(clear, -1)
         clear.show()
         return edit_toolbar
+
 
     def __copy_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
@@ -636,3 +638,4 @@ class TerminalActivity(activity.Activity):
         n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
+
