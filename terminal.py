@@ -258,6 +258,7 @@ class TerminalActivity(activity.Activity):
         self.bg_color_palette._tooltip = "Set Background color"
         self.bg_color_palette.set_title('Background Color')
         self.bg_color_palette.connect('notify::color', self.__bg_color_notify_cb)
+        self.bg_color_palette.set_color(Gdk.Color.parse('#FFFFFF')[1])
         view_toolbar.insert(self.bg_color_palette, -1)
         self.bg_color_palette.show()
 
