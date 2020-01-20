@@ -247,19 +247,19 @@ class TerminalActivity(activity.Activity):
         view_toolbar.insert(self._theme_toggler, -1)
         self._theme_toggler.show()
 
-        fg_color = ColorToolButton('color-preview')
-        fg_color._tooltip = "Set Foreground Text color"
-        fg_color.set_title('Foreground Color')
-        fg_color.connect('notify::color', self.__fg_color_notify_cb)
-        view_toolbar.insert(fg_color, -1)
-        fg_color.show()
+        self.fg_color_palette = ColorToolButton('color-preview')
+        self.fg_color_palette._tooltip = "Set Foreground Text color"
+        self.fg_color_palette.set_title('Foreground Color')
+        self.fg_color_palette.connect('notify::color', self.__fg_color_notify_cb)
+        view_toolbar.insert(self.fg_color_palette, -1)
+        self.fg_color_palette.show()
 
-        bg_color = ColorToolButton('color-preview')
-        bg_color._tooltip = "Set Background color"
-        bg_color.set_title('Background Color')
-        bg_color.connect('notify::color', self.__bg_color_notify_cb)
-        view_toolbar.insert(bg_color, -1)
-        bg_color.show()
+        self.bg_color_palette = ColorToolButton('color-preview')
+        self.bg_color_palette._tooltip = "Set Background color"
+        self.bg_color_palette.set_title('Background Color')
+        self.bg_color_palette.connect('notify::color', self.__bg_color_notify_cb)
+        view_toolbar.insert(self.bg_color_palette, -1)
+        self.bg_color_palette.show()
 
         sep = Gtk.SeparatorToolItem()
         view_toolbar.insert(sep, -1)
@@ -564,6 +564,8 @@ class TerminalActivity(activity.Activity):
             self._theme_colors['custom'] = data['theme_hex']
         else:
             self._theme_colors['custom'] = self._theme_colors[data['theme']]
+        self.fg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
+        self.bg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
         self._update_theme()
 
         # Create new tabs from saved state.
