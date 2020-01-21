@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2016-04-05 06:46+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2020-01-02 21:12+0000\n"
+"Last-Translator: dbekele <almazsolutions@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: am\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1459838789.000000\n"
+"X-POOTLE-MTIME: 1577999553.000000\n"
 
 #: activity/activity.info:2
 msgid "Terminal"
@@ -24,11 +24,11 @@ msgstr "ተርሚናል"
 
 #: activity/activity.info:3
 msgid "Here you have complete control over your computer. You are in charge!!"
-msgstr ""
+msgstr "መቀመሪያው ሙሉ በሙሉ በቁጥጥርዎ ስር ነው፡፡"
 
 #: helpbutton.py:41
 msgid "Help"
-msgstr ""
+msgstr "እርዳታ"
 
 #: terminal.py:188
 msgid "Zoom out"
@@ -40,92 +40,100 @@ msgstr "ከቅርበት ዕይታ"
 
 #: terminal.py:202
 msgid "Fullscreen"
-msgstr "ሙሉ እስክሪን"
+msgstr "ሙሉ ምርአይ"
 
 #: terminal.py:228
 msgid "Useful commands"
-msgstr ""
+msgstr "ጠቃሚ ትእዛዞች"
 
 #: terminal.py:229
 msgid "cd"
-msgstr ""
+msgstr "ሲዲ (ድሬክተሪ ይቀየር)"
 
 #: terminal.py:230
 msgid "Change directory"
-msgstr ""
+msgstr "ድሬክተሪ ይቀየር (ሲዲ)"
 
 #: terminal.py:231
 msgid "To use it, write: cd directory"
-msgstr ""
+msgstr "ለመጠቀም ሲዲ ድሬክተሪ ይጻፍ"
 
 #: terminal.py:233
 msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
+"ያለ ጭማሪ መረጃ ትእዛዙ ከተሰጠ\n"
+"  ወደ ተጠቃሚው ድሬክተሪ ይቀየራል"
 
 #: terminal.py:235
 msgid "ls"
-msgstr ""
+msgstr "ኤልኤስ"
 
 #: terminal.py:236
 msgid "List the content of a directory."
-msgstr ""
+msgstr "የድሬክተሪውን ይዞታ ዘርዝር::"
 
 #: terminal.py:237
 msgid "To use it, write: ls directory"
-msgstr ""
+msgstr "ለመጠቀም ኤልኤስ ድሬክተሪ ይጻፍ"
 
 #: terminal.py:239
 msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"ያለ ጭማሪ መረጃ ትእዛዙ ከተሰጠ\n"
+" የመደበኛ ድሬክተሪውን ይዞታ ይዘረዝራል"
 
 #: terminal.py:241
 msgid "cp"
-msgstr ""
+msgstr "ሲፒ"
 
 #: terminal.py:242
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "በተጠቀሰው ድሬክተሪ የፋይሉን ኮፒ ፍጠር"
 
 #: terminal.py:243
 msgid "Call it with the file and the new location"
-msgstr ""
+msgstr "ፋይሉንና አዲሱን ድሬክተሪ በመጥቀስ ትእዛዙ ይሰጥ"
 
 #: terminal.py:244
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "ትእዛዝ፡ ሲፒ ፋይል ድሬክተሪ"
 
 #: terminal.py:245
 msgid "rm"
-msgstr ""
+msgstr "አርኤም"
 
 #: terminal.py:246
 msgid "Removes a file in any path"
-msgstr ""
+msgstr "በተሰጠው የድሬክተሪ መስፈንጠሪያ ያለን ፋይል ይደመስሳል"
 
 #: terminal.py:247
 msgid "Use: rm file"
-msgstr ""
+msgstr "ትእዛዝ፡ አርኤም ፋይል"
 
 #: terminal.py:248
 msgid "su"
-msgstr ""
+msgstr "ኤስዩ"
 
 #: terminal.py:249
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "የበላይ ፍቃድ ያለው (ሩት) አካውንት ውስጥ ይገባ"
 
 #: terminal.py:251
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"የበላይ ፍቃድ ያለው\n"
+" የመቀመሪያ አስተዳዳሪው አካውንት ነው"
 
 #: terminal.py:253
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"መቀየር የሌለባቸው\n"
+" የመቀመሪያ ፋይሎች እንዳይቀየሩ ጥንቃቄ ይደረግ"
