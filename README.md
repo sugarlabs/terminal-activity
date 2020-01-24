@@ -6,7 +6,7 @@ Terminal is a full-screen text mode program that provides a Command-Line Interfa
 How to use?
 ===========
 
-Terminal is part of the Sugar desktop.  Please refer to;
+Terminal is part of the Sugar desktop and is always included.  Please refer to;
 
 * [How to Get Sugar on sugarlabs.org](https://sugarlabs.org/),
 * [How to use Sugar](https://help.sugarlabs.org/),
