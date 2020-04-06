@@ -237,6 +237,12 @@ class TerminalActivity(activity.Activity):
             vt = self._notebook.get_nth_page(i).vt
             vt.set_term_colors(self._theme_colors['custom'])
 
+
+    def _to_rgba(self,color):
+        rgba = Gdk.RGBA()
+        rgba.parse(color)
+        return rgba
+
     def _create_view_toolbar(self):  # Color changer and Zoom toolbar
         view_toolbar = Gtk.Toolbar()
 
@@ -258,7 +264,8 @@ class TerminalActivity(activity.Activity):
         self.bg_color_palette._tooltip = "Set Background color"
         self.bg_color_palette.set_title('Background Color')
         self.bg_color_palette.connect('notify::color', self.__bg_color_notify_cb)
-        self.bg_color_palette.set_color(Gdk.Color.parse('#FFFFFF')[1])
+
+        self.bg_color_palette.set_color(self._to_rgba('#FFFFFF'))
         view_toolbar.insert(self.bg_color_palette, -1)
         self.bg_color_palette.show()
 
@@ -565,8 +572,9 @@ class TerminalActivity(activity.Activity):
             self._theme_colors['custom'] = data['theme_hex']
         else:
             self._theme_colors['custom'] = self._theme_colors[data['theme']]
-        self.fg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
-        self.bg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
+
+        self.fg_color_palette.set_color(self._to_rgba(self._theme_colors['custom']['fg_color']))
+        self.bg_color_palette.set_color(self._to_rgba(self._theme_colors['custom']['bg_color']))
         self._update_theme()
 
         # Create new tabs from saved state.

@@ -508,6 +508,11 @@ class SugarTerminal(Vte.Terminal):
         super(SugarTerminal, self).set_color_bold(
             real_fgcolor, *args, **kwargs)
 
+    def _to_rgba(self, color):
+        rgba = Gdk.RGBA()
+        rgba.parse(color)
+        return rgba
+
     def set_term_colors(self, custom_colors):
         fg_color = custom_colors['fg_color']
         bg_color = custom_colors['bg_color']
@@ -519,8 +524,9 @@ class SugarTerminal(Vte.Terminal):
             # in Fedora 21 we get a exception
             # TypeError: argument foreground: Expected Gdk.RGBA,
             # but got gi.overrides.Gdk.Color
-            self.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
-                            Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
+
+            self.set_colors(self._to_rgba(fg_color),
+                            self._to_rgba(bg_color), [])
 
     def get_custom_colors_dict(self):
         """Returns dictionary of custom colors."""
