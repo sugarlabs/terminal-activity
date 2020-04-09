@@ -194,13 +194,13 @@ class TerminalActivity(activity.Activity):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         vt.paste_clipboard()
 
-    def __bg_color_notify_cb(self, button, pdesc):
+    def __bg_color_notify_cb(self, button, pspec):
         color = button.get_color()
         self._theme_state = 'custom'
         self._theme_colors['custom']['bg_color'] = get_svg_color_string(color)
         self._update_theme()
 
-    def __fg_color_notify_cb(self, button, pdesc):
+    def __fg_color_notify_cb(self, button, pspec):
         color = button.get_color()
         self._theme_state = 'custom'
         self._theme_colors['custom']['fg_color'] = get_svg_color_string(color)
