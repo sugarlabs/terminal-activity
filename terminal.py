@@ -103,7 +103,19 @@ class TerminalActivity(activity.Activity):
         self._theme_state = "light"
 
         self._font_size = FONT_SIZE
+        self.build_notebook()
+        self.build_toolbar()
 
+    def build_notebook(self):
+        self._notebook = BrowserNotebook()
+        self._notebook.connect("tab-added", self.__open_tab_cb)
+        self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
+        self._notebook.set_scrollable(True)
+        self._notebook.show()
+        self.set_canvas(self._notebook)
+        self._create_tab(None)
+
+    def build_toolbar(self):
         toolbar_box = ToolbarBox()
 
         activity_button = ActivityToolbarButton(self)
@@ -148,16 +160,6 @@ class TerminalActivity(activity.Activity):
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
-
-        self._notebook = BrowserNotebook()
-        self._notebook.connect("tab-added", self.__open_tab_cb)
-        self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
-        self._notebook.set_scrollable(True)
-        self._notebook.show()
-
-        self.set_canvas(self._notebook)
-
-        self._create_tab(None)
 
     def fullscreen(self):
         self._notebook.set_show_tabs(False)
