@@ -213,13 +213,16 @@ class TerminalActivity(activity.Activity):
         self._theme_colors['custom']['bg_color'] = bg_color
 
     def _toggled_theme(self, button):
-        previous_theme = self._theme_colors[self._theme_state]
         if self._theme_state == "dark":
             self._theme_state = "light"
         elif self._theme_state == "light":
             self._theme_state = "dark"
         else:
-            self._theme_state = "light"
+            if self._theme_toggler.get_icon_name() == "light-theme":
+                self._theme_state = "light"
+            else:
+                self._theme_state = "dark"
+        previous_theme = self._theme_colors[self._theme_state]
         self._update_custom_theme(
             previous_theme['fg_color'], previous_theme['bg_color'])
         self._update_theme()
@@ -229,9 +232,6 @@ class TerminalActivity(activity.Activity):
             self._theme_toggler.set_icon_name('dark-theme')
             self._theme_toggler.set_tooltip('Switch to Dark Theme')
         elif self._theme_state == "dark":
-            self._theme_toggler.set_icon_name('light-theme')
-            self._theme_toggler.set_tooltip('Switch to Light Theme')
-        else:
             self._theme_toggler.set_icon_name('light-theme')
             self._theme_toggler.set_tooltip('Switch to Light Theme')
 
