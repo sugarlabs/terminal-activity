@@ -522,15 +522,6 @@ class SugarTerminal(Vte.Terminal):
             self.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
                             Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
 
-    def get_custom_colors_dict(self):
-        """Returns dictionary of custom colors."""
-        return {
-            'fg_color': self._color_to_list(self.custom_fgcolor),
-            'bg_color': self._color_to_list(self.custom_bgcolor),
-            'palette': [self._color_to_list(col)
-                        for col in self.custom_palette] if self.custom_palette else None,
-        }
-
     def set_custom_colors_from_dict(self, colors_dict):
         if not isinstance(colors_dict, dict):
             return
