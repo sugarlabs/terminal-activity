@@ -218,7 +218,8 @@ class TerminalActivity(activity.Activity):
         elif self._theme_state == "light":
             self._theme_state = "dark"
         else:
-            if self._theme_toggler.get_icon_name() == "light-theme":
+            if self._theme_toggler.get_icon_name() == "light-theme" \
+                    or self._theme_colors['custom'] == self._theme_colors['dark']:
                 self._theme_state = "light"
             else:
                 self._theme_state = "dark"
@@ -234,6 +235,11 @@ class TerminalActivity(activity.Activity):
         elif self._theme_state == "dark":
             self._theme_toggler.set_icon_name('light-theme')
             self._theme_toggler.set_tooltip('Switch to Light Theme')
+        else:
+            # If custom color is dark, update the theme toggler
+            if self._theme_colors['custom'] == self._theme_colors['dark']:
+                self._theme_toggler.set_icon_name('light-theme')
+                self._theme_toggler.set_tooltip('Switch to Light Theme')
 
         for i in range(self._notebook.get_n_pages()):
             vt = self._notebook.get_nth_page(i).vt
