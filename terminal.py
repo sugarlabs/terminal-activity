@@ -186,7 +186,6 @@ class TerminalActivity(activity.Activity):
         clear.show()
         return edit_toolbar
 
-
     def __copy_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         if vt.get_has_selection():
@@ -218,8 +217,9 @@ class TerminalActivity(activity.Activity):
         elif self._theme_state == "light":
             self._theme_state = "dark"
         else:
-            if self._theme_toggler.get_icon_name() == "light-theme" \
-                    or self._theme_colors['custom'] == self._theme_colors['dark']:
+            if button.get_icon_name() == "light-theme" or \
+                    self._theme_colors['custom'] == \
+                    self._theme_colors['dark']:
                 self._theme_state = "light"
             else:
                 self._theme_state = "dark"
@@ -258,14 +258,16 @@ class TerminalActivity(activity.Activity):
         self.fg_color_palette = ColorToolButton('color-preview')
         self.fg_color_palette._tooltip = "Set Foreground Text color"
         self.fg_color_palette.set_title('Foreground Color')
-        self.fg_color_palette.connect('notify::color', self.__fg_color_notify_cb)
+        self.fg_color_palette.connect(
+            'notify::color', self.__fg_color_notify_cb)
         view_toolbar.insert(self.fg_color_palette, -1)
         self.fg_color_palette.show()
 
         self.bg_color_palette = ColorToolButton('color-preview')
         self.bg_color_palette._tooltip = "Set Background color"
         self.bg_color_palette.set_title('Background Color')
-        self.bg_color_palette.connect('notify::color', self.__bg_color_notify_cb)
+        self.bg_color_palette.connect(
+            'notify::color', self.__bg_color_notify_cb)
         self.bg_color_palette.set_color(Gdk.Color.parse('#FFFFFF')[1])
         view_toolbar.insert(self.bg_color_palette, -1)
         self.bg_color_palette.show()
@@ -573,8 +575,10 @@ class TerminalActivity(activity.Activity):
             self._theme_colors['custom'] = data['theme_hex']
         else:
             self._theme_colors['custom'] = self._theme_colors[data['theme']]
-        self.fg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
-        self.bg_color_palette.set_color(Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
+        self.fg_color_palette.set_color(
+            Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
+        self.bg_color_palette.set_color(
+            Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
         self._update_theme()
 
         # Create new tabs from saved state.
@@ -649,4 +653,3 @@ class TerminalActivity(activity.Activity):
         n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
-

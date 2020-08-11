@@ -1,11 +1,10 @@
 import logging
-import tempfile
 
 from gi.repository import Gdk
 from gi.repository import GLib, Gtk, SugarGestures
 from sugar3 import profile
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuItem, PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuItem
 from gettext import gettext as _
 
 from sugar3.graphics.palettewindow import Invoker

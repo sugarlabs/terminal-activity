@@ -30,7 +30,6 @@ import os
 import re
 import shlex
 import signal
-import subprocess
 import sys
 import threading
 import uuid
@@ -44,16 +43,14 @@ import gi
 from sugar3 import profile, env
 from sugar3.activity.activity import launch_bundle
 from sugar3.datastore import datastore
-from sugar3.graphics.palette import Palette
 
-from palette import TerminalPalette, ContentInvoker
+from palette import ContentInvoker
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.90')  # vte-0.34
 
 from gi.repository import GLib
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import Gtk
 from gi.repository import Pango
 from gi.repository import Vte
@@ -69,7 +66,8 @@ TERMINAL_MATCH_EXPRS = [
     "(:[0-9]{1,5})?(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#'%]*[^].> \t\r\n,\\\"])?",
     "(www|ftp)[-[:alnum:]]*\.[-[:alnum:]]+(\.[-[:alnum:]]+)*(:[0-9]{1,5})?"
     "(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#%]*[^]'.>) \t\r\n,\\\"])?",
-    "(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\.[-[:alnum:]]+(\\.[-[:alnum:]]+)*"
+    "(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\."
+    "[-[:alnum:]]+(\\.[-[:alnum:]]+)*"
 ]
 
 log = logging
@@ -87,17 +85,19 @@ try:
 except Exception as e:
     libutempter = None
     sys.stderr.write(
-        "[WARN] ===================================================================\n")
+        "[WARN] ===================================="
+        "===============================\n")
     sys.stderr.write("[WARN] Unable to load the library libutempter !\n")
     sys.stderr.write(
         "[WARN] Some feature might not work:\n"
-        "[WARN]  - 'exit' command might freeze the terminal instead of closing the tab\n"
+        "[WARN]  - 'exit' command might freeze the terminal "
+        "instead of closing the tab\n"
         "[WARN]  - the 'wall' command is known to work badly\n"
     )
     sys.stderr.write("[WARN] Error: " + str(e) + '\n')
     sys.stderr.write(
-        "[WARN] ===================================================================²\n"
-    )
+        "[WARN] ===================================="
+        "===============================\n")
 
 
 def halt(loc):
@@ -237,7 +237,9 @@ class SugarTerminal(Vte.Terminal):
         try:
             # NOTE: PCRE2_UTF | PCRE2_NO_UTF_CHECK | PCRE2_MULTILINE
             # reference from vte/bindings/vala/app.vala, flags = 0x40080400u
-            # also ref: https://mail.gnome.org/archives/commits-list/2016-September/msg06218.html
+            # also ref:
+            # https://mail.gnome.org/archives/commits-list/
+            # 2016-September/msg06218.html
             VTE_REGEX_FLAGS = 0x40080400
             for expr in TERMINAL_MATCH_EXPRS:
                 tag = self.match_add_regex(
@@ -246,7 +248,8 @@ class SugarTerminal(Vte.Terminal):
                 )
                 self.match_set_cursor_type(tag, Gdk.CursorType.HAND2)
 
-        except (GLib.Error, AttributeError) as e:  # pylint: disable=catching-non-exception
+        except (GLib.Error, AttributeError) \
+                as e:  # pylint: disable=catching-non-exception
             try:
                 compile_flag = 0
                 for expr in TERMINAL_MATCH_EXPRS:
@@ -256,11 +259,11 @@ class SugarTerminal(Vte.Terminal):
 
             except GLib.Error as e:  # pylint: disable=catching-non-exception
                 log.error(
-                    "ERROR: PCRE2 does not seems to be enabled on your system. "
+                    "ERROR: PCRE2 does not seem to be enabled on your system. "
                     "Quick Edit and other Ctrl+click features are disabled. "
-                    "Please update your VTE package or contact your distribution to ask "
-                    "to enable regular expression support in VTE. Exception: '%s'", str(
-                        e)
+                    "Please update your VTE package or contact your "
+                    "distribution to enable regular expression support "
+                    "in VTE. Exception: '%s'", str(e)
                 )
 
     def get_current_directory(self):
@@ -287,7 +290,8 @@ class SugarTerminal(Vte.Terminal):
 
         self.found_link = None
 
-        if event.button == 1 and (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if event.button == 1 and \
+                (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             s = None
             if s is not None:
                 self._on_ctrl_click_matcher((s, None))
@@ -298,7 +302,7 @@ class SugarTerminal(Vte.Terminal):
             self.matched_value = matched_string[0]
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            menu = ContentInvoker(self, self.found_link)
+            ContentInvoker(self, self.found_link)
 
     def on_child_exited(self, target, status, *user_data):
         if libutempter is not None:
@@ -366,20 +370,23 @@ class SugarTerminal(Vte.Terminal):
 
         NOTE: Leave it alone, DO NOT USE os.waitpid
 
-        > sys:1: Warning: GChildWatchSource: Exit status of a child process was requested but
-                 ECHILD was received by waitpid(). See the documentation of
+        > sys:1: Warning: GChildWatchSource: Exit status of a child
+                 process was requested but ECHILD was received by
+                 waitpid(). See the documentation of
                  g_child_watch_source_new() for possible causes.
 
         g_child_watch_source_new() documentation:
             https://developer.gnome.org/glib/stable/glib-The-Main-Event-Loop.html#g-child-watch-source-new
 
-        On POSIX platforms, the following restrictions apply to this API due to limitations
-        in POSIX process interfaces:
+        On POSIX platforms, the following restrictions apply to this
+        API due to limitations in POSIX process interfaces:
             ...
-            * the application must not wait for pid to exit by any other mechanism,
-              including waitpid(pid, ...) or a second child-watch source for the same pid
+            * the application must not wait for pid to exit by any
+              other mechanism, including waitpid(pid, ...) or a second
+              child-watch source for the same pid
             ...
-        For this reason, we should not call os.waitpid(pid, ...), leave it to OS
+        For this reason, we should not call os.waitpid(pid, ...),
+        leave it to OS
         """
         try:
             os.kill(pid, signal.SIGHUP)
@@ -387,7 +394,8 @@ class SugarTerminal(Vte.Terminal):
             pass
 
     def set_color_bold(self, font_color, *args, **kwargs):
-        real_fgcolor = self.custom_fgcolor if self.custom_fgcolor else font_color
+        real_fgcolor = \
+            self.custom_fgcolor if self.custom_fgcolor else font_color
         super(SugarTerminal, self).set_color_bold(
             real_fgcolor, *args, **kwargs)
 
@@ -402,8 +410,9 @@ class SugarTerminal(Vte.Terminal):
             # in Fedora 21 we get a exception
             # TypeError: argument foreground: Expected Gdk.RGBA,
             # but got gi.overrides.Gdk.Color
-            self.set_colors(Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
-                            Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
+            self.set_colors(
+                Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
+                Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
 
     def set_custom_colors_from_dict(self, colors_dict):
         if not isinstance(colors_dict, dict):
@@ -428,7 +437,6 @@ class SugarTerminal(Vte.Terminal):
         else:
             self.custom_palette = None
 
-
     def browse_link_under_cursor(self):
         if not self.found_link:
             log.warning("No link under cursor")
@@ -447,9 +455,9 @@ class SugarTerminal(Vte.Terminal):
         journal_entry.metadata['keep'] = '0'
         journal_entry.metadata['mime_type'] = 'text/uri-list'
         journal_entry.metadata['icon-color'] = profile.get_color().to_string()
-        journal_entry.metadata['description'] = "Opening {} from the Terminal".format(URL)
+        journal_entry.metadata['description'] = \
+            "Opening {} from the Terminal".format(URL)
         journal_entry.file_path = path
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
         launch_bundle(object_id=self._object_id)
-
