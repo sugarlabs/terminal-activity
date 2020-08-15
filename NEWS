@@ -1,3 +1,12 @@
+46.3
+
+* Feature: control-click for URLs opens in Browse (Srevin Saju),
+* Feature: right-click menu for URLs, with copy (Srevin Saju),
+* Feature: colour theme (Srevin Saju, Shaan Subbaiah),
+* New translations,
+* Fix README.md for Fructose classification (James Cameron),
+* Fix notify callback parameter typo (Ibiam Chihurumnaya),
+
 46.2
 
 * Fix clear scrollback button (James Cameron),
