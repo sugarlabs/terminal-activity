@@ -562,11 +562,8 @@ class SugarTerminal(Vte.Terminal):
             return
         path = os.path.join(self.activity.get_activity_root(),
                             'instance', '%i' % time.time())
-        self.create_journal_entry(path, self.found_link)
-
-    def create_journal_entry(self, path, URL):
-        fd = open(path, "w+")
-        fd.write(URL)
+        fd = open(path, "w")
+        fd.write(url)
         fd.close()
         journal_entry = datastore.create()
         journal_entry.metadata['title'] = 'Browse Activity'
@@ -575,7 +572,7 @@ class SugarTerminal(Vte.Terminal):
         journal_entry.metadata['mime_type'] = 'text/uri-list'
         journal_entry.metadata['icon-color'] = profile.get_color().to_string()
         journal_entry.metadata['description'] = \
-            "Opening {} from the Terminal".format(URL)
+            "Opening {} from the Terminal".format(url)
         journal_entry.file_path = path
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
