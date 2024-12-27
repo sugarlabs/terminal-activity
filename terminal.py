@@ -598,55 +598,44 @@ class TerminalActivity(activity.Activity):
 
         data = {}
         data['current-tab'] = self._notebook.get_current_page()
-        # make sures this doesn't conflict with older terminal version
         data['theme'] = 'custom'
         data['theme_hex'] = self._theme_colors['custom']
         data['tabs'] = []
 
         for i in range(self._notebook.get_n_pages()):
-
-            def is_selected(vte, *args):
-                return True
-
             page = self._notebook.get_nth_page(i)
 
             text = ''
             if VTE_VERSION >= 38:
-                # in older versions of vte, get_text() makes crash
-                # the activity at random - SL #4627
                 try:
-                    # get_text is only available in latest vte #676999
-                    # and pygobject/gobject-introspection #690041
                     text, attr_ = page.vt.get_text(is_selected, None)
                 except AttributeError:
                     pass
 
-            scrollback_lines = text.split('\n')
+            if text:
+                scrollback_lines = text.split('\n')
+            else:
+                scrollback_lines = []
 
             environ_file = '/proc/%d/environ' % page.pid
             if os.path.isfile(environ_file):
-                # Note- this currently gets the child's initial environment
-                # rather than the current environment,
-                # making it not very useful.
                 environment = open(environ_file, 'r').read().split('\0')
-
                 cwd = os.readlink('/proc/%d/cwd' % page.pid)
             else:
-                # terminal killed by the user
                 environment = []
                 cwd = '~'
 
             font_desc = page.vt.get_font()
 
             tab_state = {'env': environment, 'cwd': cwd,
-                         'font_size': font_desc.get_size(),
-                         'scrollback': scrollback_lines}
+                        'font_size': font_desc.get_size(),
+                        'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
-        fd = open(file_path, 'w')
-        text = json.dumps(data)
-        fd.write(text)
-        fd.close()
+
+        with open(file_path, 'w') as fd:
+            text = json.dumps(data)
+            fd.write(text)
 
     def __clear_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
