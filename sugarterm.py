@@ -197,9 +197,8 @@ class SugarTerminal(Vte.Terminal):
         self.conf_file = os.path.join(env.get_profile_path(), 'terminalrc')
 
         if os.path.isfile(self.conf_file):
-            f = open(self.conf_file, 'r')
-            self.conf.readfp(f)
-            f.close()
+            with open(self.conf_file, 'r') as f:
+                self.conf.read_file(f)
         else:
             self.conf.add_section('terminal')
 
