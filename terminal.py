@@ -611,7 +611,10 @@ class TerminalActivity(activity.Activity):
             page = self._notebook.get_nth_page(i)
 
             text = ''
-            if VTE_VERSION >= 38:
+            if VTE_VERSION >= 76:
+                # Use get_text with format for Vte version 0.76 and above
+                text = page.vt.get_text(Vte.Format.TEXT)
+            elif VTE_VERSION >= 38:
                 # in older versions of vte, get_text() makes crash
                 # the activity at random - SL #4627
                 try:
@@ -619,7 +622,7 @@ class TerminalActivity(activity.Activity):
                     # and pygobject/gobject-introspection #690041
                     text, attr_ = page.vt.get_text(is_selected, None)
                 except AttributeError:
-                    pass
+                    text = ''
 
             scrollback_lines = text.split('\n')
 
@@ -643,10 +646,10 @@ class TerminalActivity(activity.Activity):
                          'scrollback': scrollback_lines}
 
             data['tabs'].append(tab_state)
-        fd = open(file_path, 'w')
-        text = json.dumps(data)
-        fd.write(text)
-        fd.close()
+
+        with open(file_path, 'w') as fd:
+            text = json.dumps(data)
+            fd.write(text)
 
     def __clear_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
