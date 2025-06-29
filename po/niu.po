@@ -1,0 +1,133 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-09 10:57+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: niu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: activity/activity.info:2
+msgid "Terminal"
+msgstr ""
+
+#: activity/activity.info:3
+msgid "Here you have complete control over your computer. You are in charge!!"
+msgstr ""
+
+#: helpbutton.py:41
+msgid "Help"
+msgstr ""
+
+#: terminal.py:174
+msgid "Clear scrollback"
+msgstr ""
+
+#: terminal.py:224
+msgid "Zoom out"
+msgstr ""
+
+#: terminal.py:231
+msgid "Zoom in"
+msgstr ""
+
+#: terminal.py:238
+msgid "Fullscreen"
+msgstr ""
+
+#: terminal.py:264
+msgid "Useful commands"
+msgstr ""
+
+#: terminal.py:265
+msgid "cd"
+msgstr ""
+
+#: terminal.py:266
+msgid "Change directory"
+msgstr ""
+
+#: terminal.py:267
+msgid "To use it, write: cd directory"
+msgstr ""
+
+#: terminal.py:269
+msgid ""
+"If you call it without parameters, will change\n"
+"to the user directory"
+msgstr ""
+
+#: terminal.py:271
+msgid "ls"
+msgstr ""
+
+#: terminal.py:272
+msgid "List the content of a directory."
+msgstr ""
+
+#: terminal.py:273
+msgid "To use it, write: ls directory"
+msgstr ""
+
+#: terminal.py:275
+msgid ""
+"If you call it without parameters, will list the\n"
+"working directory"
+msgstr ""
+
+#: terminal.py:277
+msgid "cp"
+msgstr ""
+
+#: terminal.py:278
+msgid "Copy a file to a specific location"
+msgstr ""
+
+#: terminal.py:279
+msgid "Call it with the file and the new location"
+msgstr ""
+
+#: terminal.py:280
+msgid "Use: cp file directory"
+msgstr ""
+
+#: terminal.py:281
+msgid "rm"
+msgstr ""
+
+#: terminal.py:282
+msgid "Removes a file in any path"
+msgstr ""
+
+#: terminal.py:283
+msgid "Use: rm file"
+msgstr ""
+
+#: terminal.py:284
+msgid "su"
+msgstr ""
+
+#: terminal.py:285
+msgid "Login as superuser (root)"
+msgstr ""
+
+#: terminal.py:287
+msgid ""
+"The root user is the administrator of the\n"
+"system"
+msgstr ""
+
+#: terminal.py:289
+msgid ""
+"You must be careful, because you can modify\n"
+"system files"
+msgstr ""
