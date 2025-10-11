@@ -34,7 +34,7 @@ class TabAdd(Gtk.Button):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        add_tab_icon = Icon(icon_name='add')
+        add_tab_icon = Icon(icon_name='list-add')
         self.props.relief = Gtk.ReliefStyle.NONE
         self.props.focus_on_click = False
         self.add(add_tab_icon)
