@@ -613,7 +613,7 @@ class TerminalActivity(activity.Activity):
             text = ''
             if VTE_VERSION >= 76:
                 # Use get_text with format for Vte version 0.76 and above
-                text = page.vt.get_text(Vte.Format.TEXT)
+                text = page.vt.get_text_format(Vte.Format.TEXT)
             elif VTE_VERSION >= 38:
                 # in older versions of vte, get_text() makes crash
                 # the activity at random - SL #4627
