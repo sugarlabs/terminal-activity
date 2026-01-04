@@ -1,8 +1,8 @@
 [Activity]
 name = Terminal
-activity_version = 47
+activity_version = 48
 bundle_id = org.laptop.Terminal
-exec = sugar-activity3 terminal.TerminalActivity
+exec = sugar-activity4 terminal.TerminalActivity
 icon = activity-terminal
 mime_types =
 license = GPLv2+;GPLv3+
