@@ -1,6 +1,7 @@
 # Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>.
 # Copyright (C) 2008, One Laptop Per Child
 # Copyright (C) 2009, Simon Schampijer
+# Copyright (C) 2025 MostlyK
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,64 +17,45 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-import sys
 import json
 import logging
+import os
+import sys
 from gettext import gettext as _
 
 import gi
 
+gi.require_version("Gtk", "4.0")
 
-vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0'}
-for api, ver in vs.items():
-    gi.require_version(api, ver)
+from gi.repository import Gdk, GLib, Gtk, Pango
 
-try:
-    gi.require_version('Vte', '2.91')
-except:
-    gi.require_version('Vte', '2.90')
-
-from gi.repository import GLib
-from gi.repository import Gtk
-from gi.repository import Gdk
+gi.require_version("Vte", "3.91")  # vte-0.82
 from gi.repository import Vte
-from gi.repository import Pango
-
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbarbox import ToolbarButton
-
-from sugar3.activity.widgets import EditToolbar
-from sugar3.activity.widgets import ActivityToolbarButton
-from sugar3.activity.widgets import StopButton
-from sugar3.activity import activity
-from sugar3.graphics.colorbutton import ColorToolButton, get_svg_color_string
-
-from widgets import BrowserNotebook
-from widgets import TabLabel
-
 from helpbutton import HelpButton
+from sugar4.activity import activity
+from sugar4.activity.widgets import ActivityToolbarButton, EditToolbar, StopButton
+from sugar4.graphics.toolbarbox import ToolbarBox, ToolbarButton
+from sugar4.graphics.toolbutton import ToolButton
 from sugarterm import SugarTerminal
+from widgets import BrowserNotebook, TabLabel
 
-MASKED_ENVIRONMENT = [
-    'DBUS_SESSION_BUS_ADDRESS',
-    'PPID']
+MASKED_ENVIRONMENT = ["DBUS_SESSION_BUS_ADDRESS", "PPID"]
 
-log = logging.getLogger('Terminal')
+log = logging.getLogger("Terminal")
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
 
 try:
-    olpc_build = open('/boot/olpc_build', 'r').readline()
+    olpc_build = open("/boot/olpc_build", "r").readline()
 except:
-    olpc_build = ''
+    olpc_build = ""
 
-if olpc_build.startswith('13'):
+if olpc_build.startswith("13"):
     FONT_SIZE = 8
 else:
     FONT_SIZE = 12
 
+# Get VTE minor version for API compatibility
 VTE_VERSION = 0
 try:
     VTE_VERSION = Vte.MINOR_VERSION
@@ -83,23 +65,21 @@ except:
 
 
 class TerminalActivity(activity.Activity):
-
     def __init__(self, handle):
-        activity.Activity.__init__(self, handle)
+        super().__init__(handle)
 
-        # HACK to avoid Escape key disable fullscreen mode on Terminal Activity
-        # This is related with http://bugs.sugarlabs.org/ticket/440
-        self.disconnect_by_func(self._Window__key_press_cb)
-        self.connect('key-press-event', self.__key_press_cb)
+        # Setup key event controller for keyboard shortcuts
+        self._key_controller = Gtk.EventControllerKey()
+        self._key_controller.connect("key-pressed", self.__key_pressed_cb)
+        self.add_controller(self._key_controller)
+
         self.vt = None
         self.max_participants = 1
-        self._theme_colors = {"light": {'fg_color': '#000000',
-                                        'bg_color': '#FFFFFF'},
-                              "dark": {'fg_color': '#FFFFFF',
-                                       'bg_color': '#000000'},
-                              "custom": {'fg_color': '#000000',
-                                         'bg_color': '#FFFFFF'}
-                              }
+        self._theme_colors = {
+            "light": {"fg_color": "#000000", "bg_color": "#FFFFFF"},
+            "dark": {"fg_color": "#FFFFFF", "bg_color": "#000000"},
+            "custom": {"fg_color": "#000000", "bg_color": "#FFFFFF"},
+        }
         self._theme_state = "light"
 
         self._font_size = FONT_SIZE
@@ -119,24 +99,19 @@ class TerminalActivity(activity.Activity):
         toolbar_box = ToolbarBox()
 
         activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, 0)
+        toolbar_box.toolbar.append(activity_button)
         activity_button.show()
 
         edit_toolbar = self._create_edit_toolbar()
-        edit_toolbar_button = ToolbarButton(
-            page=edit_toolbar,
-            icon_name='toolbar-edit'
-        )
+        edit_toolbar_button = ToolbarButton(page=edit_toolbar, icon_name="toolbar-edit")
         edit_toolbar.show()
-        toolbar_box.toolbar.insert(edit_toolbar_button, -1)
+        toolbar_box.toolbar.append(edit_toolbar_button)
         edit_toolbar_button.show()
 
         view_toolbar = self._create_view_toolbar()
-        view_toolbar_button = ToolbarButton(
-            page=view_toolbar,
-            icon_name='toolbar-view')
+        view_toolbar_button = ToolbarButton(page=view_toolbar, icon_name="toolbar-view")
         view_toolbar.show()
-        toolbar_box.toolbar.insert(view_toolbar_button, -1)
+        toolbar_box.toolbar.append(view_toolbar_button)
         view_toolbar_button.show()
 
         self._delete_tab_toolbar = None
@@ -144,18 +119,17 @@ class TerminalActivity(activity.Activity):
         self._next_tab_toolbar = None
 
         helpbutton = self._create_help_button()
-        toolbar_box.toolbar.insert(helpbutton, -1)
-        helpbutton.show_all()
+        toolbar_box.toolbar.append(helpbutton)
+        # GTK4: show_all() removed, just show() is enough
+        helpbutton.show()
 
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        toolbar_box.toolbar.insert(separator, -1)
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        separator.set_hexpand(True)
+        toolbar_box.toolbar.append(separator)
         separator.show()
 
         stop_button = StopButton(self)
-        stop_button.props.accelerator = '<Ctrl><Shift>Q'
-        toolbar_box.toolbar.insert(stop_button, -1)
+        toolbar_box.toolbar.append(stop_button)
         stop_button.show()
 
         self.set_toolbar_box(toolbar_box)
@@ -163,26 +137,24 @@ class TerminalActivity(activity.Activity):
 
     def fullscreen(self):
         self._notebook.set_show_tabs(False)
-        activity.Activity.fullscreen(self)
+        super().fullscreen()
 
     def unfullscreen(self):
         self._notebook.set_show_tabs(True)
-        activity.Activity.unfullscreen(self)
+        super().unfullscreen()
 
     def _create_edit_toolbar(self):
         edit_toolbar = EditToolbar()
         edit_toolbar.undo.props.visible = False
         edit_toolbar.redo.props.visible = False
         edit_toolbar.separator.props.visible = False
-        edit_toolbar.copy.connect('clicked', self.__copy_cb)
-        edit_toolbar.copy.props.accelerator = '<Ctrl><Shift>C'
-        edit_toolbar.paste.connect('clicked', self.__paste_cb)
-        edit_toolbar.paste.props.accelerator = '<Ctrl><Shift>V'
+        edit_toolbar.copy.connect("clicked", self.__copy_cb)
+        edit_toolbar.paste.connect("clicked", self.__paste_cb)
 
-        clear = ToolButton('edit-clear')
-        clear.set_tooltip(_('Clear scrollback'))
-        clear.connect('clicked', self.__clear_cb)
-        edit_toolbar.insert(clear, -1)
+        clear = ToolButton("edit-clear")
+        clear.set_tooltip(_("Clear scrollback"))
+        clear.connect("clicked", self.__clear_cb)
+        edit_toolbar.append(clear)
         clear.show()
         return edit_toolbar
 
@@ -197,19 +169,24 @@ class TerminalActivity(activity.Activity):
 
     def __bg_color_notify_cb(self, button, pspec):
         color = button.get_color()
-        self._theme_state = 'custom'
-        self._theme_colors['custom']['bg_color'] = get_svg_color_string(color)
+        self._theme_state = "custom"
+        # GTK4: Color handling is different, need to convert GdkRGBA to hex string
+        from sugar4.graphics.colorbutton import get_svg_color_string
+
+        self._theme_colors["custom"]["bg_color"] = get_svg_color_string(color)
         self._update_theme()
 
     def __fg_color_notify_cb(self, button, pspec):
         color = button.get_color()
-        self._theme_state = 'custom'
-        self._theme_colors['custom']['fg_color'] = get_svg_color_string(color)
+        self._theme_state = "custom"
+        from sugar4.graphics.colorbutton import get_svg_color_string
+
+        self._theme_colors["custom"]["fg_color"] = get_svg_color_string(color)
         self._update_theme()
 
     def _update_custom_theme(self, fg_color, bg_color):
-        self._theme_colors['custom']['fg_color'] = fg_color
-        self._theme_colors['custom']['bg_color'] = bg_color
+        self._theme_colors["custom"]["fg_color"] = fg_color
+        self._theme_colors["custom"]["bg_color"] = bg_color
 
     def _toggled_theme(self, button):
         if self._theme_state == "dark":
@@ -217,92 +194,97 @@ class TerminalActivity(activity.Activity):
         elif self._theme_state == "light":
             self._theme_state = "dark"
         else:
-            if button.get_icon_name() == "light-theme" or \
-                    self._theme_colors['custom'] == \
-                    self._theme_colors['dark']:
+            if (
+                button.get_icon_name() == "light-theme"
+                or self._theme_colors["custom"] == self._theme_colors["dark"]
+            ):
                 self._theme_state = "light"
             else:
                 self._theme_state = "dark"
         previous_theme = self._theme_colors[self._theme_state]
         self._update_custom_theme(
-            previous_theme['fg_color'], previous_theme['bg_color'])
+            previous_theme["fg_color"], previous_theme["bg_color"]
+        )
         self._update_theme()
 
     def _update_theme(self):
         if self._theme_state == "light":
-            self._theme_toggler.set_icon_name('dark-theme')
-            self._theme_toggler.set_tooltip('Switch to Dark Theme')
+            self._theme_toggler.set_icon_name("dark-theme")
+            self._theme_toggler.set_tooltip("Switch to Dark Theme")
         elif self._theme_state == "dark":
-            self._theme_toggler.set_icon_name('light-theme')
-            self._theme_toggler.set_tooltip('Switch to Light Theme')
+            self._theme_toggler.set_icon_name("light-theme")
+            self._theme_toggler.set_tooltip("Switch to Light Theme")
         else:
             # If custom color is dark, update the theme toggler
-            if self._theme_colors['custom'] == self._theme_colors['dark']:
-                self._theme_toggler.set_icon_name('light-theme')
-                self._theme_toggler.set_tooltip('Switch to Light Theme')
+            if self._theme_colors["custom"] == self._theme_colors["dark"]:
+                self._theme_toggler.set_icon_name("light-theme")
+                self._theme_toggler.set_tooltip("Switch to Light Theme")
 
         for i in range(self._notebook.get_n_pages()):
             vt = self._notebook.get_nth_page(i).vt
-            vt.set_term_colors(self._theme_colors['custom'])
+            vt.set_term_colors(self._theme_colors["custom"])
 
     def _create_view_toolbar(self):  # Color changer and Zoom toolbar
-        view_toolbar = Gtk.Toolbar()
+        # GTK4: Gtk.Toolbar is deprecated, use Box instead
+        view_toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
-        self._theme_toggler = ToolButton('dark-theme')
-        self._theme_toggler.set_tooltip('Switch to Dark Theme')
-        self._theme_toggler.props.accelerator = '<Ctrl><Shift>I'
-        self._theme_toggler.connect('clicked', self._toggled_theme)
-        view_toolbar.insert(self._theme_toggler, -1)
+        self._theme_toggler = ToolButton("dark-theme")
+        self._theme_toggler.set_tooltip("Switch to Dark Theme")
+        self._theme_toggler.connect("clicked", self._toggled_theme)
+        view_toolbar.append(self._theme_toggler)
         self._theme_toggler.show()
 
-        self.fg_color_palette = ColorToolButton('color-preview')
+        from sugar4.graphics.colorbutton import ColorToolButton
+
+        self.fg_color_palette = ColorToolButton("color-preview")
         self.fg_color_palette._tooltip = "Set Foreground Text color"
-        self.fg_color_palette.set_title('Foreground Color')
-        self.fg_color_palette.connect(
-            'notify::color', self.__fg_color_notify_cb)
-        view_toolbar.insert(self.fg_color_palette, -1)
+        self.fg_color_palette.set_title("Foreground Color")
+        self.fg_color_palette.connect("notify::color", self.__fg_color_notify_cb)
+        view_toolbar.append(self.fg_color_palette)
         self.fg_color_palette.show()
 
-        self.bg_color_palette = ColorToolButton('color-preview')
+        self.bg_color_palette = ColorToolButton("color-preview")
         self.bg_color_palette._tooltip = "Set Background color"
-        self.bg_color_palette.set_title('Background Color')
-        self.bg_color_palette.connect(
-            'notify::color', self.__bg_color_notify_cb)
-        self.bg_color_palette.set_color(Gdk.Color.parse('#FFFFFF')[1])
-        view_toolbar.insert(self.bg_color_palette, -1)
+        self.bg_color_palette.set_title("Background Color")
+        self.bg_color_palette.connect("notify::color", self.__bg_color_notify_cb)
+        # GTK4: Set color using Gdk.RGBA
+        bg_rgba = Gdk.RGBA()
+        bg_rgba.parse("#FFFFFF")
+        self.bg_color_palette.set_color(bg_rgba)
+        view_toolbar.append(self.bg_color_palette)
         self.bg_color_palette.show()
 
-        sep = Gtk.SeparatorToolItem()
-        view_toolbar.insert(sep, -1)
+        # GTK4: SeparatorToolItem → Separator with orientation
+        sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        view_toolbar.append(sep)
         sep.show()
 
-        zoom_out_button = ToolButton('zoom-out')
-        zoom_out_button.set_tooltip(_('Zoom out'))
-        zoom_out_button.props.accelerator = '<Ctrl>minus'
-        zoom_out_button.connect('clicked', self.__zoom_out_cb)
-        view_toolbar.insert(zoom_out_button, -1)
+        zoom_out_button = ToolButton("zoom-out")
+        zoom_out_button.set_tooltip(_("Zoom out"))
+        zoom_out_button.connect("clicked", self.__zoom_out_cb)
+        view_toolbar.append(zoom_out_button)
         zoom_out_button.show()
 
-        zoom_in_button = ToolButton('zoom-in')
-        zoom_in_button.set_tooltip(_('Zoom in'))
-        zoom_in_button.props.accelerator = '<Ctrl>plus'
-        zoom_in_button.connect('clicked', self.__zoom_in_cb)
-        view_toolbar.insert(zoom_in_button, -1)
+        zoom_in_button = ToolButton("zoom-in")
+        zoom_in_button.set_tooltip(_("Zoom in"))
+        zoom_in_button.connect("clicked", self.__zoom_in_cb)
+        view_toolbar.append(zoom_in_button)
         zoom_in_button.show()
 
-        fullscreen_button = ToolButton('view-fullscreen')
+        fullscreen_button = ToolButton("view-fullscreen")
         fullscreen_button.set_tooltip(_("Fullscreen"))
-        fullscreen_button.props.accelerator = '<Alt>Return'
-        fullscreen_button.connect('clicked', self.__fullscreen_cb)
-        view_toolbar.insert(fullscreen_button, -1)
+        fullscreen_button.connect("clicked", self.__fullscreen_cb)
+        view_toolbar.append(fullscreen_button)
         fullscreen_button.show()
         return view_toolbar
 
     def _zoom(self, step):
-
         current_page = self._notebook.get_current_page()
         vt = self._notebook.get_nth_page(current_page).vt
         font_desc = vt.get_font()
+        if font_desc is None:
+            # GTK4: Create default font if none is set
+            font_desc = Pango.FontDescription.from_string("Monospace")
         font_desc.set_size(font_desc.get_size() + Pango.SCALE * step)
         vt.set_font(font_desc)
 
@@ -318,38 +300,41 @@ class TerminalActivity(activity.Activity):
     def _create_help_button(self):
         helpitem = HelpButton()
 
-        helpitem.add_section(_('Useful commands'))
-        helpitem.add_section(_('cd'))
-        helpitem.add_paragraph(_('Change directory'))
-        helpitem.add_paragraph(_('To use it, write: cd directory'))
+        helpitem.add_section(_("Useful commands"))
+        helpitem.add_section(_("cd"))
+        helpitem.add_paragraph(_("Change directory"))
+        helpitem.add_paragraph(_("To use it, write: cd directory"))
         helpitem.add_paragraph(
-            _('If you call it without parameters, will change\n'
-              'to the user directory'))
-        helpitem.add_section(_('ls'))
-        helpitem.add_paragraph(_('List the content of a directory.'))
-        helpitem.add_paragraph(_('To use it, write: ls directory'))
+            _("If you call it without parameters, will change\nto the user directory")
+        )
+        helpitem.add_section(_("ls"))
+        helpitem.add_paragraph(_("List the content of a directory."))
+        helpitem.add_paragraph(_("To use it, write: ls directory"))
         helpitem.add_paragraph(
-            _('If you call it without parameters, will list the\n'
-              'working directory'))
-        helpitem.add_section(_('cp'))
-        helpitem.add_paragraph(_('Copy a file to a specific location'))
-        helpitem.add_paragraph(_('Call it with the file and the new location'))
-        helpitem.add_paragraph(_('Use: cp file directory'))
-        helpitem.add_section(_('rm'))
-        helpitem.add_paragraph(_('Removes a file in any path'))
-        helpitem.add_paragraph(_('Use: rm file'))
-        helpitem.add_section(_('su'))
-        helpitem.add_paragraph(_('Login as superuser (root)'))
+            _("If you call it without parameters, will list the\nworking directory")
+        )
+        helpitem.add_section(_("cp"))
+        helpitem.add_paragraph(_("Copy a file to a specific location"))
+        helpitem.add_paragraph(_("Call it with the file and the new location"))
+        helpitem.add_paragraph(_("Use: cp file directory"))
+        helpitem.add_section(_("rm"))
+        helpitem.add_paragraph(_("Removes a file in any path"))
+        helpitem.add_paragraph(_("Use: rm file"))
+        helpitem.add_section(_("su"))
+        helpitem.add_paragraph(_("Login as superuser (root)"))
+        helpitem.add_paragraph(_("The root user is the administrator of the\nsystem"))
         helpitem.add_paragraph(
-            _('The root user is the administrator of the\nsystem'))
-        helpitem.add_paragraph(
-            _('You must be careful, because you can modify\nsystem files'))
+            _("You must be careful, because you can modify\nsystem files")
+        )
 
         return helpitem
 
     def __open_tab_cb(self, btn):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         font_desc = vt.get_font()
+        if font_desc is None:
+            # GTK4: Create default font if none is set
+            font_desc = Pango.FontDescription.from_string("Monospace")
         self._font_size = font_desc.get_size() / Pango.SCALE
 
         index = self._create_tab(None)
@@ -381,7 +366,8 @@ class TerminalActivity(activity.Activity):
             self.close()
         if self._notebook.get_n_pages() == 1:
             self._notebook.get_tab_label(
-                self._notebook.get_nth_page(0)).hide_close_button()
+                self._notebook.get_nth_page(0)
+            ).hide_close_button()
 
     def __tab_child_exited_cb(self, vt, status=None):
         for i in range(self._notebook.get_n_pages()):
@@ -396,8 +382,7 @@ class TerminalActivity(activity.Activity):
                 label.set_text(vt.get_window_title())
                 return
 
-    def __drag_data_received_cb(self, widget, context, x, y, selection,
-                                target, time):
+    def __drag_data_received_cb(self, widget, context, x, y, selection, target, time):
         widget.feed_child(selection.get_text(), -1)
         context.finish(True, False, time)
         return True
@@ -407,33 +392,36 @@ class TerminalActivity(activity.Activity):
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
-        vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-                         [Gtk.TargetEntry.new('text/plain', 0, 0),
-                          Gtk.TargetEntry.new('STRING', 0, 1)],
-                         Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
-        vt.drag_dest_add_text_targets()
-        vt.connect('drag_data_received', self.__drag_data_received_cb)
+        # GTK4: Drag and drop is handled differently in sugarterm.py setup_drag_and_drop()
+        # The old API is removed, but we kept basic support
 
-        vt.set_term_colors(self._theme_colors['custom'])
+        vt.set_term_colors(self._theme_colors["custom"])
 
         vt.show()
 
-        scrollbar = Gtk.VScrollbar.new(vt.get_vadjustment())
+        # GTK4: VScrollbar -> Scrollbar with orientation
+        scrollbar = Gtk.Scrollbar(
+            orientation=Gtk.Orientation.VERTICAL, adjustment=vt.get_vadjustment()
+        )
 
-        box = Gtk.HBox()
-        box.pack_start(vt, True, True, 0)
-        box.pack_start(scrollbar, False, True, 0)
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        box.append(vt)
+        # GTK4: set_child_packing removed, use properties on child
+        vt.set_hexpand(True)
+        vt.set_vexpand(True)
+        box.append(scrollbar)
+        scrollbar.set_hexpand(False)
 
         box.vt = vt
         box.show()
 
         tablabel = TabLabel(box)
-        tablabel.connect('tab-close', self.__close_tab_cb)
+        tablabel.connect("tab-close", self.__close_tab_cb)
         tablabel.update_size(200)
         box.label = tablabel
 
         index = self._notebook.append_page(box, tablabel)
-        tablabel.show_all()
+        tablabel.show()
 
         # Uncomment this to only show the tab bar when there is at least
         # one tab. I think it's useful to always see it, since it displays
@@ -443,8 +431,9 @@ class TerminalActivity(activity.Activity):
             tablabel.hide_close_button()
         if self._notebook.get_n_pages() == 2:
             self._notebook.get_tab_label(
-                self._notebook.get_nth_page(0)).show_close_button()
-        self._notebook.show_all()
+                self._notebook.get_nth_page(0)
+            ).show_close_button()
+        self._notebook.show()
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -452,11 +441,11 @@ class TerminalActivity(activity.Activity):
         if tab_state:
             # Restore the environment.
             # This is currently not enabled.
-            environment = tab_state['env']
+            environment = tab_state["env"]
 
             filtered_env = []
             for e in environment:
-                var, sep, value = e.partition('=')
+                var, sep, value = e.partition("=")
                 if var not in MASKED_ENVIRONMENT:
                     filtered_env.append(var + sep + value)
 
@@ -465,44 +454,61 @@ class TerminalActivity(activity.Activity):
             # os.environ['TERMINAL_ENV'] = '\n'.join(filtered_env)
 
             # Restore the working directory.
-            if 'cwd' in tab_state and os.path.exists(tab_state['cwd']):
+            if "cwd" in tab_state and os.path.exists(tab_state["cwd"]):
                 try:
-                    os.chdir(tab_state['cwd'])
+                    os.chdir(tab_state["cwd"])
                 except:
                     # ACLs may deny access
-                    sys.stdout.write("Could not chdir to " + tab_state['cwd'])
+                    sys.stdout.write("Could not chdir to " + tab_state["cwd"])
 
-            if 'font_size' in tab_state:
+            if "font_size" in tab_state:
                 font_desc = vt.get_font()
-                font_desc.set_size(tab_state['font_size'])
+                if font_desc is None:
+                    # GTK4: Create default font if none is set
+                    font_desc = Pango.FontDescription.from_string("Monospace")
+                font_desc.set_size(tab_state["font_size"])
                 vt.set_font(font_desc)
 
             # Restore the scrollback buffer.
-            for l in tab_state['scrollback']:
-                vt.feed(l.encode('utf-8') + b'\r\n')
+            for l in tab_state["scrollback"]:
+                vt.feed(l.encode("utf-8") + b"\r\n")
 
-        argv = [os.environ.get('SHELL') or '/bin/bash']
-        envv = ['SUGAR_TERMINAL_VERSION=%s' %
-                os.environ['SUGAR_BUNDLE_VERSION']]
+        argv = [os.environ.get("SHELL") or "/bin/bash"]
+        envv = ["SUGAR_TERMINAL_VERSION=%s" % os.environ["SUGAR_BUNDLE_VERSION"]]
 
         saved = {}
-        for name in ['SUGAR_BUNDLE_PATH', 'SUGAR_ACTIVITY_ROOT',
-                     'SUGAR_BUNDLE_ID', 'SUGAR_BUNDLE_NAME',
-                     'SUGAR_BUNDLE_VERSION']:
+        for name in [
+            "SUGAR_BUNDLE_PATH",
+            "SUGAR_ACTIVITY_ROOT",
+            "SUGAR_BUNDLE_ID",
+            "SUGAR_BUNDLE_NAME",
+            "SUGAR_BUNDLE_VERSION",
+        ]:
             if name in os.environ:
                 saved[name] = os.environ[name]
                 del os.environ[name]
 
-        if hasattr(vt, 'fork_command_full'):
+        # Spawn terminal with VTE
+        if hasattr(vt, "fork_command_full"):
             _, box.pid = vt.fork_command_full(
-                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None, None)
+                Vte.PtyFlags.DEFAULT,
+                os.environ["HOME"],
+                argv,
+                envv,
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+            )
         else:
             _, box.pid = vt.spawn_sync(
-                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None, None)
+                Vte.PtyFlags.DEFAULT,
+                os.environ["HOME"],
+                argv,
+                envv,
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+            )
 
         for name in saved:
             os.environ[name] = saved[name]
@@ -512,12 +518,13 @@ class TerminalActivity(activity.Activity):
 
         return index
 
-    def __key_press_cb(self, window, event):
+    def __key_pressed_cb(self, controller, keyval, keycode, state):
         """Route some keypresses directly to the vte and then drop them.
 
         This prevents Sugar from hijacking events that are useful in
         the vte.
 
+        GTK4: This is now an EventControllerKey callback
         """
 
         def event_to_vt(event):
@@ -525,44 +532,54 @@ class TerminalActivity(activity.Activity):
             vt = self._notebook.get_nth_page(current_page).vt
             vt.event(event)
 
-        key_name = Gdk.keyval_name(event.keyval)
+        key_name = Gdk.keyval_name(keyval)
 
         # Escape is used in Sugar to cancel fullscreen mode.
-        if key_name == 'Escape':
+        if key_name == "Escape":
+            # Create a fake event for the VTE
+            event = Gdk.Event()
+            event.type = Gdk.EventType.KEY_PRESS
+            event.keyval = keyval
+            event.state = state
             event_to_vt(event)
             return True
 
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK:
-            if key_name in ['z', 'q']:
+        elif state & Gdk.ModifierType.CONTROL_MASK:
+            if key_name in ["z", "q"]:
+                event = Gdk.Event()
+                event.type = Gdk.EventType.KEY_PRESS
+                event.keyval = keyval
+                event.state = state
                 event_to_vt(event)
                 return True
-            elif key_name == 'Tab':
+            elif key_name == "Tab":
                 current_index = self._notebook.get_current_page()
                 if current_index == self._notebook.get_n_pages() - 1:
                     self._notebook.set_current_page(0)
                 else:
                     self._notebook.set_current_page(current_index + 1)
                 return True
-            elif event.get_state() & Gdk.ModifierType.SHIFT_MASK:
-                if key_name == 'ISO_Left_Tab':
+            elif state & Gdk.ModifierType.SHIFT_MASK:
+                if key_name == "ISO_Left_Tab":
                     current_index = self._notebook.get_current_page()
                     if current_index == 0:
                         self._notebook.set_current_page(
-                            self._notebook.get_n_pages() - 1)
+                            self._notebook.get_n_pages() - 1
+                        )
                     else:
                         self._notebook.set_current_page(current_index - 1)
                     return True
-                elif key_name == 'T':
+                elif key_name == "T":
                     self._create_tab(None)
                     return True
 
         return False
 
     def read_file(self, file_path):
-        if self.metadata['mime_type'] != 'text/plain':
+        if self.metadata["mime_type"] != "text/plain":
             return
 
-        fd = open(file_path, 'r')
+        fd = open(file_path, "r")
         text = fd.read()
         data = json.loads(text)
         fd.close()
@@ -571,37 +588,44 @@ class TerminalActivity(activity.Activity):
             self._notebook.remove_page(0)
 
         # Restore theme
-        if data['theme'] == 'custom':
-            self._theme_colors['custom'] = data['theme_hex']
+        if data["theme"] == "custom":
+            self._theme_colors["custom"] = data["theme_hex"]
         else:
-            self._theme_colors['custom'] = self._theme_colors[data['theme']]
-        self.fg_color_palette.set_color(
-            Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
-        self.bg_color_palette.set_color(
-            Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
+            self._theme_colors["custom"] = self._theme_colors[data["theme"]]
+
+        # GTK4: Set color using Gdk.RGBA
+        from sugar4.graphics.colorbutton import get_svg_color_string
+
+        fg_rgba = Gdk.RGBA()
+        fg_rgba.parse(self._theme_colors["custom"]["fg_color"])
+        bg_rgba = Gdk.RGBA()
+        bg_rgba.parse(self._theme_colors["custom"]["bg_color"])
+
+        self.fg_color_palette.set_color(fg_rgba)
+        self.bg_color_palette.set_color(bg_rgba)
         self._update_theme()
 
         # Create new tabs from saved state.
-        for tab_state in data['tabs']:
+        for tab_state in data["tabs"]:
             self._create_tab(tab_state)
 
         # Restore active tab.
-        self._notebook.props.page = data['current-tab']
+        self._notebook.props.page = data["current-tab"]
 
         # Create a blank one if this state had no terminals.
         if self._notebook.get_n_pages() == 0:
             self._create_tab(None)
 
     def write_file(self, file_path):
-        if not self.metadata['mime_type']:
-            self.metadata['mime_type'] = 'text/plain'
+        if not self.metadata["mime_type"]:
+            self.metadata["mime_type"] = "text/plain"
 
         data = {}
-        data['current-tab'] = self._notebook.get_current_page()
+        data["current-tab"] = self._notebook.get_current_page()
         # make sures this doesn't conflict with older terminal version
-        data['theme'] = 'custom'
-        data['theme_hex'] = self._theme_colors['custom']
-        data['tabs'] = []
+        data["theme"] = "custom"
+        data["theme_hex"] = self._theme_colors["custom"]
+        data["tabs"] = []
 
         for i in range(self._notebook.get_n_pages()):
 
@@ -610,7 +634,7 @@ class TerminalActivity(activity.Activity):
 
             page = self._notebook.get_nth_page(i)
 
-            text = ''
+            text = ""
             if VTE_VERSION >= 76:
                 # Use get_text with format for Vte version 0.76 and above
                 text = page.vt.get_text_format(Vte.Format.TEXT)
@@ -622,32 +646,45 @@ class TerminalActivity(activity.Activity):
                     # and pygobject/gobject-introspection #690041
                     text, attr_ = page.vt.get_text(is_selected, None)
                 except AttributeError:
-                    text = ''
+                    text = ""
 
-            scrollback_lines = text.split('\n')
+            scrollback_lines = text.split("\n")
 
-            environ_file = '/proc/%d/environ' % page.pid
-            if os.path.isfile(environ_file):
-                # Note- this currently gets the child's initial environment
-                # rather than the current environment,
-                # making it not very useful.
-                environment = open(environ_file, 'r').read().split('\0')
-
-                cwd = os.readlink('/proc/%d/cwd' % page.pid)
-            else:
-                # terminal killed by the user
+            # GTK4: Handle case when VTE is not available (pid is None)
+            if page.pid is None:
+                # VTE not available, use default values
                 environment = []
-                cwd = '~'
+                cwd = "~"
+            else:
+                environ_file = "/proc/%d/environ" % page.pid
+                if os.path.isfile(environ_file):
+                    # Note- this currently gets the child's initial environment
+                    # rather than the current environment,
+                    # making it not very useful.
+                    environment = open(environ_file, "r").read().split("\0")
+
+                    cwd = os.readlink("/proc/%d/cwd" % page.pid)
+                else:
+                    # terminal killed by the user
+                    environment = []
+                    cwd = "~"
 
             font_desc = page.vt.get_font()
+            # GTK4: Handle case where font is None
+            font_size = font_desc.get_size() if font_desc else 0
 
-            tab_state = {'env': environment, 'cwd': cwd,
-                         'font_size': font_desc.get_size(),
-                         'scrollback': scrollback_lines}
+            tab_state = {
+                "env": environment,
+                "cwd": cwd,
+                "font_size": font_size,
+                "scrollback": scrollback_lines,
+            }
 
-            data['tabs'].append(tab_state)
+            data["tabs"].append(tab_state)
 
-        with open(file_path, 'w') as fd:
+        # GTK4: Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "w") as fd:
             text = json.dumps(data)
             fd.write(text)
 
@@ -656,3 +693,43 @@ class TerminalActivity(activity.Activity):
         n = vt.props.scrollback_lines
         vt.set_scrollback_lines(0)
         vt.set_scrollback_lines(n)
+
+
+def main():
+    """Run the terminal activity with proper GTK4 application lifecycle."""
+    import hashlib
+    import os
+    import time
+
+    # Set up environment variables for standalone execution
+    if "SUGAR_BUNDLE_PATH" not in os.environ:
+        os.environ["SUGAR_BUNDLE_PATH"] = os.path.abspath(os.path.dirname(__file__))
+    if "SUGAR_BUNDLE_ID" not in os.environ:
+        os.environ["SUGAR_BUNDLE_ID"] = "org.laptop.Terminal"
+    if "SUGAR_BUNDLE_NAME" not in os.environ:
+        os.environ["SUGAR_BUNDLE_NAME"] = "Terminal"
+    if "SUGAR_ACTIVITY_ROOT" not in os.environ:
+        os.makedirs("/tmp/sugar_terminal", exist_ok=True)
+        os.environ["SUGAR_ACTIVITY_ROOT"] = "/tmp/sugar_terminal"
+    if "SUGAR_BUNDLE_VERSION" not in os.environ:
+        os.environ["SUGAR_BUNDLE_VERSION"] = "48"
+
+    app = Gtk.Application(application_id="org.laptop.Terminal")
+
+    def on_activate(app):
+        from sugar4.activity.activityhandle import ActivityHandle
+
+        data = "%s%s" % (time.time(), 10000)
+        random_hash = hashlib.sha1(data.encode()).hexdigest()
+        handle = ActivityHandle(activity_id=random_hash)
+
+        activity = TerminalActivity(handle)
+        app.add_window(activity)
+        activity.show()
+
+    app.connect("activate", on_activate)
+    return app.run(None)
+
+
+if __name__ == "__main__":
+    main()
