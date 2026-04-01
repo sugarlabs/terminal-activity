@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 10:57+1000\n"
-"PO-Revision-Date: 2026-03-18 06:28+0000\n"
+"PO-Revision-Date: 2026-04-01 08:11+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/terminal/ka/>\n"
@@ -37,15 +37,15 @@ msgstr ""
 
 #: terminal.py:224
 msgid "Zoom out"
-msgstr ""
+msgstr "დაპატარავება"
 
 #: terminal.py:231
 msgid "Zoom in"
-msgstr ""
+msgstr "გადიდება"
 
 #: terminal.py:238
 msgid "Fullscreen"
-msgstr ""
+msgstr "სრულ ეკრანზე"
 
 #: terminal.py:264
 msgid "Useful commands"
