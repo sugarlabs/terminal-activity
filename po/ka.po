@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 10:57+1000\n"
-"PO-Revision-Date: 2026-04-01 08:11+0000\n"
+"PO-Revision-Date: 2026-05-14 10:46+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/terminal/ka/>\n"
@@ -21,11 +21,11 @@ msgstr ""
 
 #: activity/activity.info:2
 msgid "Terminal"
-msgstr ""
+msgstr "ტერმინალი"
 
 #: activity/activity.info:3
 msgid "Here you have complete control over your computer. You are in charge!!"
-msgstr ""
+msgstr "აქედან კომპიუტერს სრულად მართავთ. პასუხისმგებელი პირი თქვენ ბრძანდებით!"
 
 #: helpbutton.py:41
 msgid "Help"
@@ -49,88 +49,96 @@ msgstr "სრულ ეკრანზე"
 
 #: terminal.py:264
 msgid "Useful commands"
-msgstr ""
+msgstr "სასარგებლო ბრძანებები"
 
 #: terminal.py:265
 msgid "cd"
-msgstr ""
+msgstr "cd"
 
 #: terminal.py:266
 msgid "Change directory"
-msgstr ""
+msgstr "საქაღალდის შეცვლა"
 
 #: terminal.py:267
 msgid "To use it, write: cd directory"
-msgstr ""
+msgstr "გამოსაყენებლად აკრიფეთ: cd საქაღალდე"
 
 #: terminal.py:269
 msgid ""
 "If you call it without parameters, will change\n"
 "to the user directory"
 msgstr ""
+"თუ მას პარამეტრებით გამოიძახებთ, ის მომხმარებლის\n"
+"საწყის საქაღალდეზე გადავა"
 
 #: terminal.py:271
 msgid "ls"
-msgstr ""
+msgstr "ls"
 
 #: terminal.py:272
 msgid "List the content of a directory."
-msgstr ""
+msgstr "საქაღალდის შემცველობის ჩამონათვალი."
 
 #: terminal.py:273
 msgid "To use it, write: ls directory"
-msgstr ""
+msgstr "გამოსაყენებლად აკრიფეთ: ls საქაღალდე"
 
 #: terminal.py:275
 msgid ""
 "If you call it without parameters, will list the\n"
 "working directory"
 msgstr ""
+"თუ მას პარამეტრების გარეშე გამოიძახებთ, მიიღებთ\n"
+"მიმდინარე საქაღალდის ჩამონათვალს"
 
 #: terminal.py:277
 msgid "cp"
-msgstr ""
+msgstr "cp"
 
 #: terminal.py:278
 msgid "Copy a file to a specific location"
-msgstr ""
+msgstr "აკოპირებს ფაილს მითითებულ მდებარეობაზე"
 
 #: terminal.py:279
 msgid "Call it with the file and the new location"
-msgstr ""
+msgstr "გამოიძახეთ ის ფაილით და ახალი მდებარეობით"
 
 #: terminal.py:280
 msgid "Use: cp file directory"
-msgstr ""
+msgstr "გამოყენება: cp ფაილი საქაღალდე"
 
 #: terminal.py:281
 msgid "rm"
-msgstr ""
+msgstr "rm"
 
 #: terminal.py:282
 msgid "Removes a file in any path"
-msgstr ""
+msgstr "წაშლის ფაილს ნებისმიერი ბილიკიდან"
 
 #: terminal.py:283
 msgid "Use: rm file"
-msgstr ""
+msgstr "გამოყენება: rm ფაილი"
 
 #: terminal.py:284
 msgid "su"
-msgstr ""
+msgstr "su"
 
 #: terminal.py:285
 msgid "Login as superuser (root)"
-msgstr ""
+msgstr "ზემომხმარებლით (root) შესვლა"
 
 #: terminal.py:287
 msgid ""
 "The root user is the administrator of the\n"
 "system"
 msgstr ""
+"მომხმარებელი root\n"
+"სისტემის ადმინისტრატორია"
 
 #: terminal.py:289
 msgid ""
 "You must be careful, because you can modify\n"
 "system files"
 msgstr ""
+"ფრთხილად უნდა იყოთ, რადგან შეგიძლიათ\n"
+"სისტემური ფაილების შეცვლა"
