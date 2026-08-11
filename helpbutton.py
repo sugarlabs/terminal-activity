@@ -25,39 +25,50 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
 
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
 
 
-class HelpButton(Gtk.ToolItem):
+def get_screen_size():
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors and monitors.get_n_items() > 0:
+            monitor = monitors.get_item(0)
+            return monitor.get_geometry()
+
+    class FakeGeo:
+        width = 1200
+        height = 900
+    return FakeGeo()
+
+
+class HelpButton(ToolButton):
 
     def __init__(self, **kwargs):
-        GObject.GObject.__init__(self)
+        ToolButton.__init__(self, icon_name='toolbar-help', **kwargs)
 
-        help_button = ToolButton('toolbar-help')
-        help_button.set_tooltip(_('Help'))
-        self.add(help_button)
+        self.set_tooltip(_('Help'))
 
-        self._palette = help_button.get_palette()
+        self._palette = self.get_palette()
 
+        geo = get_screen_size()
         sw = Gtk.ScrolledWindow()
-        sw.set_size_request(int(Gdk.Screen.width() / 2.8),
-                            Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)
+        sw.set_size_request(int(geo.width / 2.8),
+                            geo.height - style.GRID_CELL_SIZE * 3)
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
         self._vbox = Gtk.Box()
         self._vbox.set_orientation(Gtk.Orientation.VERTICAL)
         self._vbox.set_homogeneous(False)
 
-        sw.add_with_viewport(self._vbox)
+        sw.set_child(self._vbox)
 
         self._palette.set_content(sw)
-        sw.show_all()
 
-        help_button.connect('clicked', self.__help_button_clicked_cb)
+        self.connect('clicked', self.__help_button_clicked_cb)
 
     def __help_button_clicked_cb(self, button):
         self._palette.popup(immediate=True)
@@ -68,26 +79,45 @@ class HelpButton(Gtk.ToolItem):
         label.set_justify(Gtk.Justification.FILL)
         label.set_use_markup(True)
         label.set_markup('<b>%s</b>' % section_text)
-        label.set_line_wrap(True)
+        label.set_wrap(True)
         label.set_halign(Gtk.Align.START)
-        hbox.pack_start(label, True, True, 4)
+        label.set_hexpand(True)
+        label.set_vexpand(True)
+        label.set_margin_start(4)
+        label.set_margin_end(4)
+        hbox.append(label)
         if icon is not None:
             _icon = Icon(icon_name=icon)
-            hbox.pack_end(_icon, False, False, 10)
-        hbox.show_all()
-        self._vbox.pack_start(hbox, True, True, padding=5)
+            _icon.set_margin_start(10)
+            _icon.set_margin_end(10)
+            hbox.append(_icon)
+
+        hbox.set_hexpand(True)
+        hbox.set_vexpand(True)
+        hbox.set_margin_top(5)
+        hbox.set_margin_bottom(5)
+        self._vbox.append(hbox)
 
     def add_paragraph(self, text, icon=None):
         hbox = Gtk.Box()
         label = Gtk.Label(label=text)
         label.set_justify(Gtk.Justification.FILL)
-        label.set_line_wrap(True)
+        label.set_wrap(True)
         label.set_halign(Gtk.Align.START)
-        hbox.pack_start(label, True, True, 20)
+        label.set_hexpand(True)
+        label.set_vexpand(True)
+        label.set_margin_start(20)
+        label.set_margin_end(20)
+        hbox.append(label)
 
         if icon is not None:
             _icon = Icon(icon_name=icon)
-            hbox.pack_end(_icon, False, False, 20)
+            _icon.set_margin_start(20)
+            _icon.set_margin_end(20)
+            hbox.append(_icon)
 
-        hbox.show_all()
-        self._vbox.pack_start(hbox, True, True, padding=3)
+        hbox.set_hexpand(True)
+        hbox.set_vexpand(True)
+        hbox.set_margin_top(3)
+        hbox.set_margin_bottom(3)
+        self._vbox.append(hbox)

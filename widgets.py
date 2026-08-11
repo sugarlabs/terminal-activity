@@ -21,7 +21,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from sugar3.graphics.icon import Icon
+from sugar4.graphics.icon import Icon
 
 
 class TabAdd(Gtk.Button):
@@ -35,12 +35,12 @@ class TabAdd(Gtk.Button):
         GObject.GObject.__init__(self)
 
         add_tab_icon = Icon(icon_name='list-add')
-        self.props.relief = Gtk.ReliefStyle.NONE
-        self.props.focus_on_click = False
-        self.add(add_tab_icon)
+        self.set_has_frame(False)
+        self.set_focus_on_click(False)
+        self.set_child(add_tab_icon)
         self.connect('clicked', self.__button_clicked_cb)
-        add_tab_icon.show()
-        self.show()
+        add_tab_icon.set_visible(True)
+        self.set_visible(True)
 
     def __button_clicked_cb(self, button):
         self.emit('tab-added')
@@ -58,22 +58,31 @@ class BrowserNotebook(Gtk.Notebook):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.connect("draw", self._draw_cb)
         self._tab_add = TabAdd()
         self._tab_add.connect('tab-added', self.on_add_tab)
         self.set_action_widget(self._tab_add, Gtk.PackType.END)
-        self._tab_add.show()
+        self._tab_add.set_visible(True)
         self.n_pages = 0
         self.width = 0
         self.button_size = 0
 
-    def _draw_cb(self, widget, event):
-        # Update tab sizes
+        self.connect('page-added', self._pages_changed_cb)
+        self.connect('page-removed', self._pages_changed_cb)
+
+    def _pages_changed_cb(self, notebook, child, page_num):
+        self._check_tab_sizes()
+
+    def do_size_allocate(self, width, height, baseline):
+        Gtk.Notebook.do_size_allocate(self, width, height, baseline)
+        self._check_tab_sizes()
+
+    def _check_tab_sizes(self):
+        """Update tab sizes when page count, width, or button size changes."""
         n_pages = self.get_n_pages()
-        width = self.get_allocation().width
-        button_size = self._tab_add.get_allocation().width
-        if n_pages != self.n_pages or width !=\
-           self.width or self.button_size != button_size:
+        width = self.get_width()
+        button_size = self._tab_add.get_width()
+        if n_pages != self.n_pages or width != self.width \
+                or self.button_size != button_size:
             self.n_pages = n_pages
             self.width = width
             self.button_size = button_size
@@ -89,17 +98,17 @@ class BrowserNotebook(Gtk.Notebook):
             for page_idx in range(self.n_pages):
                 page = self.get_nth_page(page_idx)
                 label = self.get_tab_label(page)
-                self.child_set_property(page, 'tab-expand', False)
+                self.get_page(page).set_property('tab-expand', False)
                 label.update_size(tab_new_size)
         else:
             for page_idx in range(self.n_pages):
                 page = self.get_nth_page(page_idx)
                 label = self.get_tab_label(page)
                 label.update_size(-1)
-                self.child_set_property(page, 'tab-expand', True)
+                self.get_page(page).set_property('tab-expand', True)
 
 
-class TabLabel(Gtk.HBox):
+class TabLabel(Gtk.Box):
     __gsignals__ = {
         'tab-close': (GObject.SignalFlags.RUN_FIRST,
                       None,
@@ -107,22 +116,26 @@ class TabLabel(Gtk.HBox):
     }
 
     def __init__(self, child):
-        GObject.GObject.__init__(self)
+        GObject.GObject.__init__(self, orientation=Gtk.Orientation.HORIZONTAL)
 
         self.child = child
         self._label = Gtk.Label(label="")
         self._label.set_ellipsize(Pango.EllipsizeMode.END)
-        self._label.set_alignment(0, 0.5)
-        self.pack_start(self._label, True, True, 0)
-        self._label.show()
+        self._label.set_halign(Gtk.Align.START)
+        self._label.set_valign(Gtk.Align.CENTER)
+        self._label.set_hexpand(True)
+        self._label.set_vexpand(True)
+        self.append(self._label)
+        self._label.set_visible(True)
 
         close_tab_icon = Icon(icon_name='close-tab')
         button = Gtk.Button()
-        button.add(close_tab_icon)
+        button.set_has_frame(False)
+        button.set_child(close_tab_icon)
         button.connect('clicked', self.__button_clicked_cb)
-        self.pack_start(button, False, True, 0)
-        close_tab_icon.show()
-        button.show()
+        self.append(button)
+        close_tab_icon.set_visible(True)
+        button.set_visible(True)
         self._close_button = button
 
     def set_text(self, title):
@@ -132,10 +145,10 @@ class TabLabel(Gtk.HBox):
         self.set_size_request(size, -1)
 
     def hide_close_button(self):
-        self._close_button.hide()
+        self._close_button.set_visible(False)
 
     def show_close_button(self):
-        self._close_button.show()
+        self._close_button.set_visible(True)
 
     def __button_clicked_cb(self, button):
         self.emit('tab-close', self.child)
