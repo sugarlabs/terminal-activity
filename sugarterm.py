@@ -33,27 +33,25 @@ import signal
 import sys
 import threading
 import uuid
-
-from enum import IntEnum
+import time
 from pathlib import Path
 from typing import Optional
 from typing import Tuple
-from urllib.parse import unquote
-from urllib.parse import urlparse
-
-import time
 
 import gi
-from sugar3 import profile, env
-from sugar3.activity.activity import launch_bundle
-from sugar3.datastore import datastore
+from sugar4 import profile, env
+from sugar4.activity.activity import launch_bundle
+from sugar4.datastore import datastore
 
 from palette import ContentInvoker
 
-gi.require_version('Gtk', '3.0')
-gi.require_version('Vte', '2.91')  # vte-0.38
+gi.require_version('Gtk', '4.0')
+try:
+    gi.require_version('Vte', '3.0')
+except ValueError:
+    gi.require_version('Vte', '3.91')
 
-from gi.repository import GLib
+from gi.repository import GLib, GObject
 from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import Pango
@@ -65,13 +63,13 @@ TERMINAL_MATCH_TAGS = ('schema', 'http', 'https', 'email', 'ftp')
 # Beware this is a PRCE (Perl) regular expression, not a Python one!
 # Edit: use regex101.com with PCRE syntax
 TERMINAL_MATCH_EXPRS = [
-    "(news:|telnet:|nntp:|file:\/|https?:|ftps?:|webcal:)\/\/([-[:alnum:]]+"
-    "(:[-[:alnum:],?;.:\/!%$^\*&~\"#']+)?\@)?[-[:alnum:]]+(\.[-[:alnum:]]+)*"
-    "(:[0-9]{1,5})?(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#'%]*[^].> \t\r\n,\\\"])?",
-    "(www|ftp)[-[:alnum:]]*\.[-[:alnum:]]+(\.[-[:alnum:]]+)*(:[0-9]{1,5})?"
-    "(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#%]*[^]'.>) \t\r\n,\\\"])?",
-    "(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\."
-    "[-[:alnum:]]+(\\.[-[:alnum:]]+)*"
+    r"(news:|telnet:|nntp:|file:\/|https?:|ftps?:|webcal:)\/\/([-[:alnum:]]+"
+    r"(:[-[:alnum:],?;.:\/!%$^\*&~\"#']+)?\@)?[-[:alnum:]]+(\.[-[:alnum:]]+)*"
+    r"(:[0-9]{1,5})?(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#'%]*[^].> \t\r\n,\\\"])?",
+    r"(www|ftp)[-[:alnum:]]*\.[-[:alnum:]]+(\.[-[:alnum:]]+)*(:[0-9]{1,5})?"
+    r"(\/[-[:alnum:]_$.+!*(),;:@&=?\/~#%]*[^]'.>) \t\r\n,\\\"])?",
+    r"(mailto:)?[-[:alnum:]][-[:alnum:].]*@[-[:alnum:]]+\."
+    r"[-[:alnum:]]+(\\.[-[:alnum:]]+)*"
 ]
 
 log = logging
@@ -113,11 +111,6 @@ __all__ = ['SugarTerminal']
 # pylint: enable=anomalous-backslash-in-string
 
 
-class DropTargets(IntEnum):
-    URIS = 0
-    TEXT = 1
-
-
 class SugarTerminal(Vte.Terminal):
     """
     Just a vte.Terminal with some properties already set.
@@ -131,8 +124,19 @@ class SugarTerminal(Vte.Terminal):
         self.add_matches()
         self.handler_ids = []
         self.read_config()
-        self.handler_ids.append(self.connect(
-            'button-press-event', self.button_press))
+        click_controller = Gtk.GestureClick.new()
+        click_controller.set_button(0)
+        handler_id = click_controller.connect('pressed', self.button_press)
+        self.add_controller(click_controller)
+
+        self.configure_terminal()
+        self._font_size = getattr(self.activity, '_font_size', 12)
+        self.configure_font()
+
+        long_press = Gtk.GestureLongPress.new()
+        long_press.connect('pressed', self.long_pressed_cb)
+        self.add_controller(long_press)
+        self.handler_ids.append(handler_id)
         # Call on_child_exited, don't remove it
         self.connect('child-exited', self.on_child_exited)
         self.matched_value = ''
@@ -203,12 +207,27 @@ class SugarTerminal(Vte.Terminal):
             self.conf.add_section('terminal')
 
     def setup_drag_and_drop(self):
-        self.targets = Gtk.TargetList()
-        self.targets.add_uri_targets(DropTargets.URIS)
-        self.targets.add_text_targets(DropTargets.TEXT)
-        self.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
-        self.drag_dest_set_target_list(self.targets)
-        self.connect('drag-data-received', self.on_drag_data_received)
+        drop_target_text = Gtk.DropTarget.new(
+            GObject.TYPE_STRING, Gdk.DragAction.COPY)
+        drop_target_text.connect('drop', self.on_drop_text)
+        self.add_controller(drop_target_text)
+
+        drop_target_uri = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
+        drop_target_uri.connect('drop', self.on_drop_uri)
+        self.add_controller(drop_target_uri)
+
+    def on_drop_text(self, target, value, x, y):
+        if value:
+            self.feed_child(value)
+        return True
+
+    def on_drop_uri(self, target, file_list, x, y):
+        if file_list:
+            for gfile in file_list.get_files():
+                path = gfile.get_path()
+                if path:
+                    self.feed_child(shlex.quote(str(path)) + ' ')
+        return True
 
     def get_uuid(self):
         return self.uuid
@@ -222,16 +241,11 @@ class SugarTerminal(Vte.Terminal):
         self._pid = pid
 
     def feed_child(self, resolved_cmdline):
-        if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 42):
-            encoded = resolved_cmdline.encode("utf-8")
-            try:
-                super().feed_child_binary(encoded)
-            except TypeError:
-                # The doc does not say clearly at which version the
-                # feed_child* function lost the "len" parameter :(
-                super().feed_child(resolved_cmdline, len(resolved_cmdline))
+        encoded = resolved_cmdline.encode("utf-8")
+        if hasattr(self, 'feed_child_binary'):
+            super().feed_child_binary(encoded)
         else:
-            super().feed_child(resolved_cmdline, len(resolved_cmdline))
+            super().feed_child(encoded)
 
     def execute_command(self, command):
         if command[-1] != '\n':
@@ -240,13 +254,16 @@ class SugarTerminal(Vte.Terminal):
 
     def copy_clipboard(self, widget=None, content=None):
         if self.get_has_selection() and (content is None):
-            super(SugarTerminal, self).copy_clipboard()
+            super(SugarTerminal, self).copy_clipboard_format(Vte.Format.TEXT)
         elif content:
-            self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-            self.clipboard.set_text(content, -1)
-            self.clipboard.store()
+            clipboard = Gdk.Display.get_default().get_clipboard()
+            try:
+                clipboard.set_text(content)
+            except AttributeError:
+                provider = Gdk.ContentProvider.new_for_value(content)
+                clipboard.set_content(provider)
         elif self.get_has_selection():
-            super(SugarTerminal, self).copy_clipboard()
+            super(SugarTerminal, self).copy_clipboard_format(Vte.Format.TEXT)
 
     def paste_clipboard(self, widget=None):
         super(SugarTerminal, self).paste_clipboard()
@@ -256,6 +273,7 @@ class SugarTerminal(Vte.Terminal):
         guake.globals.TERMINAL_MATCH_EXPRS to the terminal to make vte
         highlight text that matches them.
         """
+        self._match_tags = {}
         try:
             # NOTE: PCRE2_UTF | PCRE2_NO_UTF_CHECK | PCRE2_MULTILINE
             # reference from vte/bindings/vala/app.vala, flags = 0x40080400u
@@ -263,23 +281,25 @@ class SugarTerminal(Vte.Terminal):
             # https://mail.gnome.org/archives/commits-list/
             # 2016-September/msg06218.html
             VTE_REGEX_FLAGS = 0x40080400
-            for expr in TERMINAL_MATCH_EXPRS:
+            for i, expr in enumerate(TERMINAL_MATCH_EXPRS):
                 tag = self.match_add_regex(
                     Vte.Regex.new_for_match(
                         expr, len(expr), VTE_REGEX_FLAGS), 0
                 )
-                self.match_set_cursor_type(tag, Gdk.CursorType.HAND2)
+                self.match_set_cursor_name(tag, "pointer")
+                self._match_tags[tag] = TERMINAL_MATCH_TAGS[i]
 
-        except (GLib.Error, AttributeError) \
-                as e:  # pylint: disable=catching-non-exception
+        except (GLib.Error, AttributeError):
+            # pylint: disable=catching-non-exception
             try:
                 compile_flag = 0
                 if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 44):
                     compile_flag = GLib.RegexCompileFlags.MULTILINE
-                for expr in TERMINAL_MATCH_EXPRS:
+                for i, expr in enumerate(TERMINAL_MATCH_EXPRS):
                     tag = self.match_add_gregex(
                         GLib.Regex.new(expr, compile_flag, 0), 0)
-                    self.match_set_cursor_type(tag, Gdk.CursorType.HAND2)
+                    self.match_set_cursor_name(tag, "pointer")
+                    self._match_tags[tag] = TERMINAL_MATCH_TAGS[i]
 
             except GLib.Error as e:  # pylint: disable=catching-non-exception
                 log.error(
@@ -295,7 +315,7 @@ class SugarTerminal(Vte.Terminal):
         if self.pid is not None:
             try:
                 cwd = os.readlink("/proc/{}/cwd".format(self.pid))
-            except Exception as e:
+            except Exception:
                 return directory
             if os.path.exists(cwd):
                 directory = cwd
@@ -377,25 +397,28 @@ class SugarTerminal(Vte.Terminal):
             log.debug("not a file name: %r", text)
         return (None, None, None)
 
-    def button_press(self, terminal, event):
-        """Handles the button press event in the terminal widget. If
-        any match string is caught, another application is open to
-        handle the matched resource uri.
-        """
+    def button_press(self, gesture, n_press, x, y):
+        """Handles the button press event in the terminal widget."""
         self.matched_value = ''
-        if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) >= (0, 46):
+        event = gesture.get_current_event()
+        if hasattr(self, "check_match_at"):
+            matched_string = self.check_match_at(x, y)
+        elif hasattr(self, "match_check_event") and event is not None:
             matched_string = self.match_check_event(event)
         else:
             matched_string = self.match_check(
-                int(event.x / self.get_char_width()
-                    ), int(event.y / self.get_char_height())
+                int(x / self.get_char_width()), int(y / self.get_char_height())
             )
 
         self.found_link = None
+        button = gesture.get_current_button()
+        st = gesture.get_current_event_state()
+        state = st if st else 0
 
-        if event.button == 1 and \
-                (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            if (Vte.MAJOR_VERSION, Vte.MINOR_VERSION) > (0, 50):
+        is_r_click = button == 3 and n_press == 1
+
+        if button == 1 and (state & Gdk.ModifierType.CONTROL_MASK):
+            if hasattr(self, "hyperlink_check_event") and event is not None:
                 s = self.hyperlink_check_event(event)
             else:
                 s = None
@@ -403,29 +426,35 @@ class SugarTerminal(Vte.Terminal):
                 self._on_ctrl_click_matcher((s, None))
             elif matched_string and matched_string[0]:
                 self._on_ctrl_click_matcher(matched_string)
-        elif event.button == 3 and matched_string:
+        elif is_r_click and matched_string and matched_string[0]:
             self.found_link = self.handleTerminalMatch(matched_string)
             self.matched_value = matched_string[0]
 
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
+        if button == 3 and n_press == 1:
             ContentInvoker(self, self.found_link)
+
+    def long_pressed_cb(self, gesture, x, y):
+        # Fake a right click for long press
+        self.matched_value = ''
+        event = gesture.get_current_event()
+        if hasattr(self, "check_match_at"):
+            matched_string = self.check_match_at(x, y)
+        elif hasattr(self, "match_check_event") and event is not None:
+            matched_string = self.match_check_event(event)
+        else:
+            matched_string = self.match_check(
+                int(x / self.get_char_width()), int(y / self.get_char_height())
+            )
+        self.found_link = None
+        if matched_string and matched_string[0]:
+            self.found_link = self.handleTerminalMatch(matched_string)
+            self.matched_value = matched_string[0]
+        ContentInvoker(self, self.found_link)
 
     def on_child_exited(self, target, status, *user_data):
         if libutempter is not None:
             if self.get_pty() is not None:
                 libutempter.utempter_remove_record(self.get_pty().get_fd())
-
-    def on_drag_data_received(
-            self, widget, drag_context, x, y, data, info, time):
-        if info == DropTargets.URIS:
-            uris = data.get_uris()
-            for uri in uris:
-                path = Path(unquote(urlparse(uri).path))
-                self.feed_child(shlex.quote(str(path.absolute())) + ' ')
-        elif info == DropTargets.TEXT:
-            text = data.get_text()
-            if text:
-                self.feed_child(text)
 
     def _on_ctrl_click_matcher(self, matched_string):
         value, tag = matched_string
@@ -441,18 +470,20 @@ class SugarTerminal(Vte.Terminal):
     def handleTerminalMatch(self, matched_string):
         value, tag = matched_string
         log.debug("found tag: %r, item: %r", tag, value)
-        if tag in TERMINAL_MATCH_TAGS:
-            if TERMINAL_MATCH_TAGS[tag] == 'schema':
+
+        tag_type = getattr(self, '_match_tags', {}).get(tag)
+        if tag_type:
+            if tag_type == 'schema':
                 # value here should not be changed, it is right and
                 # ready to be used.
                 pass
-            elif TERMINAL_MATCH_TAGS[tag] == 'http':
+            elif tag_type == 'http':
                 value = 'http://%s' % value
-            elif TERMINAL_MATCH_TAGS[tag] == 'https':
+            elif tag_type == 'https':
                 value = 'https://%s' % value
-            elif TERMINAL_MATCH_TAGS[tag] == 'ftp':
+            elif tag_type == 'ftp':
                 value = 'ftp://%s' % value
-            elif TERMINAL_MATCH_TAGS[tag] == 'email':
+            elif tag_type == 'email':
                 value = 'mailto:%s' % value
 
         if value:
@@ -520,17 +551,11 @@ class SugarTerminal(Vte.Terminal):
     def set_term_colors(self, custom_colors):
         fg_color = custom_colors['fg_color']
         bg_color = custom_colors['bg_color']
-        try:
-            self.set_colors(Gdk.color_parse(fg_color),
-                            Gdk.color_parse(bg_color), [])
-        except TypeError:
-            # Vte 0.38 requires the colors set as a different type
-            # in Fedora 21 we get a exception
-            # TypeError: argument foreground: Expected Gdk.RGBA,
-            # but got gi.overrides.Gdk.Color
-            self.set_colors(
-                Gdk.RGBA(*Gdk.color_parse(fg_color).to_floats()),
-                Gdk.RGBA(*Gdk.color_parse(bg_color).to_floats()), [])
+        fg_rgba = Gdk.RGBA()
+        fg_rgba.parse(fg_color)
+        bg_rgba = Gdk.RGBA()
+        bg_rgba.parse(bg_color)
+        self.set_colors(fg_rgba, bg_rgba, [])
 
     def set_custom_colors_from_dict(self, colors_dict):
         if not isinstance(colors_dict, dict):
@@ -562,7 +587,7 @@ class SugarTerminal(Vte.Terminal):
         path = os.path.join(self.activity.get_activity_root(),
                             'instance', '%i' % time.time())
         fd = open(path, "w")
-        fd.write(url)
+        fd.write(self.found_link)
         fd.close()
         journal_entry = datastore.create()
         journal_entry.metadata['title'] = 'Browse Activity'
@@ -571,7 +596,7 @@ class SugarTerminal(Vte.Terminal):
         journal_entry.metadata['mime_type'] = 'text/uri-list'
         journal_entry.metadata['icon-color'] = profile.get_color().to_string()
         journal_entry.metadata['description'] = \
-            "Opening {} from the Terminal".format(url)
+            "Opening {} from the Terminal".format(self.found_link)
         journal_entry.file_path = path
         datastore.write(journal_entry)
         self._object_id = journal_entry.object_id
