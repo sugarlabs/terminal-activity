@@ -22,17 +22,21 @@ import json
 import logging
 from gettext import gettext as _
 
+
+def _parse_rgba(hex_str):
+    rgba = Gdk.RGBA()
+    rgba.parse(hex_str)
+    return rgba
+
+
 import gi
 
 
-vs = {'Gtk': '3.0', 'SugarExt': '1.0', 'SugarGestures': '1.0'}
+vs = {'Gtk': '4.0'}
 for api, ver in vs.items():
     gi.require_version(api, ver)
 
-try:
-    gi.require_version('Vte', '2.91')
-except:
-    gi.require_version('Vte', '2.90')
+gi.require_version('Vte', '3.91')
 
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -40,15 +44,15 @@ from gi.repository import Gdk
 from gi.repository import Vte
 from gi.repository import Pango
 
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.toolbarbox import ToolbarBox
+from sugar4.graphics.toolbarbox import ToolbarButton
 
-from sugar3.activity.widgets import EditToolbar
-from sugar3.activity.widgets import ActivityToolbarButton
-from sugar3.activity.widgets import StopButton
-from sugar3.activity import activity
-from sugar3.graphics.colorbutton import ColorToolButton, get_svg_color_string
+from sugar4.activity.widgets import EditToolbar
+from sugar4.activity.widgets import ActivityToolbarButton
+from sugar4.activity.widgets import StopButton
+from sugar4.activity import activity
+from sugar4.graphics.colorbutton import ColorToolButton, get_svg_color_string
 
 from widgets import BrowserNotebook
 from widgets import TabLabel
@@ -66,7 +70,7 @@ logging.basicConfig()
 
 try:
     olpc_build = open('/boot/olpc_build', 'r').readline()
-except:
+except Exception:
     olpc_build = ''
 
 if olpc_build.startswith('13'):
@@ -77,7 +81,7 @@ else:
 VTE_VERSION = 0
 try:
     VTE_VERSION = Vte.MINOR_VERSION
-except:
+except Exception:
     # version is not published in old versions of vte
     pass
 
@@ -87,10 +91,10 @@ class TerminalActivity(activity.Activity):
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
 
-        # HACK to avoid Escape key disable fullscreen mode on Terminal Activity
-        # This is related with http://bugs.sugarlabs.org/ticket/440
-        self.disconnect_by_func(self._Window__key_press_cb)
-        self.connect('key-press-event', self.__key_press_cb)
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        key_controller.connect('key-pressed', self.__key_press_cb)
+        self.add_controller(key_controller)
         self.vt = None
         self.max_participants = 1
         self._theme_colors = {"light": {'fg_color': '#000000',
@@ -111,7 +115,7 @@ class TerminalActivity(activity.Activity):
         self._notebook.connect("tab-added", self.__open_tab_cb)
         self._notebook.set_property("tab-pos", Gtk.PositionType.TOP)
         self._notebook.set_scrollable(True)
-        self._notebook.show()
+        self._notebook.set_visible(True)
         self.set_canvas(self._notebook)
         self._create_tab(None)
 
@@ -119,47 +123,47 @@ class TerminalActivity(activity.Activity):
         toolbar_box = ToolbarBox()
 
         activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, 0)
-        activity_button.show()
+        toolbar_box.toolbar.prepend(activity_button)
+        activity_button.set_visible(True)
 
         edit_toolbar = self._create_edit_toolbar()
         edit_toolbar_button = ToolbarButton(
             page=edit_toolbar,
             icon_name='toolbar-edit'
         )
-        edit_toolbar.show()
-        toolbar_box.toolbar.insert(edit_toolbar_button, -1)
-        edit_toolbar_button.show()
+        edit_toolbar.set_visible(True)
+        toolbar_box.toolbar.append(edit_toolbar_button)
+        edit_toolbar_button.set_visible(True)
 
         view_toolbar = self._create_view_toolbar()
         view_toolbar_button = ToolbarButton(
             page=view_toolbar,
             icon_name='toolbar-view')
-        view_toolbar.show()
-        toolbar_box.toolbar.insert(view_toolbar_button, -1)
-        view_toolbar_button.show()
+        view_toolbar.set_visible(True)
+        toolbar_box.toolbar.append(view_toolbar_button)
+        view_toolbar_button.set_visible(True)
 
         self._delete_tab_toolbar = None
         self._previous_tab_toolbar = None
         self._next_tab_toolbar = None
 
         helpbutton = self._create_help_button()
-        toolbar_box.toolbar.insert(helpbutton, -1)
-        helpbutton.show_all()
+        toolbar_box.toolbar.append(helpbutton)
+        helpbutton.set_visible(True)
 
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        toolbar_box.toolbar.insert(separator, -1)
-        separator.show()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+        separator.set_hexpand(True)
+        separator.set_opacity(0.0)
+        toolbar_box.toolbar.append(separator)
+        separator.set_visible(True)
 
         stop_button = StopButton(self)
         stop_button.props.accelerator = '<Ctrl><Shift>Q'
-        toolbar_box.toolbar.insert(stop_button, -1)
-        stop_button.show()
+        toolbar_box.toolbar.append(stop_button)
+        stop_button.set_visible(True)
 
         self.set_toolbar_box(toolbar_box)
-        toolbar_box.show()
+        toolbar_box.set_visible(True)
 
     def fullscreen(self):
         self._notebook.set_show_tabs(False)
@@ -182,14 +186,14 @@ class TerminalActivity(activity.Activity):
         clear = ToolButton('edit-clear')
         clear.set_tooltip(_('Clear scrollback'))
         clear.connect('clicked', self.__clear_cb)
-        edit_toolbar.insert(clear, -1)
-        clear.show()
+        edit_toolbar.append(clear)
+        clear.set_visible(True)
         return edit_toolbar
 
     def __copy_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
         if vt.get_has_selection():
-            vt.copy_clipboard()
+            vt.copy_clipboard_format(Vte.Format.TEXT)
 
     def __paste_cb(self, button):
         vt = self._notebook.get_nth_page(self._notebook.get_current_page()).vt
@@ -246,56 +250,56 @@ class TerminalActivity(activity.Activity):
             vt.set_term_colors(self._theme_colors['custom'])
 
     def _create_view_toolbar(self):  # Color changer and Zoom toolbar
-        view_toolbar = Gtk.Toolbar()
+        view_toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self._theme_toggler = ToolButton('dark-theme')
         self._theme_toggler.set_tooltip('Switch to Dark Theme')
         self._theme_toggler.props.accelerator = '<Ctrl><Shift>I'
         self._theme_toggler.connect('clicked', self._toggled_theme)
-        view_toolbar.insert(self._theme_toggler, -1)
-        self._theme_toggler.show()
+        view_toolbar.append(self._theme_toggler)
+        self._theme_toggler.set_visible(True)
 
         self.fg_color_palette = ColorToolButton('color-preview')
         self.fg_color_palette._tooltip = "Set Foreground Text color"
         self.fg_color_palette.set_title('Foreground Color')
         self.fg_color_palette.connect(
             'notify::color', self.__fg_color_notify_cb)
-        view_toolbar.insert(self.fg_color_palette, -1)
-        self.fg_color_palette.show()
+        view_toolbar.append(self.fg_color_palette)
+        self.fg_color_palette.set_visible(True)
 
         self.bg_color_palette = ColorToolButton('color-preview')
         self.bg_color_palette._tooltip = "Set Background color"
         self.bg_color_palette.set_title('Background Color')
         self.bg_color_palette.connect(
             'notify::color', self.__bg_color_notify_cb)
-        self.bg_color_palette.set_color(Gdk.Color.parse('#FFFFFF')[1])
-        view_toolbar.insert(self.bg_color_palette, -1)
-        self.bg_color_palette.show()
+        self.bg_color_palette.set_color(_parse_rgba('#FFFFFF'))
+        view_toolbar.append(self.bg_color_palette)
+        self.bg_color_palette.set_visible(True)
 
-        sep = Gtk.SeparatorToolItem()
-        view_toolbar.insert(sep, -1)
-        sep.show()
+        sep = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+        view_toolbar.append(sep)
+        sep.set_visible(True)
 
         zoom_out_button = ToolButton('zoom-out')
         zoom_out_button.set_tooltip(_('Zoom out'))
         zoom_out_button.props.accelerator = '<Ctrl>minus'
         zoom_out_button.connect('clicked', self.__zoom_out_cb)
-        view_toolbar.insert(zoom_out_button, -1)
-        zoom_out_button.show()
+        view_toolbar.append(zoom_out_button)
+        zoom_out_button.set_visible(True)
 
         zoom_in_button = ToolButton('zoom-in')
         zoom_in_button.set_tooltip(_('Zoom in'))
         zoom_in_button.props.accelerator = '<Ctrl>plus'
         zoom_in_button.connect('clicked', self.__zoom_in_cb)
-        view_toolbar.insert(zoom_in_button, -1)
-        zoom_in_button.show()
+        view_toolbar.append(zoom_in_button)
+        zoom_in_button.set_visible(True)
 
         fullscreen_button = ToolButton('view-fullscreen')
         fullscreen_button.set_tooltip(_("Fullscreen"))
         fullscreen_button.props.accelerator = '<Alt>Return'
         fullscreen_button.connect('clicked', self.__fullscreen_cb)
-        view_toolbar.insert(fullscreen_button, -1)
-        fullscreen_button.show()
+        view_toolbar.append(fullscreen_button)
+        fullscreen_button.set_visible(True)
         return view_toolbar
 
     def _zoom(self, step):
@@ -396,36 +400,31 @@ class TerminalActivity(activity.Activity):
                 label.set_text(vt.get_window_title())
                 return
 
-    def __drag_data_received_cb(self, widget, context, x, y, selection,
-                                target, time):
-        widget.feed_child(selection.get_text(), -1)
-        context.finish(True, False, time)
-        return True
-
     def _create_tab(self, tab_state):
         vt = SugarTerminal(self)
         vt.connect("child-exited", self.__tab_child_exited_cb)
         vt.connect("window-title-changed", self.__tab_title_changed_cb)
 
-        vt.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-                         [Gtk.TargetEntry.new('text/plain', 0, 0),
-                          Gtk.TargetEntry.new('STRING', 0, 1)],
-                         Gdk.DragAction.DEFAULT | Gdk.DragAction.COPY)
-        vt.drag_dest_add_text_targets()
-        vt.connect('drag_data_received', self.__drag_data_received_cb)
+        # Handled by sugarterm setup_drag_and_drop
 
         vt.set_term_colors(self._theme_colors['custom'])
 
-        vt.show()
+        vt.set_visible(True)
 
-        scrollbar = Gtk.VScrollbar.new(vt.get_vadjustment())
+        scrollbar = Gtk.Scrollbar(
+            orientation=Gtk.Orientation.VERTICAL,
+            adjustment=vt.get_vadjustment()
+        )
 
-        box = Gtk.HBox()
-        box.pack_start(vt, True, True, 0)
-        box.pack_start(scrollbar, False, True, 0)
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        vt.set_hexpand(True)
+        vt.set_vexpand(True)
+        box.append(vt)
+        box.append(scrollbar)
 
         box.vt = vt
-        box.show()
+        box.pid = -1
+        box.set_visible(True)
 
         tablabel = TabLabel(box)
         tablabel.connect('tab-close', self.__close_tab_cb)
@@ -433,7 +432,7 @@ class TerminalActivity(activity.Activity):
         box.label = tablabel
 
         index = self._notebook.append_page(box, tablabel)
-        tablabel.show_all()
+        tablabel.set_visible(True)
 
         # Uncomment this to only show the tab bar when there is at least
         # one tab. I think it's useful to always see it, since it displays
@@ -444,7 +443,7 @@ class TerminalActivity(activity.Activity):
         if self._notebook.get_n_pages() == 2:
             self._notebook.get_tab_label(
                 self._notebook.get_nth_page(0)).show_close_button()
-        self._notebook.show_all()
+        self._notebook.set_visible(True)
 
         # Launch the default shell in the HOME directory.
         os.chdir(os.environ["HOME"])
@@ -468,7 +467,7 @@ class TerminalActivity(activity.Activity):
             if 'cwd' in tab_state and os.path.exists(tab_state['cwd']):
                 try:
                     os.chdir(tab_state['cwd'])
-                except:
+                except Exception:
                     # ACLs may deny access
                     sys.stdout.write("Could not chdir to " + tab_state['cwd'])
 
@@ -478,8 +477,8 @@ class TerminalActivity(activity.Activity):
                 vt.set_font(font_desc)
 
             # Restore the scrollback buffer.
-            for l in tab_state['scrollback']:
-                vt.feed(l.encode('utf-8') + b'\r\n')
+            for line in tab_state['scrollback']:
+                vt.feed(line.encode('utf-8') + b'\r\n')
 
         argv = [os.environ.get('SHELL') or '/bin/bash']
         envv = ['SUGAR_TERMINAL_VERSION=%s' %
@@ -493,16 +492,23 @@ class TerminalActivity(activity.Activity):
                 saved[name] = os.environ[name]
                 del os.environ[name]
 
-        if hasattr(vt, 'fork_command_full'):
-            _, box.pid = vt.fork_command_full(
-                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None, None)
-        else:
-            _, box.pid = vt.spawn_sync(
-                Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None, None)
+        def on_spawn_cb(terminal, pid, error, box):
+            if error is None:
+                box.pid = pid
+                terminal.pid = pid
+
+        vt.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            os.environ["HOME"],
+            argv,
+            envv,
+            GLib.SpawnFlags.DEFAULT,
+            None, None,
+            -1,
+            None,
+            on_spawn_cb,
+            box
+        )
 
         for name in saved:
             os.environ[name] = saved[name]
@@ -512,38 +518,33 @@ class TerminalActivity(activity.Activity):
 
         return index
 
-    def __key_press_cb(self, window, event):
-        """Route some keypresses directly to the vte and then drop them.
+    def __key_press_cb(self, controller, keyval, keycode, state):
+        key_name = Gdk.keyval_name(keyval)
+        page = self._notebook.get_nth_page(self._notebook.get_current_page())
+        if page is None:
+            return False
+        vt = page.vt
 
-        This prevents Sugar from hijacking events that are useful in
-        the vte.
-
-        """
-
-        def event_to_vt(event):
-            current_page = self._notebook.get_current_page()
-            vt = self._notebook.get_nth_page(current_page).vt
-            vt.event(event)
-
-        key_name = Gdk.keyval_name(event.keyval)
-
-        # Escape is used in Sugar to cancel fullscreen mode.
+        # HACK to avoid Escape key disable fullscreen mode on
+        # Terminal Activity and prevent Sugar from hijacking
+        # Ctrl+Z/Ctrl+Q useful in the terminal.
         if key_name == 'Escape':
-            event_to_vt(event)
+            controller.forward(vt)
             return True
 
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK:
-            if key_name in ['z', 'q']:
-                event_to_vt(event)
+        if state & Gdk.ModifierType.CONTROL_MASK:
+            if key_name in ('z', 'q'):
+                controller.forward(vt)
                 return True
-            elif key_name == 'Tab':
+
+            if key_name == 'Tab':
                 current_index = self._notebook.get_current_page()
                 if current_index == self._notebook.get_n_pages() - 1:
                     self._notebook.set_current_page(0)
                 else:
                     self._notebook.set_current_page(current_index + 1)
                 return True
-            elif event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+            elif state & Gdk.ModifierType.SHIFT_MASK:
                 if key_name == 'ISO_Left_Tab':
                     current_index = self._notebook.get_current_page()
                     if current_index == 0:
@@ -552,8 +553,14 @@ class TerminalActivity(activity.Activity):
                     else:
                         self._notebook.set_current_page(current_index - 1)
                     return True
-                elif key_name == 'T':
+                elif key_name in ('T', 't'):
                     self._create_tab(None)
+                    return True
+                elif key_name in ('C', 'c'):
+                    self.__copy_cb(None)
+                    return True
+                elif key_name in ('V', 'v'):
+                    self.__paste_cb(None)
                     return True
 
         return False
@@ -576,9 +583,9 @@ class TerminalActivity(activity.Activity):
         else:
             self._theme_colors['custom'] = self._theme_colors[data['theme']]
         self.fg_color_palette.set_color(
-            Gdk.Color.parse(self._theme_colors['custom']['fg_color'])[1])
+            _parse_rgba(self._theme_colors['custom']['fg_color']))
         self.bg_color_palette.set_color(
-            Gdk.Color.parse(self._theme_colors['custom']['bg_color'])[1])
+            _parse_rgba(self._theme_colors['custom']['bg_color']))
         self._update_theme()
 
         # Create new tabs from saved state.
