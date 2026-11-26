@@ -501,7 +501,7 @@ class TerminalActivity(activity.Activity):
         else:
             _, box.pid = vt.spawn_sync(
                 Vte.PtyFlags.DEFAULT, os.environ["HOME"],
-                argv, envv, GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                argv, envv, GLib.SpawnFlags.DEFAULT,
                 None, None)
 
         for name in saved:
